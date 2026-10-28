@@ -1,22 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="560" height="140" viewBox="0 0 560 140" role="img" aria-label="AnberNext">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="220" viewBox="0 0 760 220" role="img" aria-label="AnberNext">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ffb03a"/>
-      <stop offset="1" stop-color="#ff7a1a"/>
+    <linearGradient id="amber" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe08a"/>
+      <stop offset="0.5" stop-color="#ffab2e"/>
+      <stop offset="1" stop-color="#ff6a1a"/>
     </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#15151b"/>
+      <stop offset="1" stop-color="#0b0b0f"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <!-- badge: a handheld silhouette with a power ring -->
-  <rect x="10" y="20" width="100" height="100" rx="26" fill="url(#g)"/>
-  <circle cx="60" cy="70" r="30" fill="none" stroke="#1b1b1f" stroke-width="7"/>
-  <rect x="56.5" y="34" width="7" height="24" rx="3.5" fill="#1b1b1f"/>
-  <!-- tiny d-pad hint bottom-left, action dots bottom-right -->
-  <g fill="#1b1b1f">
-    <rect x="26" y="98" width="16" height="5" rx="2.5"/>
-    <rect x="31.5" y="92.5" width="5" height="16" rx="2.5"/>
-    <circle cx="84" cy="98" r="3"/>
-    <circle cx="94" cy="100" r="3"/>
+
+  <!-- dark plate so the mark reads on light OR dark GitHub themes -->
+  <rect x="6" y="6" width="748" height="208" rx="30" fill="url(#panel)"/>
+  <rect x="6.5" y="6.5" width="747" height="207" rx="29.5" fill="none" stroke="#ffab2e" stroke-opacity="0.22"/>
+
+  <!-- futuristic emblem: angular hex + chevron 'A' + power notch -->
+  <g transform="translate(104,110)" filter="url(#glow)">
+    <polygon points="0,-66 57,-33 57,33 0,66 -57,33 -57,-33" fill="none" stroke="url(#amber)" stroke-width="5"/>
+    <polygon points="0,-50 43,-25 43,25 0,50 -43,25 -43,-25" fill="none" stroke="#ffab2e" stroke-opacity="0.35" stroke-width="2"/>
+    <!-- power gap at the top of the ring -->
+    <rect x="-8" y="-72" width="16" height="16" fill="url(#panel)"/>
+    <rect x="-3" y="-64" width="6" height="22" rx="3" fill="url(#amber)"/>
+    <!-- chevron 'A' suggesting forward / next -->
+    <path d="M-26,30 L0,-26 L26,30" fill="none" stroke="url(#amber)" stroke-width="9" stroke-linecap="square" stroke-linejoin="miter"/>
+    <path d="M-13,10 L13,10" stroke="url(#amber)" stroke-width="9" stroke-linecap="square"/>
   </g>
+
   <!-- wordmark -->
-  <text x="130" y="86" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="54" font-weight="700" fill="#f2f2f5">Anber<tspan fill="#ffb03a">Next</tspan></text>
-  <text x="132" y="112" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="16" letter-spacing="3" fill="#9a9aa2">RG353V · NextUI</text>
+  <g transform="translate(188,0)">
+    <!-- leading tech bracket -->
+    <path d="M-6,66 L-18,66 L-18,146 L-6,146" fill="none" stroke="#ffab2e" stroke-opacity="0.55" stroke-width="4"/>
+    <!-- ANBER: futuristic, wide, amber, glowing -->
+    <text x="8" y="136" filter="url(#glow)"
+          font-family="'Eurostile','Bank Gothic','Arial Narrow','Franklin Gothic Medium',Impact,sans-serif"
+          font-size="92" font-weight="800" letter-spacing="6" fill="url(#amber)"
+          transform="skewX(-5)">ANBER</text>
+    <!-- Next: clean, minimalist, like the original -->
+    <text x="356" y="136"
+          font-family="'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif"
+          font-size="92" font-weight="400" letter-spacing="1" fill="#f4f4f6">Next</text>
+    <!-- trailing tick + baseline rule -->
+    <path d="M548,146 L560,146 L560,66" fill="none" stroke="#ffab2e" stroke-opacity="0.55" stroke-width="4"/>
+    <line x1="10" y1="162" x2="556" y2="162" stroke="#ffab2e" stroke-opacity="0.25" stroke-width="2"/>
+    <text x="10" y="186" font-family="'Segoe UI',Arial,sans-serif" font-size="15" letter-spacing="6" fill="#c89a5a">NEXTUI · RG353V</text>
+  </g>
 </svg>
