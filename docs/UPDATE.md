@@ -29,10 +29,10 @@ Toda atualização guarda os arquivos antigos antes de trocar. Abra
 
 O AnberNext tem **duas coisas** numa release:
 
-- **Pacote de atualização** (`anbernext-<tag>-update.zip` + `.sha256`) — o arquivo leve
+- **Pacote de atualização** (`anbernext-<tag>-update.zip` + `.sha256`), o arquivo leve
   que o aparelho baixa. Contém só a camada do NextUI (`.system/rg353`, `Tools/rg353`,
   `Emus/rg353`).
-- **Imagem completa** (`anbernext-<tag>-rg353v.img` + `.sha256`) — para quem vai instalar
+- **Imagem completa** (`anbernext-<tag>-rg353v.img` + `.sha256`), para quem vai instalar
   do zero pelo [guia de instalação](INSTALL.md).
 
 ### 1. Gerar o pacote de atualização
@@ -68,7 +68,7 @@ gh release create v3.15 \
 ### 3. Rota de atualização
 
 O aparelho olha **apenas** para `retrotiv/AnberNext` (configurado em
-`Tools/rg353/AnberNext Update.pak`). Não usamos o auto-update de origem do NextUI — toda
+`Tools/rg353/AnberNext Update.pak`). Não usamos o auto-update de origem do NextUI, toda
 atualização do AnberNext passa por aqui. Isso é de propósito: mantém tudo dentro da
 estrutura do aparelho e evita conflito com o projeto de origem.
 
@@ -76,7 +76,7 @@ estrutura do aparelho e evita conflito com o projeto de origem.
 
 ## O que muda em cada versão
 
-### v3.15 — energia e bateria
+### v3.15: energia e bateria
 - **Fim dos reinícios sob carga.** Em bateria não cheia, abrir coisas pesadas (lista do
   Boombrick, PSP, carga do Spotify) dava um pico de corrente que derrubava a tensão da
   célula abaixo do corte e o aparelho reiniciava sozinho. A v3.15 limita a frequência

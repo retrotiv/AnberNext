@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <b>NextUI on the Anbernic RG353V — without giving up Android or your games card.</b>
+  <b>NextUI on the Anbernic RG353V, without giving up Android or your games card.</b>
 </p>
 
 <p align="center">
@@ -16,16 +16,16 @@
 
 ## What this is
 
-AnberNext is my adaptation of **NextUI** — the clean, fast front-end that ships on the
-TrimUI Brick — brought over to the **Anbernic RG353V** (Rockchip RK3566).
+AnberNext is my adaptation of **NextUI**, the clean, fast front-end that ships on the
+TrimUI Brick, brought over to the **Anbernic RG353V** (Rockchip RK3566).
 
 It runs entirely from a microSD card you dedicate to it. The device's internal storage
 and its stock Android are left exactly as they are. Pop the card in and you boot straight
 into NextUI; hold one button at power-on and you're back in Android. Nothing on your games
 card or on the console's internal memory is ever rewritten by AnberNext.
 
-It started as a handful of compatibility tests — would the Brick's firmware even talk to
-this panel, these buttons, this battery gauge? — and grew into a full port with its own
+It started as a handful of compatibility tests (would the Brick's firmware even talk to
+this panel, these buttons, this battery gauge?) and grew into a full port, with its own
 fixes for the things the RG353V does differently.
 
 ## Why
@@ -52,7 +52,7 @@ stay in sync across all three handhelds.
   the cell voltage so the percentage you see is closer to the truth.
 - **dArkOS emulators integrated** for the heavier systems the RG353V can handle.
 - **Updates from the device itself.** Point it at this repository and it pulls new
-  versions over Wi-Fi, rewriting only the NextUI card partition — **never** your games card
+  versions over Wi-Fi, rewriting only the NextUI card partition, **never** your games card
   and **never** the internal memory. See [Updating from the device](docs/UPDATE.md).
 
 ## Getting started
@@ -60,7 +60,7 @@ stay in sync across all three handhelds.
 New install (writes the dedicated boot card once): **[docs/INSTALL.md](docs/INSTALL.md)**.
 
 Already running AnberNext and just want the latest version:
-**[docs/UPDATE.md](docs/UPDATE.md)** — no reflashing, straight from the handheld.
+**[docs/UPDATE.md](docs/UPDATE.md)**, no reflashing, straight from the handheld.
 
 ## What you need
 
@@ -72,8 +72,7 @@ Already running AnberNext and just want the latest version:
 
 Every operation AnberNext performs is scoped to its own card partition. The in-device
 updater refuses to run if it cannot prove it is writing to that partition and nowhere else;
-your games card and the console's Android are out of bounds by design. The one exception —
-the `F` Android toggle — is deliberate and documented, and it only ever touches the boot
+your games card and the console's Android are out of bounds by design. The one exception, the `F` Android toggle, is deliberate and documented, and it only ever touches the boot
 card's own loader area.
 
 ## Credits

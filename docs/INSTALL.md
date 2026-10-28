@@ -1,6 +1,6 @@
 # Instalação do AnberNext no RG353V
 
-Este guia é para a **primeira instalação** — gravar o cartão de boot uma vez. Depois
+Este guia é para a **primeira instalação**, gravar o cartão de boot uma vez. Depois
 disso, as novas versões entram pelo próprio aparelho, sem regravar nada
 (veja [UPDATE.md](UPDATE.md)).
 
@@ -14,10 +14,9 @@ disso, as novas versões entram pelo próprio aparelho, sem regravar nada
 - Um leitor de cartão e um PC com Windows.
 - O programa **balenaEtcher** (grátis): https://etcher.balena.io
 
-## Passo 1 — Baixar a imagem
+## Passo 1: Baixar a imagem
 
-Na página de [Releases](../../releases), baixe a imagem da versão mais recente —
-`anbernext-vX.Y-rg353v.img.gz`. É um arquivo comprimido (fica pequeno, ~400 MB); **você
+Na página de [Releases](../../releases), baixe a imagem da versão mais recente, `anbernext-vX.Y-rg353v.img.gz`. É um arquivo comprimido (fica pequeno, ~400 MB); **você
 não precisa descompactar**, o Etcher faz isso sozinho na hora de gravar.
 
 Se quiser conferir que o download não veio corrompido, compare o checksum (`.sha256` ao
@@ -29,7 +28,7 @@ Get-FileHash .\anbernext-vX.Y-rg353v.img.gz -Algorithm SHA256
 
 O número tem que bater com o conteúdo do arquivo `.sha256`.
 
-## Passo 2 — Gravar no cartão
+## Passo 2: Gravar no cartão
 
 1. Coloque o cartão de boot no leitor.
 2. Abra o **balenaEtcher**.
@@ -38,23 +37,23 @@ O número tem que bater com o conteúdo do arquivo `.sha256`.
 4. **Select target** → escolha o cartão. **Confira o tamanho** para não gravar no disco
    errado.
 5. **Flash!** e espere terminar a gravação e a verificação.
-6. Quando o Windows pedir para "formatar o disco" ao final, **cancele** — isso é normal,
+6. Quando o Windows pedir para "formatar o disco" ao final, **cancele**, isso é normal,
    ele só não entende as partições do Linux. Pode retirar o cartão com segurança.
 
-## Passo 3 — Primeira inicialização
+## Passo 3: Primeira inicialização
 
 1. Com o aparelho **desligado**, coloque o cartão de boot no **slot de cima** (TF1).
 2. Ligue. Em alguns segundos o AnberNext (NextUI) abre.
 
-Pronto — esse slot de cima é o AnberNext.
+Pronto, esse slot de cima é o AnberNext.
 
-## Passo 4 — Voltar para o Android quando quiser
+## Passo 4: Voltar para o Android quando quiser
 
 Com o aparelho desligado, **segure o botão `F` (MENU) enquanto liga**. Ele passa para o
 Android de fábrica. Na próxima vez que ligar sem segurar o `F`, volta para o AnberNext.
 É o mesmo gesto dos cartões de dois sistemas da Anbernic.
 
-## Passo 5 (opcional) — Compartilhar seu cartão de jogos
+## Passo 5 (opcional): Compartilhar seu cartão de jogos
 
 Se você usa um cartão de jogos no TrimUI Brick, coloque-o no **slot de baixo** (TF2) do
 RG353V. O AnberNext lê esse cartão **sem escrever nele**, então seus saves, capas e listas
