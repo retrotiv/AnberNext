@@ -32,21 +32,19 @@
   </g>
 
   <!-- wordmark -->
-  <g transform="translate(188,0)">
-    <!-- leading tech bracket -->
-    <path d="M-6,66 L-18,66 L-18,146 L-6,146" fill="none" stroke="#ffab2e" stroke-opacity="0.55" stroke-width="4"/>
-    <!-- ANBER: futuristic, wide, amber, glowing -->
-    <text x="8" y="136" filter="url(#glow)"
+  <g transform="translate(190,0)">
+    <!-- ANBER: futuristic, amber, glowing — fixed advance so it fits in any font -->
+    <text x="6" y="134" filter="url(#glow)"
           font-family="'Eurostile','Bank Gothic','Arial Narrow','Franklin Gothic Medium',Impact,sans-serif"
-          font-size="92" font-weight="800" letter-spacing="6" fill="url(#amber)"
-          transform="skewX(-5)">ANBER</text>
+          font-size="84" font-weight="800" fill="url(#amber)"
+          textLength="326" lengthAdjust="spacingAndGlyphs" transform="skewX(-5)">ANBER</text>
     <!-- Next: clean, minimalist, like the original -->
-    <text x="356" y="136"
+    <text x="346" y="134"
           font-family="'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif"
-          font-size="92" font-weight="400" letter-spacing="1" fill="#f4f4f6">Next</text>
-    <!-- trailing tick + baseline rule -->
-    <path d="M548,146 L560,146 L560,66" fill="none" stroke="#ffab2e" stroke-opacity="0.55" stroke-width="4"/>
-    <line x1="10" y1="162" x2="556" y2="162" stroke="#ffab2e" stroke-opacity="0.25" stroke-width="2"/>
-    <text x="10" y="186" font-family="'Segoe UI',Arial,sans-serif" font-size="15" letter-spacing="6" fill="#c89a5a">NEXTUI · RG353V</text>
+          font-size="84" font-weight="400" fill="#f4f4f6"
+          textLength="198" lengthAdjust="spacingAndGlyphs">Next</text>
+    <!-- baseline rule + subtitle -->
+    <line x1="8" y1="156" x2="544" y2="156" stroke="#ffab2e" stroke-opacity="0.25" stroke-width="2"/>
+    <text x="8" y="182" font-family="'Segoe UI',Arial,sans-serif" font-size="15" letter-spacing="6" fill="#c89a5a">NEXTUI · RG353V</text>
   </g>
 </svg>
