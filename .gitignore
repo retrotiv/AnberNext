@@ -1,0 +1,16 @@
+# build artifacts and large images never belong in the repo — they ride on releases
+*.img
+*.img.*
+*.zip
+*.7z
+*.xz
+*.gz
+*.sha256
+build/
+out/
+staging/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
