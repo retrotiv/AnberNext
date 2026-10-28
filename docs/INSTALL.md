@@ -16,15 +16,15 @@ disso, as novas versões entram pelo próprio aparelho, sem regravar nada
 
 ## Passo 1 — Baixar a imagem
 
-Na página de [Releases](../../releases), baixe o arquivo de imagem da versão mais recente
-(`anbernext-vX.Y-rg353v.img`, ou as partes `.img.001`, `.img.002`… se a imagem vier
-dividida — nesse caso o guia da release explica como juntar).
+Na página de [Releases](../../releases), baixe a imagem da versão mais recente —
+`anbernext-vX.Y-rg353v.img.gz`. É um arquivo comprimido (fica pequeno, ~400 MB); **você
+não precisa descompactar**, o Etcher faz isso sozinho na hora de gravar.
 
-Confira que o download não veio corrompido comparando o checksum (`.sha256` ao lado do
-arquivo). No PowerShell:
+Se quiser conferir que o download não veio corrompido, compare o checksum (`.sha256` ao
+lado do arquivo). No PowerShell:
 
 ```powershell
-Get-FileHash .\anbernext-vX.Y-rg353v.img -Algorithm SHA256
+Get-FileHash .\anbernext-vX.Y-rg353v.img.gz -Algorithm SHA256
 ```
 
 O número tem que bater com o conteúdo do arquivo `.sha256`.
@@ -33,7 +33,8 @@ O número tem que bater com o conteúdo do arquivo `.sha256`.
 
 1. Coloque o cartão de boot no leitor.
 2. Abra o **balenaEtcher**.
-3. **Flash from file** → escolha a imagem baixada.
+3. **Flash from file** → escolha a imagem baixada (o `.img.gz`; o Etcher descompacta
+   sozinho).
 4. **Select target** → escolha o cartão. **Confira o tamanho** para não gravar no disco
    errado.
 5. **Flash!** e espere terminar a gravação e a verificação.

@@ -53,16 +53,17 @@ de cada arquivo, que o aparelho também confere).
 gh release create v3.15 \
   ./dist/anbernext-v3.15-update.zip \
   ./dist/anbernext-v3.15-update.zip.sha256 \
-  anbernext-v3.15-rg353v.img \
-  anbernext-v3.15-rg353v.img.sha256 \
+  anbernext-v3.15-rg353v.img.gz \
+  anbernext-v3.15-rg353v.img.gz.sha256 \
   --repo retrotiv/AnberNext \
   --title "AnberNext v3.15" \
   --notes-file docs/release-notes/v3.15.md
 ```
 
-> A imagem completa costuma passar de 2 GB, que é o limite por arquivo do GitHub. Se
-> passar, divida em partes de ~1,9 GB (`split -b 1900m imagem.img anbernext-v3.15-rg353v.img.`)
-> e anexe as partes; o guia de instalação explica como juntá-las.
+> A imagem crua tem ~4 GB e passaria do limite de 2 GB por arquivo do GitHub. Por isso
+> subimos **comprimida** (`gzip -c imagem.img > anbernext-v3.15-rg353v.img.gz`): fica em
+> ~400 MB (a imagem é quase toda espaço vazio) e o balenaEtcher grava o `.gz` direto, sem
+> o usuário precisar descompactar.
 
 ### 3. Rota de atualização
 
