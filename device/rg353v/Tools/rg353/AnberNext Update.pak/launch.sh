@@ -189,6 +189,11 @@ fi
 # ---------------------------------------------------------------------------------------
 BDIR="$BACKUP/$CURRENT-$(date '+%Y%m%d%H%M%S')"
 mkdir -p "$BDIR"
+# preserve the current release tag so a rollback restores both the files AND the version
+if [ -f "$RELFILE" ]; then
+	mkdir -p "$BDIR/.system/rg353"
+	cp -p "$RELFILE" "$BDIR/.system/rg353/anbernext-release.txt" 2>/dev/null
+fi
 say "AnberNext: applying $LATEST..."
 
 ( cd "$STAGE" && find . -type f ! -name 'anbernext-release.txt' ! -name 'MANIFEST.sha256' ) | while read -r f; do
