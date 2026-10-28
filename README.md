@@ -12,6 +12,10 @@
   <a href="../../releases">Releases</a>
 </p>
 
+<p align="center">
+  <a href="https://ko-fi.com/retrotiv"><img src="https://img.shields.io/badge/%E2%98%95%20Support%20on-Ko--fi-ff5e5b?logo=ko-fi&logoColor=white" alt="Support retrotiv on Ko-fi"></a>
+</p>
+
 ---
 
 ## What this is
