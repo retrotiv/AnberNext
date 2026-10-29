@@ -58,7 +58,11 @@ trap 'ui_stop' EXIT INT TERM
 BB=""
 [ -f "$PAKDIR/bin/busybox" ] && BB="$PAKDIR/bin/busybox"
 [ -z "$BB" ] && command -v busybox >/dev/null 2>&1 && BB="busybox"
-HAVE_SHA=0; command -v sha256sum >/dev/null 2>&1 && HAVE_SHA=1
+# sha256sum: o do aparelho se existir, senao o do busybox embutido
+SHA=""; HAVE_SHA=0
+if command -v sha256sum >/dev/null 2>&1; then SHA="sha256sum"; HAVE_SHA=1
+elif [ -n "$BB" ]; then SHA="$BB sha256sum"; HAVE_SHA=1
+fi
 
 # abre o pacote entrando na pasta (sem depender do -C do tar)
 extract_pkg() {
@@ -146,7 +150,7 @@ if [ "$HAVE_SHA" -eq 1 ] && [ -n "$SHA_URL" ]; then
 	ui_text "Verificando..."
 	$GET "$DL/pkg.sha256" "$SHA_URL" 2>>"$LOG"
 	WANT="$(awk '{print $1}' "$DL/pkg.sha256" | head -1)"
-	HAVE="$(sha256sum "$PKG" | awk '{print $1}')"
+	HAVE="$($SHA "$PKG" | awk '{print $1}')"
 	if [ -n "$WANT" ] && [ "$WANT" != "$HAVE" ]; then
 		result "checksum nao bate (want $WANT got $HAVE)"
 		ui_final "Download corrompido. Tente de novo." 6
@@ -185,7 +189,7 @@ if [ -s "$DL/pathcheck.txt" ]; then
 fi
 
 if [ "$HAVE_SHA" -eq 1 ] && [ -f "$STAGE/MANIFEST.sha256" ]; then
-	( cd "$STAGE" && sha256sum -c MANIFEST.sha256 ) >>"$LOG" 2>&1 || { result "manifest falhou"; ui_final "Arquivo nao conferiu. Recusado." 6; exit 1; }
+	( cd "$STAGE" && $SHA -c MANIFEST.sha256 ) >>"$LOG" 2>&1 || { result "manifest falhou"; ui_final "Arquivo nao conferiu. Recusado." 6; exit 1; }
 	log "manifesto verificado"
 fi
 ui_prog 80
