@@ -1,32 +1,30 @@
 #!/bin/sh
-# AnberNext Update.pak — in-device over-the-air updater for the RG353V.
+# AnberNext Update.pak - atualizador pelo proprio aparelho (RG353V).
 #
-# It pulls the latest AnberNext release from retrotiv/AnberNext over Wi-Fi and applies it
-# ONLY to the NextUI card partition this pak lives on. It can never reach the shared games
-# card or the console's internal (Android) storage — see the safety section below.
+# Baixa a ultima versao do AnberNext (retrotiv/AnberNext) pelo Wi-Fi e aplica
+# SOMENTE na particao do cartao de boot onde este pak vive. Nunca alcanca o
+# cartao de jogos nem a memoria interna (Android) do console - ver as travas
+# de seguranca abaixo.
 #
-# This is deliberately the ONLY update route for AnberNext: we do not use NextUI's upstream
-# auto-update. The route points at the project's own repository.
+# Esta e de proposito a UNICA rota de atualizacao do AnberNext: nao usamos o
+# auto-update do NextUI original. A rota aponta para o repositorio do projeto.
 
 set -u
 
 # ---------------------------------------------------------------------------------------
-# where things are
+# onde as coisas estao
 # ---------------------------------------------------------------------------------------
 REPO="retrotiv/AnberNext"
 API="https://api.github.com/repos/${REPO}/releases/latest"
 
 PAKDIR="$(cd "$(dirname "$0")" && pwd)"
 
-# The top-level dirs a release is ever allowed to touch. Anything in an update package
-# outside this list is refused. These are all NextUI-layer dirs on the boot card.
+# As pastas de topo que uma release pode tocar. Qualquer coisa fora disso e recusada.
 ALLOWED_TOP=".system Tools Emus .tmp_update"
 
 # ---------------------------------------------------------------------------------------
-# find the boot-card root, and prove it is the boot card and nothing else
+# achar a raiz do cartao de boot e provar que e o cartao de boot, nada mais
 # ---------------------------------------------------------------------------------------
-# Walk up from the pak until we hit the partition root that holds .system/rg353. That root
-# is the only place we will ever write. We never derive it from a mount guess.
 find_sdcard() {
 	d="$PAKDIR"
 	i=0
@@ -43,126 +41,182 @@ find_sdcard() {
 	return 1
 }
 
-SDCARD="$(find_sdcard)" || { echo "FATAL: could not locate the AnberNext boot card (.system/rg353)"; exit 1; }
-SDCARD="$(cd "$SDCARD" && pwd -P)"   # resolve to a real, canonical path
+SDCARD="$(find_sdcard)" || SDCARD=""
+[ -n "$SDCARD" ] && SDCARD="$(cd "$SDCARD" && pwd -P)"
 
-LOGDIR="$SDCARD/.userdata/rg353/logs"
-WORK="$SDCARD/.anbernext"
+# ---------------------------------------------------------------------------------------
+# tela: usa o show2.elf (apresentador do proprio NextUI, com fonte embutida).
+# Tenta primeiro a copia embutida no pak (autossuficiente), depois as do sistema,
+# depois o PATH. Se nenhum existir, cai so no log, mas nunca trava.
+# ---------------------------------------------------------------------------------------
+SHOW=""
+for c in "$PAKDIR/bin/show2.elf" \
+         "$SDCARD/.system/rg353/bin/show2.elf" \
+         "$SDCARD/.tmp_update/rg353/show2.elf"; do
+	[ -n "$c" ] && [ -x "$c" ] && { SHOW="$c"; break; }
+done
+if [ -z "$SHOW" ] && command -v show2.elf >/dev/null 2>&1; then SHOW="show2.elf"; fi
+
+LOGO=""
+for c in "$PAKDIR/res/logo.png" \
+         "$SDCARD/.system/res/logo.png" \
+         "$SDCARD/.system/rg353/res/logo.png"; do
+	[ -n "$c" ] && [ -f "$c" ] && { LOGO="$c"; break; }
+done
+
+FIFO="/tmp/show2.fifo"
+BG="0x1a1205"
+FG="0xf2a53a"
+UI_PID=""
+
+ui_start() {   # tela de progresso que fica no ar o tempo todo
+	[ -n "$SHOW" ] && [ -n "$LOGO" ] || return 0
+	rm -f "$FIFO" 2>/dev/null
+	"$SHOW" --mode=daemon --image="$LOGO" --bgcolor="$BG" --fontcolor="$FG" --text="$1" >/dev/null 2>&1 &
+	UI_PID=$!
+	n=0
+	while [ "$n" -lt 15 ]; do
+		[ -p "$FIFO" ] && break
+		sleep 0.2
+		n=$((n + 1))
+	done
+}
+ui_text() { [ -n "$UI_PID" ] && [ -p "$FIFO" ] && printf 'TEXT:%s\n' "$1" >"$FIFO" 2>/dev/null; return 0; }
+ui_prog() { [ -n "$UI_PID" ] && [ -p "$FIFO" ] && printf 'PROGRESS:%s\n' "$1" >"$FIFO" 2>/dev/null; return 0; }
+ui_stop() {
+	[ -n "$UI_PID" ] || return 0
+	printf 'QUIT\n' >"$FIFO" 2>/dev/null
+	wait "$UI_PID" 2>/dev/null
+	UI_PID=""
+}
+# mensagem final de tela cheia que o usuario le, depois volta ao menu
+ui_final() {
+	ui_stop
+	[ -n "$SHOW" ] && [ -n "$LOGO" ] || return 0
+	"$SHOW" --mode=simple --image="$LOGO" --bgcolor="$BG" --fontcolor="$FG" --text="$1" --timeout="${2:-4}" >/dev/null 2>&1
+}
+trap 'ui_stop' EXIT INT TERM
+
+# ---------------------------------------------------------------------------------------
+# log / resultado (diagnostico, alem da tela)
+# ---------------------------------------------------------------------------------------
+if [ -n "$SDCARD" ]; then
+	LOGDIR="$SDCARD/.userdata/rg353/logs"
+	WORK="$SDCARD/.anbernext"
+else
+	LOGDIR="/tmp"; WORK="/tmp/.anbernext"
+fi
 DL="$WORK/download"
 STAGE="$WORK/staging"
 BACKUP="$WORK/backup"
-RELFILE="$SDCARD/.system/rg353/anbernext-release.txt"   # machine tag, e.g. v3.15
-HUMANFILE="$SDCARD/.system/rg353/anbernext-version.txt"  # human string shown in About
+RELFILE="$SDCARD/.system/rg353/anbernext-release.txt"
+HUMANFILE="$SDCARD/.system/rg353/anbernext-version.txt"
 RESULT="$WORK/last-result.txt"
-
 mkdir -p "$LOGDIR" "$DL" "$STAGE" "$BACKUP" 2>/dev/null
 LOG="$LOGDIR/anbernext-ota.log"
-
-log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >>"$LOG"; echo "$*"; }
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >>"$LOG" 2>/dev/null; }
 result() { printf '%s\n' "$*" >"$RESULT" 2>/dev/null; log "$*"; }
 
-# best-effort on-screen message: use a NextUI presenter binary if one is present, otherwise
-# just the log + result file (finalized during on-device testing).
-say() {
-	for p in "$SDCARD/.system/rg353/bin/minui-presenter" "$SDCARD/.system/rg353/bin/show.elf"; do
-		if [ -x "$p" ]; then "$p" --message "$*" --timeout 2 >/dev/null 2>&1 && return 0; fi
-	done
-	log "$*"
-}
-
 # ---------------------------------------------------------------------------------------
-# HARD SAFETY GATES — refuse to run unless the target is provably the boot card
+# TRAVAS DE SEGURANCA - so roda se o alvo for provadamente o cartao de boot
 # ---------------------------------------------------------------------------------------
-abort() { result "ABORTED (safety): $*"; exit 1; }
+abort() { result "ABORTADO (seguranca): $*"; ui_final "Nao consegui achar o cartao do AnberNext com seguranca. Nada foi alterado." 5; exit 1; }
 
+[ -n "$SDCARD" ] || abort "nao localizei o cartao de boot (.system/rg353)"
 case "$SDCARD" in
-	"" | "/" | "/mnt" | "/media" ) abort "boot-card path looks wrong: '$SDCARD'";;
+	"" | "/" | "/mnt" | "/media" ) abort "caminho do cartao suspeito: '$SDCARD'";;
 esac
-# the resolved root must still carry the NextUI layer
-[ -d "$SDCARD/.system/rg353" ] || abort "'$SDCARD' is not the AnberNext boot card"
-# never, ever operate on a path that smells like the shared games card or internal memory
+[ -d "$SDCARD/.system/rg353" ] || abort "'$SDCARD' nao e o cartao do AnberNext"
 case "$SDCARD" in
-	*sd2* | *SD2* | *mmcblk0* | *android* | *ANDROID* ) abort "refusing to touch '$SDCARD'";;
+	*sd2* | *SD2* | *mmcblk0* | *android* | *ANDROID* ) abort "recuso tocar em '$SDCARD'";;
 esac
-# refuse if the games card and the boot card somehow resolved to the same place
 for other in /mnt/sd2 /mnt/SDCARD2 /media/sd2; do
 	[ -e "$other" ] || continue
 	o="$(cd "$other" 2>/dev/null && pwd -P)" || continue
-	[ "$o" = "$SDCARD" ] && abort "boot card resolves to the games card ($other)"
+	[ "$o" = "$SDCARD" ] && abort "o cartao de boot aponta para o de jogos ($other)"
 done
 
 # ---------------------------------------------------------------------------------------
-# tools
+# tela inicial - a partir daqui sempre ha algo visivel
+# ---------------------------------------------------------------------------------------
+ui_start "AnberNext: procurando atualizacao..."
+
+# ---------------------------------------------------------------------------------------
+# ferramentas
 # ---------------------------------------------------------------------------------------
 if command -v curl >/dev/null 2>&1; then GET="curl -fsSL --connect-timeout 15 -o"; GETS="curl -fsSL --connect-timeout 15";
 elif command -v wget >/dev/null 2>&1; then GET="wget -q -O"; GETS="wget -q -O -";
-else abort "no curl or wget on the device"; fi
-command -v unzip >/dev/null 2>&1 || abort "no unzip on the device"
-command -v sha256sum >/dev/null 2>&1 || abort "no sha256sum on the device"
+else result "sem curl/wget"; ui_final "Faltam ferramentas de rede no aparelho. Atualize por outra via." 6; exit 1; fi
+command -v unzip >/dev/null 2>&1 || { result "sem unzip"; ui_final "Falta o unzip no aparelho." 6; exit 1; }
+command -v sha256sum >/dev/null 2>&1 || { result "sem sha256sum"; ui_final "Falta o sha256sum no aparelho." 6; exit 1; }
 
 # ---------------------------------------------------------------------------------------
-# check network
+# checar rede
 # ---------------------------------------------------------------------------------------
-say "AnberNext: checking for updates..."
-$GETS "https://api.github.com" >/dev/null 2>&1 || { result "No internet. Connect Wi-Fi and try again."; exit 0; }
+ui_prog 5
+$GETS "https://api.github.com" >/dev/null 2>&1 || { result "sem internet"; ui_final "Sem internet. Conecte o Wi-Fi e tente de novo." 6; exit 0; }
 
 # ---------------------------------------------------------------------------------------
-# read the latest release
+# ler a ultima release
 # ---------------------------------------------------------------------------------------
+ui_text "Lendo a ultima versao publicada..."
+ui_prog 10
 JSON="$DL/latest.json"
-$GET "$JSON" "$API" 2>>"$LOG" || { result "Could not reach the release server."; exit 0; }
+$GET "$JSON" "$API" 2>>"$LOG" || { result "release server inacessivel"; ui_final "Nao consegui falar com o servidor de versoes. Tente mais tarde." 6; exit 0; }
 
-# tag_name
 LATEST="$(sed -n 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$JSON" | head -1)"
-[ -n "$LATEST" ] || { result "No release found yet in $REPO."; exit 0; }
+[ -n "$LATEST" ] || { result "nenhuma release"; ui_final "Nenhuma versao encontrada ainda." 6; exit 0; }
 
-# asset urls (browser_download_url lines), pick the update zip and its checksum
 ZIP_URL="$(grep -o '"browser_download_url"[^,]*' "$JSON" | sed 's/.*"\(https[^"]*\)".*/\1/' | grep -i 'update\.zip$' | head -1)"
 SHA_URL="$(grep -o '"browser_download_url"[^,]*' "$JSON" | sed 's/.*"\(https[^"]*\)".*/\1/' | grep -i 'update\.zip\.sha256$' | head -1)"
-[ -n "$ZIP_URL" ] || { result "Release $LATEST has no update package."; exit 0; }
+[ -n "$ZIP_URL" ] || { result "release sem pacote"; ui_final "A versao $LATEST ainda nao tem pacote de atualizacao." 6; exit 0; }
 
-CURRENT="unknown"
+CURRENT="desconhecida"
 [ -f "$RELFILE" ] && CURRENT="$(tr -d ' \t\r\n' <"$RELFILE")"
 log "current=$CURRENT latest=$LATEST"
 if [ "$CURRENT" = "$LATEST" ]; then
-	result "Already up to date ($CURRENT)."
+	result "ja atualizado ($CURRENT)"
+	ui_final "Ja esta na versao mais nova ($CURRENT)." 5
 	exit 0
 fi
 
 # ---------------------------------------------------------------------------------------
-# download + verify
+# baixar + verificar
 # ---------------------------------------------------------------------------------------
-say "AnberNext: downloading $LATEST..."
+ui_text "Baixando $LATEST..."
+ui_prog 20
 ZIP="$DL/update.zip"
 rm -f "$ZIP"
-$GET "$ZIP" "$ZIP_URL" 2>>"$LOG" || { result "Download failed."; exit 0; }
+$GET "$ZIP" "$ZIP_URL" 2>>"$LOG" || { result "download falhou"; ui_final "O download falhou. Verifique o Wi-Fi e tente de novo." 6; exit 0; }
+ui_prog 55
 
-if [ -n "$SHA_URL" ]; then
-	$GET "$DL/update.zip.sha256" "$SHA_URL" 2>>"$LOG"
-	WANT="$(awk '{print $1}' "$DL/update.zip.sha256" | head -1)"
-	HAVE="$(sha256sum "$ZIP" | awk '{print $1}')"
-	if [ -z "$WANT" ] || [ "$WANT" != "$HAVE" ]; then
-		result "Checksum mismatch — download rejected (want $WANT, got $HAVE)."
-		exit 1
-	fi
-	log "checksum ok ($HAVE)"
-else
-	result "Release $LATEST has no checksum; refusing to apply."
+if [ -z "$SHA_URL" ]; then
+	result "sem checksum"
+	ui_final "A versao $LATEST nao trouxe verificacao. Por seguranca, nao apliquei." 6
 	exit 1
 fi
+ui_text "Verificando o download..."
+$GET "$DL/update.zip.sha256" "$SHA_URL" 2>>"$LOG"
+WANT="$(awk '{print $1}' "$DL/update.zip.sha256" | head -1)"
+HAVE="$(sha256sum "$ZIP" | awk '{print $1}')"
+if [ -z "$WANT" ] || [ "$WANT" != "$HAVE" ]; then
+	result "checksum nao bate (want $WANT got $HAVE)"
+	ui_final "O arquivo baixado nao conferiu. Nada foi alterado. Tente de novo." 6
+	exit 1
+fi
+log "checksum ok ($HAVE)"
+ui_prog 65
 
 # ---------------------------------------------------------------------------------------
-# extract to staging and validate EVERY path before touching the card
+# extrair e validar TODOS os caminhos antes de tocar no cartao
 # ---------------------------------------------------------------------------------------
 rm -rf "$STAGE"; mkdir -p "$STAGE"
-unzip -oq "$ZIP" -d "$STAGE" 2>>"$LOG" || { result "Could not unpack the update."; exit 1; }
+unzip -oq "$ZIP" -d "$STAGE" 2>>"$LOG" || { result "unzip falhou"; ui_final "Nao consegui abrir o pacote. Tente de novo." 6; exit 1; }
 
-# the package must carry its own release tag and it must match the release we fetched
 PKG_TAG=""
 [ -f "$STAGE/anbernext-release.txt" ] && PKG_TAG="$(tr -d ' \t\r\n' <"$STAGE/anbernext-release.txt")"
-[ "$PKG_TAG" = "$LATEST" ] || { result "Package tag '$PKG_TAG' != release '$LATEST' — rejected."; exit 1; }
+[ "$PKG_TAG" = "$LATEST" ] || { result "tag do pacote '$PKG_TAG' != release '$LATEST'"; ui_final "O pacote nao confere com a versao. Nada foi alterado." 6; exit 1; }
 
-# validate paths: relative only, no '..', top dir in the allow-list, nothing escaping SDCARD
 bad=0
 ( cd "$STAGE" && find . -type f ! -name 'anbernext-release.txt' ! -name 'MANIFEST.sha256' ) | while read -r f; do
 	rel="${f#./}"
@@ -174,53 +228,49 @@ bad=0
 	esac
 done >"$DL/pathcheck.txt"
 if [ -s "$DL/pathcheck.txt" ]; then
-	result "Update rejected — unsafe paths: $(head -3 "$DL/pathcheck.txt" | tr '\n' ' ')"
+	result "caminhos inseguros: $(head -3 "$DL/pathcheck.txt" | tr '\n' ' ')"
+	ui_final "O pacote tinha caminhos fora do permitido. Recusado, nada mudou." 6
 	exit 1
 fi
 
-# per-file manifest (optional but preferred): verify each file's hash
 if [ -f "$STAGE/MANIFEST.sha256" ]; then
-	( cd "$STAGE" && sha256sum -c MANIFEST.sha256 ) >>"$LOG" 2>&1 || { result "A file in the package failed its checksum — rejected."; exit 1; }
-	log "per-file manifest verified"
+	( cd "$STAGE" && sha256sum -c MANIFEST.sha256 ) >>"$LOG" 2>&1 || { result "manifest falhou"; ui_final "Um arquivo do pacote nao conferiu. Recusado, nada mudou." 6; exit 1; }
+	log "manifesto por arquivo verificado"
 fi
+ui_prog 80
 
 # ---------------------------------------------------------------------------------------
-# apply: back up every file we are about to replace, then copy in
+# aplicar: faz backup de cada arquivo que vai trocar, depois copia
 # ---------------------------------------------------------------------------------------
+ui_text "Aplicando $LATEST..."
 BDIR="$BACKUP/$CURRENT-$(date '+%Y%m%d%H%M%S')"
 mkdir -p "$BDIR"
-# preserve the current release tag so a rollback restores both the files AND the version
 if [ -f "$RELFILE" ]; then
 	mkdir -p "$BDIR/.system/rg353"
 	cp -p "$RELFILE" "$BDIR/.system/rg353/anbernext-release.txt" 2>/dev/null
 fi
-say "AnberNext: applying $LATEST..."
 
 ( cd "$STAGE" && find . -type f ! -name 'anbernext-release.txt' ! -name 'MANIFEST.sha256' ) | while read -r f; do
 	rel="${f#./}"
 	dest="$SDCARD/$rel"
-	# final paranoid check: dest must be inside SDCARD
 	destdir="$(dirname "$dest")"
 	mkdir -p "$destdir" 2>/dev/null
 	rdd="$(cd "$destdir" 2>/dev/null && pwd -P)" || { echo "SKIP $rel"; continue; }
 	case "$rdd/" in "$SDCARD/"*) : ;; *) echo "ESCAPE $rel"; continue;; esac
-	# back up the existing file
 	if [ -f "$dest" ]; then
 		mkdir -p "$BDIR/$(dirname "$rel")" 2>/dev/null
 		cp -p "$dest" "$BDIR/$rel" 2>/dev/null
 	fi
 	cp -p "$STAGE/$rel" "$dest" 2>>"$LOG"
 done
+ui_prog 95
 
-# record the new version
 printf '%s\n' "$LATEST" >"$RELFILE"
-# human line for the About screen, keep it readable
 printf '%s (atualizado pelo aparelho em %s)\n' "$LATEST" "$(date '+%Y-%m-%d')" >"$HUMANFILE"
 
-# tidy the big download, keep the backup for rollback
 rm -f "$ZIP" "$DL/update.zip.sha256"
-
 sync
-result "Updated to $LATEST. Backup kept at ${BDIR#$SDCARD/}. Restart to use it."
-say "AnberNext updated to $LATEST — restart the device."
+ui_prog 100
+result "atualizado para $LATEST (backup em ${BDIR#$SDCARD/})"
+ui_final "Atualizado para $LATEST. Reinicie o aparelho para usar." 6
 exit 0
