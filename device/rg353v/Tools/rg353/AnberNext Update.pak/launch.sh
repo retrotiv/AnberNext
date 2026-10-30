@@ -207,7 +207,18 @@ if [ -f "$RELFILE" ]; then mkdir -p "$BDIR/.system/rg353"; cp -p "$RELFILE" "$BD
 	rdd="$(cd "$destdir" 2>/dev/null && pwd -P)" || { echo "SKIP $rel"; continue; }
 	case "$rdd/" in "$SDCARD/"*) : ;; *) echo "ESCAPE $rel"; continue;; esac
 	if [ -f "$dest" ]; then mkdir -p "$BDIR/$(dirname "$rel")" 2>/dev/null; cp -p "$dest" "$BDIR/$rel" 2>/dev/null; fi
-	cp -p "$STAGE/$rel" "$dest" 2>>"$LOG"
+	# Grava num arquivo ao lado e renomeia por cima. Um programa em execucao
+	# (o player residente) nao pode ser sobrescrito com cp direto -- o sistema
+	# recusa com "Text file busy" -- mas aceita a troca por renomeacao: o
+	# processo antigo continua no arquivo antigo ate o aparelho reiniciar, e o
+	# arquivo novo ja fica no lugar para o proximo boot.
+	tmp="$destdir/.anbernext-new.$$"
+	if cp -p "$STAGE/$rel" "$tmp" 2>>"$LOG"; then
+		mv -f "$tmp" "$dest" 2>>"$LOG" || { rm -f "$tmp" 2>/dev/null; cp -p "$STAGE/$rel" "$dest" 2>>"$LOG"; }
+	else
+		rm -f "$tmp" 2>/dev/null
+		cp -p "$STAGE/$rel" "$dest" 2>>"$LOG"
+	fi
 done
 ui_prog 95
 
