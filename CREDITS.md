@@ -33,6 +33,15 @@ community. Credit to their authors:
 - **Anbernic**, for the RG353V hardware and its stock dual-boot mechanism, which the `F`
   toggle mirrors.
 
+## The Anbernic H700 line
+
+- **Knulli** (https://knulli.org · https://github.com/knulli-cfw), whose images for each H700
+  model provide the boot loaders, kernels and modules AnberNext's H700 cards boot with, and whose
+  builds of RetroArch, PPSSPP, DraStic and the cores for the heavier systems run on them.
+- **Batocera** (https://batocera.org), the distribution Knulli is built on.
+- **DraStic**, the Nintendo DS emulator by Exophase, in the H700 build Knulli ships.
+- **Anbernic**, for the H700 hardware.
+
 ---
 
 This repository is not affiliated with or endorsed by any of the above, and all trademarks
