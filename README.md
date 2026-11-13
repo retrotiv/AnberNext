@@ -123,4 +123,4 @@ deliberate and documented, and it only ever touches the boot card's own loader a
 
 Built on the work of the NextUI and MinUI authors, the dArkOS project (RG353V) and the Knulli
 project (H700 line: boot loaders, kernels and the emulators for the heavier systems). See
-[CREDITS.md](CREDITS.md). The handhelds on this page are our own drawings, not the makers' photos.
+[CREDITS.md](CREDITS.md). Handheld photos: Anbernic. AnberNext is a community project, not affiliated with Anbernic.
