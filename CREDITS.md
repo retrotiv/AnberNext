@@ -12,6 +12,14 @@ by the people and projects below.
   **Shaun Inman** (https://github.com/shauninman). The NextUI lineage also runs through
   **ro8inmorgan**'s MinUI work (https://github.com/ro8inmorgan/MinUI).
 
+## The music player
+
+- **Boombrick**, the music player app by **ujjwal313** (https://github.com/ujjwal313/boombrick),
+  released under the GNU GPL v3. AnberNext's music player, **AnberTunes**
+  (https://github.com/retrotiv/AnberTunes), is a fork of it: the app and the hard work behind it
+  are theirs; AnberTunes adds the AnberNext look and the now-playing card shown on the home screen
+  and in games.
+
 ## Paks and tools from the NextUI ecosystem
 
 The AnberNext image includes, or is designed to work alongside, tools from the NextUI
