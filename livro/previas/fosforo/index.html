@@ -1,0 +1,1486 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AnberNext Fósforo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Outfit:wght@300;400;500;600&display=swap">
+<style>
+  /* Layout: the same showroom as Bloco and Neon. Every Fósforo screen at the RG353V's own 640x480,
+     animated, grouped by where it lives; the page is a dark shelf with a faint phosphor glow. */
+  :root{
+    --bg:#040805; --panel:#08110b;
+    --ink:#e6fff0; --muted:#8fb79c; --faint:#557a62;
+    --ph:#48ff8c; --ph-hi:#b6ffd1; --ph-dim:rgba(72,255,140,.16);
+    --line:rgba(72,255,140,.16);
+    --display:'VT323',ui-monospace,monospace;
+    --mono:'Share Tech Mono',ui-monospace,monospace;
+    --body:'Outfit',system-ui,sans-serif;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1000px 560px at 85% -10%,rgba(72,255,140,.07),transparent 60%),radial-gradient(800px 600px at 0% 0%,rgba(72,255,140,.04),transparent 55%),var(--bg);
+    color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;
+    padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  header.top{padding:48px 0 28px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:end}
+  @media(max-width:860px){header.top{grid-template-columns:1fr}}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .brand svg{width:34px;height:34px;filter:drop-shadow(0 0 6px rgba(72,255,140,.6))}
+  .brand b{font-family:var(--mono);font-weight:400;font-size:18px;letter-spacing:.06em}
+  .brand b i{font-style:normal;color:var(--ph)}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--ph);margin:0 0 12px}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(42px,7vw,72px);line-height:.95;margin:0 0 16px;text-wrap:balance;text-shadow:0 0 18px rgba(72,255,140,.35)}
+  h1 span{color:var(--ph)}
+  .lead{color:var(--muted);font-size:17px;line-height:1.6;max-width:62ch;margin:0}
+  .lead b{color:var(--ink);font-weight:600}
+
+  .path{display:flex;flex-wrap:wrap;align-items:center;gap:10px 8px}
+  .cap{font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--ph);border:1px solid rgba(72,255,140,.55);padding:8px 12px}
+  .cap.on{background:var(--ph);color:#04140a;box-shadow:0 0 14px rgba(72,255,140,.45)}
+  .path .sep{color:var(--faint);font-family:var(--mono)}
+  .switch p{color:var(--muted);font-size:14.5px;line-height:1.55;margin:18px 0 0;max-width:46ch}
+  .switch p b{color:var(--ink);font-weight:600}
+
+  .motifs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:12px}
+  .motif h3{font-family:var(--mono);font-weight:400;font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;color:var(--ph-hi)}
+  .motif p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+
+  section.group{padding:34px 0 8px}
+  .ghead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:6px}
+  .ghead h2{font-family:var(--display);font-weight:400;font-size:clamp(30px,4vw,40px);margin:0;line-height:1}
+  .ghead h2::before{content:'> ';color:var(--faint)}
+  .ghead .who{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ph)}
+  .gsub{color:var(--muted);font-size:15px;line-height:1.55;margin:0 0 20px;max-width:72ch}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 26px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  figure{margin:0;min-width:0}
+  .bz{background:linear-gradient(145deg,#1b211d,#0a0e0b);border-radius:18px;padding:10px;border:1px solid rgba(255,255,255,.05);
+    box-shadow:0 22px 44px -22px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.05)}
+  canvas{display:block;width:100%;max-width:100%;aspect-ratio:4/3;border-radius:6px;background:#020402}
+  figcaption{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;margin-top:12px}
+  figcaption .no{grid-row:span 2;font-family:var(--mono);font-size:13px;color:var(--ph);padding-top:3px}
+  figcaption b{font-family:var(--mono);font-weight:400;font-size:16px;letter-spacing:.03em}
+  figcaption span{color:var(--muted);font-size:14px;line-height:1.5}
+
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:32px 0 80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+  footer h3{font-family:var(--mono);font-weight:400;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--ph-hi);margin:0 0 8px}
+  footer p,footer li{color:var(--muted);font-size:14.5px;line-height:1.6}
+  footer p{margin:0}
+  footer ul{margin:0;padding-left:18px}
+  footer b{color:var(--ink);font-weight:600}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="10" y="18" width="80" height="60" rx="10" fill="none" stroke="#48ff8c" stroke-width="6"/><rect x="26" y="34" width="22" height="8" fill="#48ff8c"/><rect x="26" y="50" width="36" height="8" fill="#48ff8c" opacity=".55"/><rect x="36" y="82" width="28" height="6" fill="#48ff8c"/></svg>
+        <b>Anber<i>Next</i></b>
+      </div>
+      <p class="kicker">Tema 4 · RG353V · 640×480</p>
+      <h1>Fósforo: o aparelho vira um <span>terminal de tubo</span>.</h1>
+      <p class="lead">As <b>telas do sistema</b> num monitor antigo de uma cor só: tudo é traço e brilho, com linhas de varredura e cantos curvos. Os consoles aparecem em arame e giram, e as capas ficam na cor do tubo. Os outros temas continuam existindo: você troca nos Ajustes e <b>tudo muda junto</b>.</p>
+    </div>
+    <div class="switch">
+      <div class="path" aria-label="Caminho no aparelho">
+        <span class="cap">Ajustes</span><span class="sep">›</span><span class="cap">Aparência</span><span class="sep">›</span><span class="cap on">Tema: Fósforo</span>
+      </div>
+      <p>Muda a tela inicial, o menu dentro dos jogos, a música, os Ajustes e a tela de boot. Em <b>Cor do fósforo</b> você escolhe verde, âmbar ou branco. Os emuladores com menu próprio (Dreamcast, N64, NDS e PSP) ficam como estão, igual nos outros temas.</p>
+    </div>
+  </header>
+
+  <div class="motifs">
+    <div class="motif"><h3>Um tubo, uma cor</h3><p>Tudo em verde em quatro intensidades, com brilho em volta das letras, varredura, faixa de atualização descendo e os cantos escurecidos.</p></div>
+    <div class="motif"><h3>Seleção em vídeo reverso</h3><p>O item escolhido acende inteiro com a letra escura e um feixe passa por ele uma vez. Os nomes longos aparecem sendo digitados, com o cursor piscando.</p></div>
+    <div class="motif"><h3>Consoles em arame</h3><p>Cada console é desenhado só com as arestas, flutuando sobre um anel de projeção. O escolhido gira devagar.</p></div>
+    <div class="motif"><h3>Capas na cor do tubo</h3><p>Capas, saves e álbuns aparecem na cor do fósforo e são desenhados de cima para baixo, como uma imagem chegando no monitor.</p></div>
+  </div>
+
+  <section class="group">
+    <div class="ghead"><h2>Tela inicial: três jeitos</h2><span class="who">launcher · escolha nos Ajustes</span></div>
+    <p class="gsub">As abas no topo são as quatro partes do aparelho: Jogos, Recentes, Música e Sistema. Em Ajustes › Aparência › Tela inicial você escolhe como os consoles aparecem: Carrossel (o padrão), Lista ou Grade.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="home" aria-label="Tela inicial em carrossel"></canvas></div><figcaption><span class="no">01</span><b>Carrossel</b><span>O console escolhido flutua sobre o anel e gira; os outros ficam menores dos lados. O nome entra sendo digitado, com o número de jogos embaixo e a música tocando no canto.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeList" aria-label="Tela inicial em lista"></canvas></div><figcaption><span class="no">01b</span><b>Lista</b><span>Os nomes à esquerda com o número de jogos, mais rápido de percorrer. À direita, o console escolhido se desenha traço a traço, com o último jogo aberto nele.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeGrid" aria-label="Tela inicial em grade"></canvas></div><figcaption><span class="no">01c</span><b>Grade</b><span>Todos os consoles de uma vez, cada um no seu quadro. Os cantos se fecham no escolhido, que acende e gira.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Desenho dos consoles</h2><span class="who">opção nos Ajustes</span></div>
+    <p class="gsub">Em Ajustes › Aparência › Ícone dos consoles: Sigla, Controle ou Console (o padrão). São os mesmos desenhos dos outros temas, refeitos em traço.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="iconsB" aria-label="Os 39 consoles em arame"></canvas></div><figcaption><span class="no">B</span><b>Os 39 consoles: console</b><span>Todos os consoles compatíveis em arame. As arestas de trás ficam mais fracas, então dá para ler o volume mesmo sem preenchimento.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="iconsA" aria-label="Os 39 controles em traço"></canvas></div><figcaption><span class="no">A</span><b>Os 39 consoles: controle</b><span>O controle de cada um, contornado. Os botões coloridos do original viram pontos acesos.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeA" data-offset="0.6" aria-label="Início com os controles"></canvas></div><figcaption><span class="no">A</span><b>Início com controle</b><span>Como fica o carrossel com os controles.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeS" data-offset="0.6" aria-label="Início com a sigla"></canvas></div><figcaption><span class="no">S</span><b>Início com sigla</b><span>A opção mais simples: a sigla do console numa etiqueta, acesa no escolhido.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Jogos e atalhos</h2><span class="who">launcher</span></div>
+    <p class="gsub">Dentro de cada console, os recentes, o menu do F e o que aparece por cima.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="games" aria-label="Capas em carrossel"></canvas></div><figcaption><span class="no">02</span><b>Dentro do console: carrossel</b><span>As capas na cor do tubo deslizam; a escolhida cresce, ganha os cantos e é redesenhada de cima para baixo. Jogo sem capa mostra a inicial do nome. É o padrão.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="gamesList" aria-label="Jogos em lista"></canvas></div><figcaption><span class="no">02b</span><b>Dentro do console: lista</b><span>Nomes numerados à esquerda, mais jogos por tela, e a capa do escolhido à direita com o save mais recente.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="recent" aria-label="Recentes"></canvas></div><figcaption><span class="no">03</span><b>Recentes (SELECT)</b><span>A imagem do último save de cada jogo. Esquerda e direita trocam, A continua de onde parou.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="fmenu" aria-label="Menu do botão F"></canvas></div><figcaption><span class="no">04</span><b>Menu do F</b><span>A caixa abre como um monitor ligando: uma linha que se estica na vertical. Moldura dupla por cima da tela inicial apagada.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="tools" aria-label="Ferramentas"></canvas></div><figcaption><span class="no">05</span><b>Ferramentas</b><span>Lista larga e numerada; à direita, o que cada ferramenta tem para mostrar (bateria, hora, se está online).</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="loading" aria-label="Carregando"></canvas></div><figcaption><span class="no">06</span><b>Carregando</b><span>O console se desenha aresta por aresta, a barra enche em blocos e as etapas aparecem sendo digitadas embaixo.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="osd" aria-label="Volume"></canvas></div><figcaption><span class="no">07</span><b>Volume e brilho</b><span>Uma escada de blocos que sobe com o nível, com o número grande ao lado.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Música</h2><span class="who">launcher e menu do jogo</span></div>
+    <p class="gsub">O mesmo player abre pelo menu do F e pelo menu dentro do jogo.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="music" aria-label="Biblioteca de música"></canvas></div><figcaption><span class="no">08</span><b>Biblioteca</b><span>Artistas em pastas à esquerda; à direita a capa do álbum e um osciloscópio que acompanha o som.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="playing" aria-label="Tocando agora"></canvas></div><figcaption><span class="no">09</span><b>Tocando agora</b><span>Analisador de frequências em colunas de blocos, progresso em segmentos e as três teclas de controle. O osciloscópio fica embaixo da capa.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Dentro do jogo</h2><span class="who">motor dos emuladores</span></div>
+    <p class="gsub">O menu do botão F durante o jogo e tudo que aparece por cima dele. Com o menu aberto o jogo pausado fica na cor do tubo; jogando, ele mantém as cores dele e só os avisos são de fósforo.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="gamemenu" aria-label="Menu do jogo"></canvas></div><figcaption><span class="no">10</span><b>Menu do jogo</b><span>Painel à esquerda com régua na borda. Em Salvar e Carregar a imagem do slot chega varrendo, com os 9 slots em caixinhas.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="options" aria-label="Opções do emulador"></canvas></div><figcaption><span class="no">11</span><b>Opções</b><span>Valor à direita, setas no item escolhido. A explicação da opção é digitada na caixa de baixo.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="toasts" aria-label="Avisos"></canvas></div><figcaption><span class="no">12</span><b>Avisos</b><span>Save, conquista e volume em caixas pretas com borda acesa, que entram pela esquerda com uma tremida rápida.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="achievements" aria-label="Conquistas"></canvas></div><figcaption><span class="no">13</span><b>Conquistas</b><span>Barra de progresso no topo com conquistas e pontos. Feitas com a caixa marcada; as que faltam mostram quantos pontos valem.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="achDetail" aria-label="Detalhe da conquista"></canvas></div><figcaption><span class="no">13b</span><b>Detalhe da conquista</b><span>O A abre a ficha: emblema aceso (ou tracejado com cadeado, se falta), pontos, quando foi feita, modo e quantos jogadores já conseguiram. Esquerda e direita passam para a próxima.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Ajustes</h2><span class="who">app de ajustes</span></div>
+    <p class="gsub">Inclui a tela de onde se troca o tema, agora com os quatro, e a cor do tubo.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="settings" aria-label="Ajustes"></canvas></div><figcaption><span class="no">14</span><b>Ajustes</b><span>À direita, o símbolo da seção escolhida em traço grande e o que tem dentro dela.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="appearance" aria-label="Aparência e troca de tema"></canvas></div><figcaption><span class="no">15</span><b>Aparência</b><span>Tema (Neon Drive, Bloco, Grafite ou Fósforo), Tela inicial, Ícone dos consoles, Biblioteca de jogos, Cor do fósforo e Idioma, com prévia ao lado. Ao trocar a cor, a tela inteira muda na hora; ao trocar o idioma, os menus já aparecem em inglês.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="color" aria-label="Seletor de cor"></canvas></div><figcaption><span class="no">16</span><b>Cor do fósforo personalizada</b><span>Para quem quiser outra cor além das três prontas: cada canal é uma barra de blocos e a esfera mostra a cor brilhando.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="wifi" aria-label="Wi-Fi"></canvas></div><figcaption><span class="no">17</span><b>Wi-Fi</b><span>Sinal em quatro barras, cadeado nas redes com senha e a rede conectada marcada. Enquanto busca, um cursor gira no canto.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="keyboard" aria-label="Teclado"></canvas></div><figcaption><span class="no">18</span><b>Teclado</b><span>Teclas em caixas; a escolhida acende. A senha aparece em asteriscos com o cursor de bloco.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Boot</h2><span class="who">tela de boot</span></div>
+    <p class="gsub">A versão Fósforo da bootscreen animada, com as mesmas frases divertidas e o mesmo rodapé.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="boot" aria-label="Tela de boot"></canvas></div><figcaption><span class="no">19</span><b>Tela de boot</b><span>O tubo liga (um ponto, uma linha, a tela inteira), a checagem do aparelho é digitada, o nome acende letra por letra piscando e a barra enche em blocos.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <h3>O que preciso de você</h3>
+      <p>Aprovar, ou pedir ajuste citando o <b>número da tela</b>. Depois da aprovação eu monto no código, conferindo cada tela na prévia do PC antes de ir para o aparelho.</p>
+    </div>
+    <div>
+      <h3>Visual próprio</h3>
+      <p>Inspirado nos monitores de fósforo dos computadores antigos. Não usa nome, mascote, desenho nem fonte de nenhum jogo. As fontes são <b>VT323</b> e <b>Share Tech Mono</b>, as duas livres, e vão junto no cartão.</p>
+    </div>
+    <div>
+      <h3>O que é ilustrativo</h3>
+      <ul>
+        <li>Capas, saves, álbuns, redes e conquistas são exemplos. No aparelho vêm dos seus arquivos.</li>
+        <li>Os nomes dos jogos são inventados para a prévia.</li>
+        <li>As miniaturas dos outros temas em Aparência são simplificadas.</li>
+      </ul>
+    </div>
+  </footer>
+</div>
+<script>
+// Console icons shared by both themes: each system's controller (flat, in units u) and its console
+// (a model of boxes in the cube-top world, -1..1). Themes pass a painter that decides the look:
+// Bloco fills and extrudes, Neon draws tubes and wireframes. The 39 systems match anbernext-storage.
+(function () {
+'use strict';
+const SYSTEMS = [
+  ['GBA', 'Game Boy Advance'], ['GB', 'Game Boy'], ['GBC', 'Game Boy Color'], ['SGB', 'Super Game Boy'],
+  ['FC', 'Nintendo'], ['FDS', 'Famicom Disk System'], ['SFC', 'Super Nintendo'], ['N64', 'Nintendo 64'],
+  ['NDS', 'Nintendo DS'], ['VB', 'Virtual Boy'], ['PKM', 'Pokémon mini'], ['MD', 'Mega Drive'],
+  ['SMS', 'Master System'], ['GG', 'Game Gear'], ['SG1000', 'SG-1000'], ['SEGACD', 'Sega CD'],
+  ['32X', 'Sega 32X'], ['DC', 'Dreamcast'], ['PS', 'PlayStation'], ['PSP', 'PSP'],
+  ['PCE', 'PC Engine'], ['NGP', 'Neo Geo Pocket'], ['NGPC', 'Neo Geo Pocket Color'], ['FBN', 'Arcade'],
+  ['A2600', 'Atari 2600'], ['A5200', 'Atari 5200'], ['A7800', 'Atari 7800'], ['LYNX', 'Atari Lynx'],
+  ['COLECO', 'ColecoVision'], ['MSX', 'MSX'], ['CPC', 'Amstrad CPC'], ['C64', 'Commodore 64'],
+  ['C128', 'Commodore 128'], ['VIC', 'VIC-20'], ['PET', 'Commodore PET'], ['PLUS4', 'Commodore Plus/4'],
+  ['PUAE', 'Amiga'], ['P8', 'PICO-8'], ['PRBOOM', 'Doom']
+];
+// alternative cores share their console's drawing
+const ALIAS = { MGBA: 'GBA', SUPA: 'SFC' };
+
+function rr(g, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+
+// ---------- controllers ----------
+function ctrl(tag, P, u) {
+  const g = P.g, k = ALIAS[tag] || tag;
+  const R = (x, y, w, h, r) => () => { g.beginPath(); rr(g, x * u, y * u, w * u, h * u, r * u); };
+  const E = (x, y, rx, ry) => () => { g.beginPath(); g.ellipse(x * u, y * u, rx * u, ry * u, 0, 0, Math.PI * 2); };
+  const cross = (x, y, z) => P.cross(x * u, y * u, z * u);
+  const dot = (x, y, r, a) => P.dot(x * u, y * u, r * u, a);
+  const pill = (x, y, w) => P.pill(x * u, y * u, w * u);
+  const scr = (x, y, w, h) => P.scr(x * u, y * u, w * u, h * u);
+  const ring = (x, y, r) => P.line(() => { g.beginPath(); g.arc(x * u, y * u, r * u, 0, Math.PI * 2); });
+  const stick = (x, y, r) => { ring(x, y, r); dot(x, y, r * 0.48, true); };
+  const keys = (x, y, cols, rows, s) => { for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) P.shape(() => { g.beginPath(); g.rect((x + i * s) * u, (y + j * s) * u, s * 0.72 * u, s * 0.72 * u); }, 'ink'); };
+  const joystick = btns => { P.body(R(-0.62, -0.62, 1.24, 1.24, 0.14)); stick(0.05, 0.08, 0.32); dot(-0.38, -0.38, 0.11, true); if (btns > 1) dot(0.4, -0.38, 0.11, true); };
+  const mouse = () => { P.body(R(-0.55, -0.88, 1.1, 1.76, 0.52)); P.line(() => { g.beginPath(); g.moveTo(-0.55 * u, -0.3 * u); g.lineTo(0.55 * u, -0.3 * u); g.moveTo(0, -0.88 * u); g.lineTo(0, -0.3 * u); }); };
+  const sega = six => { P.body(E(0, 0.02, 1.12, 0.56)); cross(-0.62, 0.04, 0.25); pill(0, -0.26, 0.2); dot(0.34, 0.2, 0.12); dot(0.62, 0.06, 0.12); dot(0.9, -0.08, 0.12); if (six) { dot(0.3, -0.06, 0.08); dot(0.56, -0.2, 0.08); dot(0.82, -0.32, 0.08); } };
+  const snes = () => { P.body(() => { g.beginPath(); g.arc(-0.62 * u, 0, 0.52 * u, Math.PI * 0.5, Math.PI * 1.5); g.lineTo(0.62 * u, -0.52 * u); g.arc(0.62 * u, 0, 0.52 * u, -Math.PI * 0.5, Math.PI * 0.5); g.closePath(); }); cross(-0.62, 0, 0.26); pill(-0.1, 0.06, 0.16); pill(0.12, 0.06, 0.16); dot(0.62, -0.2, 0.1); dot(0.62, 0.2, 0.1); dot(0.42, 0, 0.1); dot(0.82, 0, 0.1, true); };
+  const nes = () => { P.body(R(-1.15, -0.48, 2.3, 0.96, 0.08)); P.shape(R(-0.3, -0.36, 0.6, 0.72, 0.04), 'ink'); cross(-0.72, 0, 0.27); pill(-0.12, 0.12, 0.14); pill(0.12, 0.12, 0.14); dot(0.58, 0.08, 0.13, true); dot(0.9, 0.08, 0.13, true); };
+  const portrait = (round, acc) => { P.body(round ? R(-0.62, -0.95, 1.24, 1.9, 0.22) : () => { g.beginPath(); g.moveTo(-0.62 * u, -0.95 * u); g.lineTo(0.62 * u, -0.95 * u); g.lineTo(0.62 * u, 0.7 * u); g.quadraticCurveTo(0.62 * u, 0.95 * u, 0.3 * u, 0.95 * u); g.lineTo(-0.62 * u, 0.95 * u); g.closePath(); }); scr(-0.4, -0.78, 0.8, 0.62); cross(-0.3, 0.32, 0.17); dot(0.22, 0.42, 0.09); dot(0.42, 0.28, 0.09, acc); pill(-0.1, 0.7, 0.14); pill(0.1, 0.7, 0.14); };
+  const wide = (w, h, r, sw, sh) => { P.body(R(-w / 2, -h / 2, w, h, r)); scr(-sw / 2, -sh / 2 - 0.02, sw, sh); };
+  switch (k) {
+    case 'FC': case 'FDS': nes(); break;
+    case 'SFC': case 'SGB': snes(); break;
+    case 'MD': case 'SEGACD': sega(false); break;
+    case '32X': sega(true); break;
+    case 'PS': P.body(() => { g.beginPath(); g.moveTo(-0.7 * u, -0.42 * u); g.lineTo(0.7 * u, -0.42 * u); g.quadraticCurveTo(1.05 * u, -0.4 * u, 1.05 * u, 0.1 * u); g.quadraticCurveTo(1.05 * u, 0.62 * u, 0.78 * u, 0.62 * u); g.quadraticCurveTo(0.55 * u, 0.62 * u, 0.42 * u, 0.22 * u); g.lineTo(-0.42 * u, 0.22 * u); g.quadraticCurveTo(-0.55 * u, 0.62 * u, -0.78 * u, 0.62 * u); g.quadraticCurveTo(-1.05 * u, 0.62 * u, -1.05 * u, 0.1 * u); g.quadraticCurveTo(-1.05 * u, -0.4 * u, -0.7 * u, -0.42 * u); g.closePath(); }); cross(-0.66, -0.08, 0.22); pill(-0.12, -0.08, 0.14); pill(0.12, -0.08, 0.14); for (const [dx, dy] of [[0, -0.19], [0, 0.03], [-0.11, -0.08], [0.11, -0.08]]) dot(0.66 + dx * 1.1, dy, 0.075); break;
+    case 'N64': P.body(() => { g.beginPath(); rr(g, -1.1 * u, -0.5 * u, 2.2 * u, 0.62 * u, 0.3 * u); rr(g, -1.05 * u, -0.2 * u, 0.42 * u, 0.8 * u, 0.2 * u); rr(g, 0.63 * u, -0.2 * u, 0.42 * u, 0.8 * u, 0.2 * u); rr(g, -0.2 * u, -0.1 * u, 0.4 * u, 0.85 * u, 0.2 * u); }); cross(-0.78, -0.2, 0.17); stick(0, 0.18, 0.15); dot(0.6, -0.12, 0.09, true); dot(0.42, -0.26, 0.08); for (const [dx, dy] of [[0.86, -0.36], [0.86, -0.12], [0.74, -0.24], [0.98, -0.24]]) dot(dx, dy, 0.055); dot(0, -0.3, 0.06); break;
+    case 'DC': P.body(R(-0.98, -0.56, 1.96, 1.06, 0.46)); scr(-0.22, -0.48, 0.44, 0.34); stick(-0.58, -0.14, 0.16); cross(-0.38, 0.26, 0.14); for (const [dx, dy] of [[0.62, -0.22], [0.62, 0.1], [0.46, -0.06], [0.78, -0.06]]) dot(dx, dy, 0.08, dx === 0.78); break;
+    case 'PSP': wide(2.4, 0.92, 0.46, 1.2, 0.62); cross(-0.92, -0.08, 0.15); dot(-0.92, 0.28, 0.07, true); for (const [dx, dy] of [[0, -0.17], [0, 0.11], [-0.14, -0.03], [0.14, -0.03]]) dot(0.92 + dx, dy, 0.06); break;
+    case 'NDS': P.body(R(-0.78, -0.95, 1.56, 1.9, 0.14)); pill(0, 0, 1.3); scr(-0.48, -0.82, 0.96, 0.66); scr(-0.38, 0.14, 0.76, 0.62); cross(-0.6, 0.38, 0.11); dot(0.6, 0.3, 0.06); dot(0.6, 0.5, 0.06, true); break;
+    case 'GG': wide(2.4, 1.04, 0.3, 0.9, 0.66); cross(-0.86, 0, 0.2); dot(0.78, 0.1, 0.1, true); dot(0.98, -0.08, 0.1); dot(0.88, -0.36, 0.05); break;
+    case 'LYNX': wide(2.4, 1.0, 0.2, 0.92, 0.62); cross(-0.88, 0, 0.2); dot(0.86, -0.13, 0.1, true); dot(0.86, 0.15, 0.1); pill(-0.55, 0.4, 0.14); pill(0.55, 0.4, 0.14); break;
+    case 'NGP': case 'NGPC': wide(2.1, 0.96, 0.42, 0.76, 0.58); stick(-0.76, 0, 0.17); dot(0.68, 0.08, 0.1, k === 'NGPC'); dot(0.88, -0.08, 0.1); break;
+    case 'VB': P.body(() => { g.beginPath(); rr(g, -1.15 * u, -0.38 * u, 2.3 * u, 0.56 * u, 0.22 * u); rr(g, -1.12 * u, -0.1 * u, 0.56 * u, 0.78 * u, 0.28 * u); rr(g, 0.56 * u, -0.1 * u, 0.56 * u, 0.78 * u, 0.28 * u); }); cross(-0.8, -0.1, 0.18); cross(0.8, -0.1, 0.18); dot(-0.22, -0.08, 0.06, true); dot(0.22, -0.08, 0.06, true); break;
+    case 'PKM': P.body(R(-0.58, -0.78, 1.16, 1.56, 0.32)); scr(-0.38, -0.58, 0.76, 0.52); cross(-0.24, 0.32, 0.14); dot(0.24, 0.4, 0.09, true); dot(0.4, 0.22, 0.09); break;
+    case 'FBN': P.body(R(-1.2, -0.52, 2.4, 1.04, 0.1)); stick(-0.7, 0, 0.24); for (let i = 0; i < 3; i++) { dot(0.16 + i * 0.3, -0.16, 0.1, i === 0); dot(0.22 + i * 0.3, 0.16, 0.1); } break;
+    case 'A2600': joystick(1); break;
+    case 'A7800': P.body(R(-0.48, -0.92, 0.96, 1.84, 0.3)); stick(0, -0.36, 0.26); dot(-0.28, 0.36, 0.1, true); dot(0.28, 0.36, 0.1, true); break;
+    case 'A5200': case 'COLECO': P.body(R(-0.6, -0.95, 1.2, 1.9, 0.16)); stick(0, -0.55, 0.24); keys(-0.36, 0.0, 3, 4, 0.26); dot(-0.48, -0.88, 0.06, true); dot(0.48, -0.88, 0.06, true); break;
+    case 'SG1000': P.body(R(-1.05, -0.48, 2.1, 0.96, 0.12)); stick(-0.52, 0, 0.28); dot(0.5, 0.06, 0.12, true); dot(0.82, 0.06, 0.12, true); break;
+    case 'SMS': P.body(R(-1.05, -0.5, 2.1, 1.0, 0.12)); cross(-0.6, 0, 0.26); dot(0.52, 0.06, 0.13, true); dot(0.84, 0.06, 0.13); break;
+    case 'PCE': P.body(R(-0.98, -0.44, 1.96, 0.88, 0.1)); cross(-0.6, 0.02, 0.24); pill(-0.12, 0.18, 0.14); pill(0.12, 0.18, 0.14); dot(0.5, 0.12, 0.11, true); dot(0.78, 0.12, 0.11, true); P.shape(R(0.42, -0.26, 0.16, 0.08, 0.02), 'ink'); P.shape(R(0.7, -0.26, 0.16, 0.08, 0.02), 'ink'); break;
+    case 'PUAE': case 'PRBOOM': mouse(); break;
+    case 'P8': P.body(R(-1.0, -0.5, 2.0, 1.0, 0.5)); cross(-0.52, 0, 0.22); dot(0.44, 0.1, 0.11, true); dot(0.7, -0.08, 0.11); break;
+    case 'GB': portrait(false, false); break;
+    case 'GBC': portrait(true, true); break;
+    case 'GBA': wide(2.3, 1.0, 0.42, 0.84, 0.56); cross(-0.8, 0, 0.19); dot(0.76, 0.1, 0.1, true); dot(0.98, -0.08, 0.1); break;
+    default: joystick(2); // MSX, CPC and the Commodores: their classic two-button stick
+  }
+}
+
+// ---------- consoles ----------
+function model(tag, M) {
+  const k = ALIAS[tag] || tag;
+  const B = M.box, rect = M.rect, circ = M.circ, lf = M.lface, grid = M.grid;
+  const cart = (a, b, z, w, h) => B(a, b, z, w, 0.14, h, 'acc');
+  const hand = (w, d, body, sw, sd, dpadX, btn) => {
+    B(-w / 2, -d / 2, 0, w, d, 0.17, body); rect(0.17, -sw / 2, -sd / 2 - 0.02, sw, sd, 'scr');
+    B(dpadX - 0.13, -0.04, 0.17, 0.26, 0.08, 0.05, 'acc'); B(dpadX - 0.04, -0.13, 0.17, 0.08, 0.26, 0.05, 'acc');
+    (btn || [[-dpadX - 0.06, -0.02], [-dpadX + 0.12, -0.16]]).forEach(([x, y]) => B(x, y, 0.17, 0.12, 0.12, 0.06, 'acc'));
+  };
+  const keyboard = (a, b, w, d, h, body, keyRole) => { B(a, b, 0, w, d, h, body); grid(h, a + 0.08, b + 0.12, w - 0.16, d - 0.2, 12, 4, keyRole || 'det'); };
+  const monitor = (a, b, w, d, h, body) => { B(a, b, 0, w, d, h, body); lf(a + 0.1, b + d, h * 0.2, w - 0.2, h * 0.65, 'scr'); };
+  switch (k) {
+    case 'SFC': B(-0.8, -0.62, 0, 1.6, 1.24, 0.3, 'body'); rect(0.3, -0.5, -0.42, 1.0, 0.3, 'det'); cart(-0.42, -0.36, 0.3, 0.84, 0.5); B(-0.62, 0.28, 0.3, 0.26, 0.18, 0.06, 'dark'); B(0.32, 0.28, 0.3, 0.26, 0.18, 0.06, 'acc'); break;
+    case 'SGB': B(-0.8, -0.62, 0, 1.6, 1.24, 0.3, 'body'); rect(0.3, -0.5, -0.42, 1.0, 0.3, 'det'); B(-0.42, -0.36, 0.3, 0.84, 0.14, 0.42, 'dark'); B(-0.22, -0.34, 0.72, 0.44, 0.1, 0.32, 'light'); break;
+    case 'PS': B(-0.82, -0.7, 0, 1.64, 1.4, 0.26, 'body'); circ(0.26, -0.08, -0.08, 0.55, 'light'); circ(0.26, -0.08, -0.08, 0.46, 'det'); circ(0.26, -0.08, -0.08, 0.1, 'light'); B(0.38, 0.4, 0.26, 0.22, 0.16, 0.07, 'dark'); B(-0.62, 0.4, 0.26, 0.22, 0.16, 0.07, 'dark'); break;
+    case 'MD': B(-0.82, -0.62, 0, 1.64, 1.24, 0.28, 'dark'); circ(0.28, 0, 0, 0.58, 'body'); circ(0.28, 0, 0, 0.48, 'dark'); cart(-0.36, -0.08, 0.28, 0.72, 0.46); break;
+    case 'SEGACD': B(-0.86, -0.66, 0, 1.72, 1.32, 0.24, 'dark'); lf(-0.5, 0.66, 0.06, 0.9, 0.1, 'det'); B(-0.8, -0.6, 0.24, 1.6, 1.2, 0.26, 'dark'); circ(0.5, 0, 0, 0.5, 'body'); cart(-0.34, -0.08, 0.5, 0.68, 0.34); break;
+    case '32X': B(-0.82, -0.62, 0, 1.64, 1.24, 0.28, 'dark'); circ(0.28, 0, 0, 0.58, 'body'); B(-0.42, -0.3, 0.28, 0.84, 0.6, 0.3, 'body'); circ(0.58, 0, 0, 0.3, 'det'); cart(-0.3, -0.07, 0.58, 0.6, 0.3); break;
+    case 'SMS': B(-0.88, -0.6, 0, 1.76, 1.2, 0.28, 'dark'); B(-0.88, -0.6, 0.28, 1.76, 0.42, 0.1, 'dark'); rect(0.28, -0.88, 0.2, 1.76, 0.08, 'acc'); cart(-0.34, -0.45, 0.38, 0.68, 0.36); break;
+    case 'SG1000': B(-0.82, -0.6, 0, 1.64, 1.2, 0.26, 'light'); rect(0.26, -0.82, 0.1, 1.64, 0.1, 'acc'); cart(-0.32, -0.36, 0.26, 0.64, 0.4); break;
+    case 'GG': hand(2.0, 1.0, 'dark', 0.62, 0.52, -0.7); break;
+    case 'DC': B(-0.84, -0.8, 0, 1.68, 1.6, 0.3, 'light'); circ(0.3, -0.04, -0.14, 0.56, 'body'); circ(0.3, -0.04, -0.14, 0.1, 'acc'); for (let i = 0; i < 4; i++) lf(-0.7 + i * 0.36, 0.8, 0.08, 0.2, 0.1, 'det'); break;
+    case 'N64': B(-0.86, -0.66, 0, 1.72, 1.32, 0.22, 'dark'); B(-0.86, -0.66, 0.22, 1.72, 0.42, 0.12, 'dark'); cart(-0.32, -0.2, 0.22, 0.64, 0.46); B(-0.62, 0.36, 0.22, 0.2, 0.14, 0.06, 'body'); B(0.42, 0.36, 0.22, 0.2, 0.14, 0.06, 'body'); break;
+    case 'NDS': B(-0.8, -0.05, 0, 1.6, 0.95, 0.12, 'light'); rect(0.12, -0.38, 0.12, 0.76, 0.6, 'scr'); B(-0.06, 0.32, 0.12, 0.1, 0.1, 0.04, 'acc'); B(-0.65, 0.32, 0.12, 0.18, 0.06, 0.04, 'acc'); B(-0.8, -0.18, 0, 1.6, 0.13, 0.95, 'light'); lf(-0.6, -0.05, 0.18, 1.2, 0.62, 'scr'); break;
+    case 'VB': B(-0.12, -0.12, 0, 0.24, 0.24, 0.5, 'dark'); B(-0.7, -0.4, 0, 0.3, 0.3, 0.06, 'dark'); B(0.4, -0.4, 0, 0.3, 0.3, 0.06, 'dark'); B(-0.78, -0.32, 0.5, 1.56, 0.52, 0.36, 'acc'); lf(-0.6, 0.2, 0.56, 0.4, 0.22, 'scr'); lf(0.2, 0.2, 0.56, 0.4, 0.22, 'scr'); break;
+    case 'PKM': hand(1.0, 1.3, 'light', 0.62, 0.5, -0.22, [[0.16, 0.22], [0.3, 0.08]]); break;
+    case 'PSP': hand(2.1, 0.86, 'dark', 1.0, 0.56, -0.78); break;
+    case 'PCE': B(-0.62, -0.62, 0, 1.24, 1.24, 0.24, 'light'); B(-0.62, -0.62, 0.24, 1.24, 0.36, 0.08, 'dark'); B(-0.36, 0.0, 0.24, 0.72, 0.06, 0.26, 'acc'); break;
+    case 'NGP': hand(1.9, 0.92, 'light', 0.66, 0.5, -0.66); break;
+    case 'NGPC': hand(1.9, 0.92, 'alt', 0.66, 0.5, -0.66); break;
+    case 'LYNX': hand(2.2, 0.9, 'dark', 0.82, 0.54, -0.82); break;
+    case 'FBN': B(-0.52, -0.6, 0, 1.04, 0.8, 1.2, 'dark'); lf(-0.38, 0.2, 0.72, 0.76, 0.36, 'scr'); B(-0.6, 0.2, 0, 1.2, 0.46, 0.56, 'body'); circ(0.56, -0.25, 0.42, 0.08, 'acc'); circ(0.56, 0.1, 0.36, 0.06, 'acc'); circ(0.56, 0.28, 0.36, 0.06, 'acc'); B(-0.52, 0.08, 1.2, 1.04, 0.12, 0.14, 'acc'); break;
+    case 'A2600': B(-0.9, -0.62, 0, 1.8, 1.24, 0.22, 'dark'); lf(-0.9, 0.62, 0, 1.8, 0.14, 'wood'); for (let i = 0; i < 5; i++) rect(0.22, -0.8, -0.5 + i * 0.12, 1.6, 0.04, 'det'); cart(-0.3, -0.3, 0.22, 0.6, 0.34); break;
+    case 'A5200': B(-0.95, -0.7, 0, 1.9, 1.4, 0.26, 'dark'); rect(0.26, -0.6, -0.5, 1.2, 0.5, 'det'); cart(-0.34, -0.34, 0.26, 0.68, 0.36); B(0.5, 0.3, 0.26, 0.3, 0.2, 0.05, 'light'); break;
+    case 'A7800': B(-0.86, -0.6, 0, 1.72, 1.2, 0.24, 'dark'); rect(0.24, -0.86, 0.12, 1.72, 0.14, 'light'); cart(-0.32, -0.32, 0.24, 0.64, 0.36); break;
+    case 'COLECO': B(-0.9, -0.62, 0, 1.8, 1.24, 0.22, 'dark'); B(0.3, -0.5, 0.22, 0.45, 0.9, 0.1, 'body'); grid(0.32, 0.36, -0.1, 0.33, 0.42, 3, 4, 'det'); cart(-0.6, -0.3, 0.22, 0.6, 0.34); break;
+    case 'MSX': keyboard(-0.95, -0.4, 1.9, 0.95, 0.18, 'dark'); cart(0.4, -0.52, 0.0, 0.42, 0.42); break;
+    case 'CPC': keyboard(-0.95, -0.05, 1.9, 0.82, 0.16, 'dark'); monitor(-0.6, -0.95, 1.2, 0.72, 0.9, 'light'); break;
+    case 'C64': keyboard(-0.95, -0.52, 1.9, 1.04, 0.22, 'light', 'dark'); rect(0.22, 0.62, -0.42, 0.2, 0.08, 'acc'); break;
+    case 'C128': keyboard(-1.0, -0.56, 2.0, 1.12, 0.18, 'light', 'dark'); rect(0.18, 0.62, -0.44, 0.24, 0.6, 'det'); break;
+    case 'VIC': keyboard(-0.95, -0.52, 1.9, 1.04, 0.22, 'light', 'dark'); rect(0.22, 0.6, -0.4, 0.22, 0.08, 'acc'); rect(0.22, 0.6, -0.26, 0.22, 0.08, 'acc'); break;
+    case 'PLUS4': keyboard(-0.95, -0.48, 1.9, 0.96, 0.14, 'dark', 'light'); rect(0.14, 0.62, 0.12, 0.2, 0.2, 'acc'); break;
+    case 'PET': B(-0.8, 0.02, 0, 1.6, 0.76, 0.2, 'light'); grid(0.2, -0.7, 0.14, 1.4, 0.52, 11, 4, 'dark'); monitor(-0.8, -0.95, 1.6, 0.97, 0.95, 'light'); break;
+    case 'PUAE': keyboard(-1.0, -0.56, 2.0, 1.12, 0.2, 'light', 'det'); rect(0.2, 0.62, -0.46, 0.26, 0.06, 'dark'); rect(0.2, -0.9, -0.48, 0.18, 0.06, 'acc'); break;
+    case 'P8': B(-0.62, -0.62, 0, 1.24, 1.24, 0.6, 'dark'); lf(-0.46, 0.62, 0.14, 0.92, 0.36, 'scr'); cart(-0.3, -0.3, 0.6, 0.6, 0.32); break;
+    case 'PRBOOM': B(0.38, -0.72, 0, 0.46, 1.1, 0.95, 'light'); lf(0.46, 0.38, 0.6, 0.3, 0.08, 'det'); monitor(-0.88, -0.6, 1.12, 0.9, 0.78, 'light'); break;
+    case 'FC': B(-0.82, -0.55, 0, 1.64, 1.1, 0.24, 'body'); B(-0.82, 0.3, 0, 1.64, 0.25, 0.27, 'dark'); cart(-0.36, -0.34, 0.24, 0.72, 0.42); B(-0.78, -0.45, 0.24, 0.28, 0.6, 0.05, 'dark'); B(0.5, -0.45, 0.24, 0.28, 0.6, 0.05, 'dark'); break;
+    case 'FDS': B(-0.82, -0.85, 0, 1.64, 0.95, 0.22, 'body'); cart(-0.3, -0.7, 0.22, 0.6, 0.36); B(-0.72, 0.25, 0, 1.44, 0.62, 0.36, 'dark'); rect(0.36, -0.5, 0.42, 1.0, 0.1, 'det'); break;
+    case 'GBA': hand(1.8, 0.96, 'alt', 0.68, 0.52, -0.62); break;
+    case 'GB': case 'GBC': {
+      B(-0.5, -0.88, 0, 1.0, 1.76, 0.17, k === 'GBC' ? 'alt' : 'body');
+      rect(0.17, -0.38, -0.76, 0.76, 0.66, 'scr');
+      B(-0.34, 0.24, 0.17, 0.26, 0.08, 0.05, 'acc'); B(-0.25, 0.15, 0.17, 0.08, 0.26, 0.05, 'acc');
+      B(0.12, 0.3, 0.17, 0.12, 0.12, 0.06, 'acc'); B(0.3, 0.16, 0.17, 0.12, 0.12, 0.06, 'acc');
+      break;
+    }
+    default: B(-0.7, -0.7, 0, 1.4, 1.4, 0.3, 'body');
+  }
+}
+const API = { SYSTEMS, ALIAS, ctrl, model, rr };
+if (typeof module !== 'undefined' && module.exports) module.exports = API;
+globalThis.ANX_ICONS = API;
+})();
+
+// Fósforo painters for the shared console drawings (icons.js): everything is line art in the
+// phosphor colour. The controller is outlined over a dark fill; the console is a wireframe that
+// can turn around its vertical axis, with the far edges drawn fainter so it reads as a volume.
+(function () {
+'use strict';
+const I = globalThis.ANX_ICONS;
+const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+
+// col: { line, acc, fill, scr, lw }
+function ctrl(g, k, x, y, u, col) {
+  g.save(); g.translate(x, y);
+  g.lineWidth = col.lw; g.lineCap = 'round'; g.lineJoin = 'round';
+  const st = () => { g.strokeStyle = col.line; g.stroke(); };
+  const P = {
+    g,
+    body: fn => { fn(); g.fillStyle = col.fill; g.fill(); st(); },
+    cross: (cx, cy, z) => {
+      const t = z * 0.36;
+      g.beginPath();
+      g.moveTo(cx - t, cy - z); g.lineTo(cx + t, cy - z); g.lineTo(cx + t, cy - t); g.lineTo(cx + z, cy - t); g.lineTo(cx + z, cy + t);
+      g.lineTo(cx + t, cy + t); g.lineTo(cx + t, cy + z); g.lineTo(cx - t, cy + z); g.lineTo(cx - t, cy + t); g.lineTo(cx - z, cy + t);
+      g.lineTo(cx - z, cy - t); g.lineTo(cx - t, cy - t); g.closePath(); st();
+    },
+    dot: (cx, cy, r, acc) => { g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); if (acc) { g.fillStyle = col.acc; g.fill(); } else st(); },
+    pill: (cx, cy, w) => { g.beginPath(); I.rr(g, cx - w / 2, cy - u * 0.035, w, u * 0.07, u * 0.035); st(); },
+    scr: (sx, sy, w, h) => {
+      g.fillStyle = col.scr; g.fillRect(sx, sy, w, h);
+      g.beginPath(); g.rect(sx, sy, w, h); st();
+      g.save(); g.globalAlpha *= 0.55; g.lineWidth = Math.max(0.6, col.lw * 0.5);
+      for (let j = 1; j < 4; j++) { g.beginPath(); g.moveTo(sx + w * 0.12, sy + h * j / 4); g.lineTo(sx + w * (0.3 + 0.5 * ((j * 7) % 5) / 5), sy + h * j / 4); st(); }
+      g.restore();
+    },
+    line: fn => { fn(); st(); },
+    shape: (fn, role) => { fn(); if (role === 'acc') { g.fillStyle = col.acc; g.fill(); } else st(); }
+  };
+  I.ctrl(k, P, u);
+  g.restore();
+}
+
+// (x, y) is the centre of the model's floor; s its half-width; th the turn in radians.
+// prog < 1 draws each edge only part of the way (the "being drawn" effect of the loading screen).
+function model(g, k, x, y, s, th, col) {
+  const cs = Math.cos(th), sn = Math.sin(th), prog = col.prog == null ? 1 : col.prog;
+  const P = (a, b, z) => { const a2 = a * cs - b * sn, b2 = a * sn + b * cs; return [x + s * (a2 - b2) / 2, y + s * (a2 + b2) / 4 - z * 0.55 * s, a2 + b2]; };
+  const ga = g.globalAlpha;
+  const stroke = role => (role === 'acc' ? col.acc : col.line);
+  g.save(); g.lineWidth = col.lw; g.lineCap = 'round'; g.lineJoin = 'round';
+  const seg = (p, q, role) => {
+    g.globalAlpha = ga * (0.3 + 0.7 * clamp(((p[2] + q[2]) / 2 + 1.7) / 3.4, 0, 1));
+    g.strokeStyle = stroke(role);
+    g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(p[0] + (q[0] - p[0]) * prog, p[1] + (q[1] - p[1]) * prog); g.stroke();
+  };
+  const loop = (pts, role, fill) => {
+    if (fill && prog >= 1) {
+      g.globalAlpha = ga; g.fillStyle = fill; g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
+      for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]);
+      g.closePath(); g.fill();
+    }
+    for (let i = 0; i < pts.length; i++) seg(pts[i], pts[(i + 1) % pts.length], role);
+  };
+  const box = (a, b, z, w, d, h, r) => {
+    const a1 = a + w, b1 = b + d, z1 = z + h;
+    const c = [P(a, b, z), P(a1, b, z), P(a1, b1, z), P(a, b1, z), P(a, b, z1), P(a1, b, z1), P(a1, b1, z1), P(a, b1, z1)];
+    for (let i = 0; i < 4; i++) { seg(c[i], c[(i + 1) % 4], r); seg(c[4 + i], c[4 + (i + 1) % 4], r); seg(c[i], c[4 + i], r); }
+  };
+  I.model(k, {
+    box,
+    rect: (z, rx, ry, w, h, r) => loop([P(rx, ry, z), P(rx + w, ry, z), P(rx + w, ry + h, z), P(rx, ry + h, z)], r, r === 'scr' ? col.scr : null),
+    circ: (z, cx, cy, rad, r) => { const pts = []; for (let i = 0; i < 20; i++) { const an = i / 20 * Math.PI * 2; pts.push(P(cx + Math.cos(an) * rad, cy + Math.sin(an) * rad, z)); } loop(pts, r); },
+    lface: (a, b1, z, w, h, r) => loop([P(a, b1, z), P(a + w, b1, z), P(a + w, b1, z + h), P(a, b1, z + h)], r, r === 'scr' ? col.scr : null),
+    grid: (z, gx, gy, w, h, cols, rows, r) => {
+      for (let j = 0; j <= rows; j++) seg(P(gx, gy + h * j / rows, z), P(gx + w, gy + h * j / rows, z), r);
+      for (let i = 0; i <= cols; i++) seg(P(gx + w * i / cols, gy, z), P(gx + w * i / cols, gy + h, z), r);
+    }
+  });
+  g.restore(); g.globalAlpha = ga;
+}
+
+I.fosforo = { ctrl, model };
+})();
+
+(function () {
+'use strict';
+// Fósforo theme renderer: every screen at the RG353V's 640x480 as a monochrome phosphor tube.
+// One colour (green, amber or white) at a few brightness levels, line art instead of fills,
+// reverse video for the selection, and the tube itself on top: scanlines, glow, curved corners.
+const W = 640, H = 480;
+const FM = '"Share Tech Mono", Consolas, monospace';
+const FD = 'VT323, Consolas, monospace';
+const PHOS = { verde: [72, 255, 140], ambar: [255, 184, 48], branco: [214, 234, 255] };
+let PC = PHOS.verde;
+const C = a => 'rgba(' + PC[0] + ',' + PC[1] + ',' + PC[2] + ',' + (a == null ? 1 : a) + ')';
+const HI = a => { const m = v => Math.round(v + (255 - v) * 0.6); return 'rgba(' + m(PC[0]) + ',' + m(PC[1]) + ',' + m(PC[2]) + ',' + (a == null ? 1 : a) + ')'; };
+const DK = f => 'rgb(' + PC.map(v => Math.round(v * f)).join(',') + ')';
+
+const clamp = (v, a = 0, b = 1) => (v < a ? a : v > b ? b : v);
+const lerp = (a, b, p) => a + (b - a) * p;
+const eo = p => 1 - Math.pow(1 - p, 3);
+const eob = p => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); };
+const off = (w, h) => {
+  const c = typeof document !== 'undefined' ? document.createElement('canvas') : globalThis.MOCK_CANVAS();
+  c.width = w; c.height = h; return c;
+};
+const up = s => s.toUpperCase();
+
+// ---------- primitives ----------
+function font(g, px, disp) { g.font = px + 'px ' + (disp ? FD : FM); }
+function tw(g, s, px, disp) { font(g, px, disp); return g.measureText(s).width; }
+// o: { d: display font, align, ls: letter spacing, glow: blur px }
+function text(g, s, x, y, col, px, o) {
+  o = o || {};
+  font(g, px, o.d); g.fillStyle = col; g.textBaseline = 'alphabetic';
+  const gl = o.glow == null ? 5 : o.glow;
+  if (gl > 0) { g.shadowColor = col; g.shadowBlur = gl; }
+  let w;
+  if (o.ls) {
+    w = 0; for (const ch of s) w += g.measureText(ch).width; w += o.ls * (s.length - 1);
+    let cx = o.align === 'center' ? x - w / 2 : o.align === 'right' ? x - w : x;
+    g.textAlign = 'left';
+    for (const ch of s) { g.fillText(ch, cx, y); cx += g.measureText(ch).width + o.ls; }
+  } else { g.textAlign = o.align || 'left'; g.fillText(s, x, y); g.textAlign = 'left'; w = g.measureText(s).width; }
+  g.shadowBlur = 0;
+  return w;
+}
+function line(g, x0, y0, x1, y1, col, lw) { g.strokeStyle = col; g.lineWidth = lw || 1; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); }
+function box(g, x, y, w, h, col, lw) { g.strokeStyle = col; g.lineWidth = lw || 1; g.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1); }
+function tri(g, x, y, s, dir, col) { g.fillStyle = col; g.beginPath(); g.moveTo(x, y - s); g.lineTo(x, y + s); g.lineTo(x + dir * s * 1.2, y); g.closePath(); g.fill(); }
+// a frame with heavier corner brackets; k pulls the brackets outward (0 = on the frame)
+function frame(g, x, y, w, h, o) {
+  o = o || {};
+  if (o.fill) { g.fillStyle = o.fill; g.fillRect(x, y, w, h); }
+  if (o.line !== false) box(g, x, y, w, h, o.line || C(0.22));
+  const k = o.k || 0, L = o.len || 12, col = o.br || C(0.85);
+  g.save(); g.shadowColor = col; g.shadowBlur = o.glow == null ? 6 : o.glow;
+  g.strokeStyle = col; g.lineWidth = 2;
+  const cor = (cx, cy, dx, dy) => { g.beginPath(); g.moveTo(cx + dx * L, cy); g.lineTo(cx, cy); g.lineTo(cx, cy + dy * L); g.stroke(); };
+  cor(x - k, y - k, 1, 1); cor(x + w + k, y - k, -1, 1); cor(x - k, y + h + k, 1, -1); cor(x + w + k, y + h + k, -1, -1);
+  g.restore();
+}
+// segmented gauge: n cells, f of them lit (fractional = the next cell half lit)
+function gauge(g, x, y, n, f, cw, ch, gap, o) {
+  o = o || {};
+  for (let i = 0; i < n; i++) {
+    const on = i < Math.floor(f), half = !on && i < f;
+    const hh = o.rise ? ch * (0.35 + 0.65 * i / (n - 1)) : ch;
+    g.fillStyle = on ? C(0.9) : half ? C(0.45) : C(0.12);
+    if (on && o.glow !== false) { g.shadowColor = C(0.8); g.shadowBlur = 6; }
+    g.fillRect(x + i * (cw + gap), y + ch - hh, cw, hh);
+    g.shadowBlur = 0;
+  }
+}
+function typed(s, t, cps) { return s.slice(0, Math.max(0, Math.floor(t * (cps || 30)))); }
+function cursor(g, x, y, px, t, col) { if (Math.floor(t * 2.4) % 2 === 0) { g.fillStyle = col || C(0.9); g.fillRect(x + 2, y - px * 0.78, px * 0.5, px * 0.9); } }
+function rrPath(g, x, y, w, h, r) {
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+
+// ---------- the tube ----------
+function bg(g) {
+  g.fillStyle = DK(0.03); g.fillRect(0, 0, W, H);
+  const gr = g.createRadialGradient(320, 230, 0, 320, 230, 380);
+  gr.addColorStop(0, C(0.075)); gr.addColorStop(1, C(0));
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+}
+let tube = null;
+function crt(g, t) {
+  if (!tube) {
+    tube = off(W, H); const x = tube.getContext('2d');
+    x.fillStyle = 'rgba(0,0,0,0.26)'; for (let y = 0; y < H; y += 3) x.fillRect(0, y + 2, W, 1);
+    const v = x.createRadialGradient(320, 240, 190, 320, 240, 430);
+    v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.62)');
+    x.fillStyle = v; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#000'; x.beginPath(); x.rect(0, 0, W, H); rrPath(x, 3, 3, W - 6, H - 6, 26); x.fill('evenodd');
+  }
+  // the refresh band rolls down the tube
+  const by = ((t * 64) % (H + 220)) - 110;
+  const band = g.createLinearGradient(0, by, 0, by + 110);
+  band.addColorStop(0, C(0)); band.addColorStop(0.5, C(0.045)); band.addColorStop(1, C(0));
+  g.fillStyle = band; g.fillRect(0, by, W, 110);
+  g.drawImage(tube, 0, 0, W, H);
+  const fl = 0.018 + 0.018 * Math.sin(t * 47) * Math.sin(t * 13.3);
+  g.fillStyle = 'rgba(0,0,0,' + clamp(fl, 0, 0.05) + ')'; g.fillRect(0, 0, W, H);
+}
+// every screen: reset the colour, paint the tube background, the content, then the glass
+function screen(fn, pick) {
+  return function (g, t) {
+    PC = pick ? pick(t) : PHOS.verde;
+    g.save(); bg(g); fn(g, t); g.restore();
+    g.shadowBlur = 0; g.globalAlpha = 1;
+    crt(g, t);
+  };
+}
+
+// ---------- chrome ----------
+const TABS = ['Jogos', 'Recentes', 'Música', 'Sistema'];
+let LANG_EN = false;
+const TABS_EN = ['Games', 'Recent', 'Music', 'System'];
+function status(g, right) {
+  const x = right || 620;
+  for (let i = 0; i < 5; i++) {
+    g.fillStyle = i < 4 ? C(0.85) : C(0.14);
+    g.fillRect(x - 46 + i * 9, 16, 6, 11);
+  }
+  box(g, x - 49, 13, 48, 17, C(0.5)); g.fillStyle = C(0.5); g.fillRect(x - 1, 18, 3, 7);
+  let xx = x - 58;
+  xx -= text(g, '82%', xx, 27, C(0.6), 14, { align: 'right', glow: 0 }) + 14;
+  text(g, '20:47', xx, 27, C(0.85), 15, { align: 'right' });
+}
+function rule(g, y, a) {
+  line(g, 16, y + 0.5, 624, y + 0.5, C(a == null ? 0.38 : a));
+  g.fillStyle = C(0.3);
+  for (let x = 16; x <= 624; x += 32) g.fillRect(x, y + 1, 1, 4);
+}
+// tab: one of TABS (or null: an in-game screen, the title takes the tab row)
+function header(g, tab, title, extra) {
+  if (tab) {
+    let x = 18;
+    const names = LANG_EN ? TABS_EN : TABS;
+    TABS.forEach((tb, i) => {
+      const s = up(names[i]), w = tw(g, s, 15) + 2 * 1.5 * (s.length - 1) / 2;
+      if (tb === tab) {
+        g.fillStyle = C(0.92); g.shadowColor = C(0.7); g.shadowBlur = 8; g.fillRect(x - 6, 10, w + 12, 22); g.shadowBlur = 0;
+        text(g, s, x, 27, DK(0.07), 15, { ls: 1.5, glow: 0 });
+      } else text(g, s, x, 27, C(0.42), 15, { ls: 1.5, glow: 0 });
+      x += w + 26;
+    });
+    status(g); rule(g, 38);
+    if (title) {
+      text(g, '>', 20, 72, C(0.5), 30, { d: true, glow: 0 });
+      text(g, title, 38, 72, HI(1), 32, { d: true, glow: 12 });
+      if (extra) text(g, up(extra), 620, 70, C(0.5), 14, { align: 'right', ls: 1, glow: 0 });
+    }
+  } else {
+    text(g, title, 20, 31, HI(1), 32, { d: true, glow: 12 });
+    if (extra) { const ew = tw(g, title, 32, true); text(g, up(extra), 32 + ew, 29, C(0.5), 14, { ls: 1, glow: 0 }); }
+    status(g); rule(g, 40);
+  }
+}
+function keyW(g, k) { return k === 'LR' ? 30 : tw(g, k, 13) + 12; }
+function key(g, x, y, k, prim) {
+  const w = keyW(g, k);
+  if (prim) { g.fillStyle = C(0.9); g.shadowColor = C(0.6); g.shadowBlur = 6; g.fillRect(x, y, w, 19); g.shadowBlur = 0; }
+  else box(g, x, y, w, 19, C(0.6));
+  const ink = prim ? DK(0.07) : C(0.85);
+  if (k === 'LR') { tri(g, x + 11, y + 9.5, 4, -1, ink); tri(g, x + 19, y + 9.5, 4, 1, ink); }
+  else text(g, k, x + w / 2, y + 14, ink, 13, { align: 'center', glow: 0 });
+  return w;
+}
+function hints(g, pairs, panel) {
+  if (panel) { g.fillStyle = 'rgba(0,0,0,0.85)'; g.fillRect(panel[0], 438, panel[1], 42); }
+  else rule(g, 438, 0.3);
+  const y = 450; let rp = pairs;
+  if (pairs[0][0] === 'B') { let x = 20; x += key(g, x, y, 'B') + 8; text(g, up(pairs[0][1]), x, y + 14, C(0.6), 13, { ls: 1, glow: 0 }); rp = pairs.slice(1); }
+  let x = 620;
+  for (let i = rp.length - 1; i >= 0; i--) {
+    const [k, lab] = rp[i], L = up(lab);
+    x -= text(g, L, x, y + 14, C(0.6), 13, { align: 'right', ls: 1, glow: 0 }) + 8;
+    x -= keyW(g, k); key(g, x, y, k, k === 'A'); x -= 20;
+  }
+}
+
+// ---------- selection: reverse video that slides, wiped in by a scan ----------
+function selState(t, n, per, off0) {
+  const tt = Math.max(0, t + (off0 || 0)), k = Math.floor(tt / per), m = Math.max(1, 2 * n - 2);
+  const f = i => { const s = ((i % m) + m) % m; return s < n ? s : m - s; };
+  return { sel: f(k), prev: f(k - 1), p: clamp((tt - k * per) / 0.34), lt: tt - k * per };
+}
+function curOf(st) { return eo(st.p) > 0.5 ? st.sel : st.prev; }
+function list(g, items, st, o) {
+  const x = o.x, y = o.y, w = o.w, rh = o.rh, pe = eo(st.p), cur = curOf(st);
+  const sy = lerp(y + st.prev * rh, y + st.sel * rh, pe);
+  items.forEach((it, i) => { if (i !== cur) rowContent(g, it, i, x, y + i * rh, w, rh, false, o, 0); });
+  // the bar: lands, then a bright scan crosses it once
+  g.fillStyle = C(0.9); g.shadowColor = C(0.55); g.shadowBlur = 10;
+  g.fillRect(x, sy + 3, w, rh - 6); g.shadowBlur = 0;
+  const sp = clamp((st.lt - 0.1) / 0.45);
+  if (sp > 0 && sp < 1) {
+    const sx = x + w * eo(sp), gr = g.createLinearGradient(sx - 60, 0, sx, 0);
+    gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(255,255,255,0.55)');
+    g.fillStyle = gr; g.fillRect(Math.max(x, sx - 60), sy + 3, Math.min(60, sx - x), rh - 6);
+  }
+  rowContent(g, items[cur], cur, x, sy, w, rh, true, o, st.lt);
+  return cur;
+}
+function rowContent(g, it, i, x, y, w, rh, sel, o, lt) {
+  const fs = o.fs || 18, mid = y + rh / 2, two = !!it.d;
+  const ink = sel ? DK(0.07) : C(0.82), soft = sel ? DK(0.3) : C(0.42), gl = sel ? 0 : 4;
+  let tx = x + 12;
+  if (o.num) { text(g, String(i + 1).padStart(2, '0'), tx, mid + 5, soft, 13, { glow: 0 }); tx += 28; }
+  if (it.chk != null) {
+    box(g, tx, mid - 8, 16, 16, sel ? ink : C(0.6));
+    if (it.chk) { g.fillStyle = sel ? ink : C(0.9); g.fillRect(tx + 4, mid - 4, 8, 8); }
+    tx += 28;
+  }
+  if (it.ic) { iconSmall(g, it.ic, tx + 8, mid, sel ? ink : C(0.7)); tx += 26; }
+  const by = two ? mid - 2 : mid + fs * 0.34;
+  const tw0 = text(g, it.t, tx, by, ink, fs, { glow: gl });
+  if (sel && !it.v && !it.arrow && !it.sig && it.chk == null) cursor(g, tx + tw0 + 4, by, fs, lt + 0.6, ink);
+  if (two) text(g, it.d, tx, mid + 15, soft, 13, { glow: 0 });
+  let rx = x + w - 12;
+  if (it.arrow) { tri(g, rx - 5, mid, 5, 1, sel ? ink : C(0.45)); rx -= 22; }
+  if (it.sig != null) {
+    for (let k = 0; k < 4; k++) { const bh = 4 + k * 3, on = k < it.sig; g.fillStyle = on ? ink : (sel ? DK(0.45) : C(0.16)); g.fillRect(rx - 30 + k * 8, mid + 7 - bh, 5, bh); }
+    rx -= 44;
+    if (it.lock) { const c = sel ? ink : C(0.6); g.fillStyle = c; g.fillRect(rx - 10, mid - 1, 10, 8); g.strokeStyle = c; g.lineWidth = 1.6; g.beginPath(); g.arc(rx - 5, mid - 1, 3.2, Math.PI, 0); g.stroke(); rx -= 22; }
+  }
+  if (it.sw) { g.fillStyle = it.sw; g.fillRect(rx - 20, mid - 8, 20, 16); box(g, rx - 20, mid - 8, 20, 16, sel ? ink : C(0.6)); rx -= 30; }
+  if (it.v != null) {
+    const vs = o.vs || 15;
+    if (sel && it.cycle !== false) {
+      tri(g, rx - 5, mid, 5, 1, ink);
+      const vw = text(g, it.v, rx - 14, mid + vs * 0.34, ink, vs, { align: 'right', glow: 0 });
+      tri(g, rx - 20 - vw, mid, 5, -1, ink);
+    } else text(g, it.v, rx, mid + vs * 0.34, sel ? ink : (it.vc || C(0.62)), vs, { align: 'right', glow: sel ? 0 : 3 });
+  }
+}
+function iconSmall(g, k, cx, cy, col) {
+  g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 1.6;
+  if (k === 'dir') { g.strokeRect(cx - 8, cy - 5, 16, 11); g.fillRect(cx - 8, cy - 7, 7, 3); }
+  else if (k === 'note') { g.beginPath(); g.arc(cx - 3, cy + 4, 3, 0, Math.PI * 2); g.fill(); g.fillRect(cx - 0.5, cy - 7, 2, 11); g.fillRect(cx, cy - 7, 6, 2); }
+  else if (k === 'tool') { g.beginPath(); g.arc(cx, cy, 6, 0, Math.PI * 2); g.stroke(); g.fillRect(cx - 1, cy - 9, 2, 4); g.fillRect(cx - 1, cy + 5, 2, 4); g.fillRect(cx - 9, cy - 1, 4, 2); g.fillRect(cx + 5, cy - 1, 4, 2); }
+  else { g.strokeRect(cx - 6, cy - 6, 12, 12); g.fillRect(cx - 2, cy - 2, 4, 4); }
+}
+
+// ---------- consoles: sigla in a frame, the controller in line art, or the console in wireframe ----------
+function iconCol(sel, a) {
+  return { line: sel ? HI(1) : C(a == null ? 0.7 : a), acc: sel ? HI(1) : C(0.85), fill: DK(0.035), scr: C(sel ? 0.22 : 0.1), lw: sel ? 1.6 : 1.2 };
+}
+// (x, y) is the floor centre; s the half-width of the drawing
+function sysIcon(g, tag, x, y, s, sel, variant, t, o) {
+  o = o || {};
+  const col = iconCol(sel, o.a);
+  if (o.prog != null) col.prog = o.prog;
+  g.save();
+  if (sel) { g.shadowColor = C(0.8); g.shadowBlur = o.glow == null ? 10 : o.glow; }
+  if (variant === 'S') {
+    const bw = s * 1.9, bh = s * 1.05, by = y - s * 0.9 - bh / 2;
+    if (sel) { g.fillStyle = C(0.9); g.fillRect(x - bw / 2, by, bw, bh); }
+    else box(g, x - bw / 2, by, bw, bh, C(0.55));
+    const px = Math.round(s * 0.62 * Math.min(1, 3.6 / tag.length));
+    text(g, tag, x, by + bh / 2 + px * 0.34, sel ? DK(0.07) : C(0.8), px, { align: 'center', d: true, glow: 0 });
+  } else if (variant === 'A') ANX_ICONS.fosforo.ctrl(g, tag, x, y - s * 0.75, s * 0.6, col);
+  else ANX_ICONS.fosforo.model(g, tag, x, y - s * 0.36, s * 1.15, sel && o.spin !== false ? t * 0.7 : 0, col);
+  g.restore();
+}
+// the projector the chosen console floats over: two rings, ticks turning, a faint beam
+function pad(g, x, y, rx, t, a) {
+  a = a == null ? 1 : a;
+  g.save(); g.globalAlpha *= a;
+  const beam = g.createLinearGradient(0, y - rx * 1.25, 0, y);
+  beam.addColorStop(0, C(0)); beam.addColorStop(1, C(0.09));
+  g.fillStyle = beam; g.beginPath(); g.moveTo(x - rx * 0.55, y - rx * 1.25); g.lineTo(x + rx * 0.55, y - rx * 1.25); g.lineTo(x + rx, y); g.lineTo(x - rx, y); g.closePath(); g.fill();
+  g.strokeStyle = C(0.55); g.lineWidth = 1.4; g.shadowColor = C(0.8); g.shadowBlur = 8;
+  g.beginPath(); g.ellipse(x, y, rx, rx * 0.25, 0, 0, Math.PI * 2); g.stroke();
+  g.strokeStyle = C(0.25); g.beginPath(); g.ellipse(x, y, rx * 0.72, rx * 0.18, 0, 0, Math.PI * 2); g.stroke();
+  g.shadowBlur = 0; g.strokeStyle = C(0.7); g.lineWidth = 2;
+  for (let i = 0; i < 16; i++) {
+    const an = i / 16 * Math.PI * 2 + t * 0.6, c = Math.cos(an), sn = Math.sin(an);
+    g.beginPath(); g.moveTo(x + c * rx, y + sn * rx * 0.25); g.lineTo(x + c * rx * 1.08, y + sn * rx * 0.27); g.stroke();
+  }
+  g.restore();
+}
+
+// ---------- art (the device reads the real covers and saves, and tints them to the phosphor) ----------
+const cache = {};
+function sceneImg(v) {
+  const key = 'sc' + v; if (cache[key]) return cache[key];
+  const c = off(160, 120), x = c.getContext('2d');
+  const pals = [['#1b1446', '#ff8a5c', '#3a2a7a', '#241c56', '#5ad1a0', '#16123a'], ['#0b2a4a', '#ffd27a', '#1d5a6a', '#123a48', '#f2a33c', '#0a2030'], ['#2a0b2a', '#ff5ca8', '#4a1f4a', '#2a1030', '#3ad6e0', '#1a0818']];
+  const p = pals[v % 3];
+  const sk = x.createLinearGradient(0, 0, 0, 84); sk.addColorStop(0, p[0]); sk.addColorStop(1, p[1]);
+  x.fillStyle = sk; x.fillRect(0, 0, 160, 120);
+  x.fillStyle = '#ffe6a8'; x.beginPath(); x.arc(116, 54, 13, 0, Math.PI * 2); x.fill();
+  x.fillStyle = 'rgba(255,255,255,0.5)'; x.fillRect(20, 20, 22, 4); x.fillRect(26, 16, 12, 4); x.fillRect(84, 28, 18, 3);
+  x.fillStyle = p[2]; x.beginPath(); x.moveTo(0, 120);
+  for (let i = 0; i <= 160; i += 8) x.lineTo(i, 74 + Math.sin(i * 0.05 + v) * 8);
+  x.lineTo(160, 120); x.fill();
+  x.fillStyle = p[3]; x.beginPath(); x.moveTo(0, 120);
+  for (let i = 0; i <= 160; i += 8) x.lineTo(i, 86 + Math.sin(i * 0.09 + v * 2) * 5);
+  x.lineTo(160, 120); x.fill();
+  for (let gx = 0; gx < 160; gx += 8) for (let gy = 96; gy < 120; gy += 8) { x.fillStyle = ((gx + gy) / 8) % 2 ? p[5] : p[3]; x.fillRect(gx, gy, 8, 8); }
+  x.fillStyle = p[4]; x.fillRect(0, 96, 160, 3);
+  x.fillStyle = '#fff2c8'; x.fillRect(42, 78, 8, 6); x.fillStyle = p[4]; x.fillRect(40, 84, 12, 10); x.fillStyle = '#20183a'; x.fillRect(41, 94, 4, 2); x.fillRect(47, 94, 4, 2);
+  x.fillStyle = '#ffd27a'; x.fillRect(70, 70, 5, 5); x.fillRect(80, 66, 5, 5); x.fillRect(90, 70, 5, 5);
+  return (cache[key] = c);
+}
+const GAMES = [['Star Hunt', ['#3ad6e0', '#143f6b']], ['Neon Alley', ['#ff5ca8', '#7a1f5a']], ['Pixel Kart', ['#f2a33c', '#7a3d12']], ['Mecha Dawn', ['#9b7cff', '#2a1f5a']], ['Tide Runner', null], ['Crystal Vale', ['#51e0a3', '#145741']], ['Iron Comet', ['#ff8a5c', '#6b2814']]];
+const ALBUMS = [['Ondas de Vidro', ['#3ad6e0', '#2a1f5a']], ['Arctic Lights', ['#9be7ff', '#143f6b']], ['Bruma', ['#8d96bd', '#1c2140']], ['Cidade Submersa', ['#51e0a3', '#0b2a4a']], ['Faroeste Neon', ['#ff8a5c', '#3a0f2a']], ['Lumen', ['#fbd270', '#7a3d12']], ['Noites Claras', ['#ff5ca8', '#140a2a']]];
+function artImg(kind, i) {
+  const key = kind + i; if (cache[key]) return cache[key];
+  const sq = kind === 'al', [name, cols] = (sq ? ALBUMS : GAMES)[i];
+  const w = sq ? 160 : 120, h = 160, c = off(w, h), x = c.getContext('2d');
+  if (!cols) {
+    x.fillStyle = '#10141c'; x.fillRect(0, 0, w, h);
+    x.font = '96px ' + FD; x.fillStyle = '#cfd8e6'; x.textAlign = 'center'; x.fillText(name[0], w / 2, h / 2 + 30); x.textAlign = 'left';
+    return (cache[key] = c);
+  }
+  const gr = x.createLinearGradient(0, 0, w, h); gr.addColorStop(0, cols[0]); gr.addColorStop(1, cols[1]);
+  x.fillStyle = gr; x.fillRect(0, 0, w, h);
+  x.globalAlpha = 0.25; x.fillStyle = '#fff';
+  x.beginPath(); x.arc(w * 0.72, h * 0.32, w * 0.34, 0, Math.PI * 2); x.fill();
+  x.globalAlpha = 0.16; for (let k = 0; k < 6; k++) x.fillRect(0, h * 0.5 + k * 9, w, 3);
+  x.globalAlpha = 1;
+  const sh = x.createLinearGradient(0, h * 0.5, 0, h); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.7)');
+  x.fillStyle = sh; x.fillRect(0, 0, w, h);
+  x.font = '600 ' + (sq ? 17 : 15) + 'px "Segoe UI", sans-serif'; x.fillStyle = '#fff'; x.fillText(name, 10, h - 14);
+  return (cache[key] = c);
+}
+// monochrome in the phosphor colour: the picture's brightness, the tube's hue, its own scanlines
+function tint(img, key) {
+  const k = 'ti' + key + PC.join('.'); if (cache[k]) return cache[k];
+  const w = img.width * 2, h = img.height * 2, c = off(w, h), x = c.getContext('2d');
+  x.imageSmoothingEnabled = false; x.drawImage(img, 0, 0, w, h);
+  x.globalCompositeOperation = 'saturation'; x.fillStyle = '#808080'; x.fillRect(0, 0, w, h);
+  x.globalCompositeOperation = 'multiply'; x.fillStyle = 'rgb(' + PC.join(',') + ')'; x.fillRect(0, 0, w, h);
+  x.globalCompositeOperation = 'source-over';
+  x.fillStyle = 'rgba(0,0,0,0.3)'; for (let y = 0; y < h; y += 3) x.fillRect(0, y, w, 1);
+  return (cache[k] = c);
+}
+// draw a tinted picture; reveal < 1 paints it top-down like a slow scan, with the beam line
+function pic(g, img, key, x, y, w, h, o) {
+  o = o || {};
+  const rv = o.reveal == null ? 1 : o.reveal, hh = h * rv;
+  if (hh > 0) {
+    g.save(); g.beginPath(); g.rect(x, y, w, hh); g.clip();
+    g.drawImage(o.raw ? img : tint(img, key), x, y, w, h);
+    if (o.dim) { g.fillStyle = 'rgba(0,0,0,' + o.dim + ')'; g.fillRect(x, y, w, h); }
+    g.restore();
+  }
+  if (rv < 1) { g.fillStyle = HI(0.9); g.shadowColor = C(1); g.shadowBlur = 12; g.fillRect(x, y + hh - 1, w, 2); g.shadowBlur = 0; }
+}
+
+// ---------- data ----------
+const S = {};
+const SYS = [['GBA', 'Game Boy Advance', 142], ['SFC', 'Super Nintendo', 308], ['PS', 'PlayStation', 214], ['MD', 'Mega Drive', 96], ['GB', 'Game Boy', 87], ['FC', 'Nintendo', 120], ['GBC', 'Game Boy Color', 64]];
+const LAST = ['Crystal Vale', 'Pixel Kart', 'Star Hunt', 'Iron Comet', 'Tide Runner', 'Neon Alley', 'Mecha Dawn'];
+
+function musicLine(g, x, y, t) {
+  for (let c = 0; c < 5; c++) {
+    const n = 1 + Math.round((Math.sin(t * 6 + c * 1.7) + 1) * 1.6);
+    for (let k = 0; k < n; k++) { g.fillStyle = C(k === n - 1 ? 1 : 0.7); g.fillRect(x + c * 6, y - k * 4, 4, 3); }
+  }
+  const w = text(g, 'Midnight Pulse', x + 38, y + 2, C(0.85), 14);
+  text(g, '· AnberTunes', x + 46 + w, y + 2, C(0.38), 13, { glow: 0 });
+}
+function nameTyped(g, s, x, y, px, lt, o) {
+  o = o || {};
+  // centred names start where the full name will start, so the letters do not slide while typing
+  const shown = typed(s, lt, 34), x0 = o.align === 'center' ? x - tw(g, s, px, true) / 2 : x;
+  const w = text(g, shown, x0, y, HI(1), px, { d: true, glow: 14 });
+  if (shown.length < s.length || lt < 1.4) cursor(g, x0 + w, y, px, lt, C(0.9));
+}
+
+// ---------- home: carousel (the default) ----------
+function homeC(g, t, variant, bare) {
+  header(g, 'Jogos');
+  const n = SYS.length, per = 2.4, k = Math.floor(t / per), lt = t - k * per, p = eo(clamp(lt / 0.5)), c = (k - 1) + p;
+  const items = [];
+  for (let j = 0; j < n; j++) { let o = ((j - c) % n + n) % n; if (o > n / 2) o -= n; items.push([j, o]); }
+  items.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  pad(g, 320, 262, 112, t, 1);
+  for (const [j, o] of items) {
+    const ao = Math.abs(o); if (ao > 3) continue;
+    const x = 320 + Math.sign(o) * (ao < 1 ? ao * 175 : 175 + (ao - 1) * 92);
+    const sc = ao < 1 ? lerp(1, 0.5, ao) : Math.max(0.32, 0.5 - (ao - 1) * 0.09);
+    const s = 74 * sc, floorY = 250 - (1 - sc) * 30 + (ao < 1 ? 0 : 0);
+    g.save(); g.globalAlpha = clamp(1 - (ao - 1.6) / 1.0) * (ao < 0.5 ? 1 : 0.6);
+    sysIcon(g, SYS[j][0], x, floorY, s, ao < 0.5, variant || 'B', t);
+    g.restore();
+  }
+  tri(g, 34, 190, 8, -1, C(0.3 + 0.3 * Math.abs(Math.sin(t * 2)))); tri(g, 606, 190, 8, 1, C(0.3 + 0.3 * Math.abs(Math.sin(t * 2))));
+  const cur = ((Math.round(c) % n) + n) % n;
+  nameTyped(g, SYS[cur][1], 320, 330, 46, lt - 0.08, { align: 'center' });
+  text(g, SYS[cur][2] + ' JOGOS', 320, 356, C(0.55), 14, { align: 'center', ls: 3, glow: 0 });
+  for (let j = 0; j < n; j++) {
+    const x = 320 + (j - (n - 1) / 2) * 18, on = j === cur;
+    if (on) { g.fillStyle = C(0.95); g.fillRect(x - 6, 374, 12, 4); } else { g.fillStyle = C(0.22); g.fillRect(x - 4, 375, 8, 2); }
+  }
+  if (bare) return;
+  musicLine(g, 20, 420, t);
+  hints(g, [['SELECT', 'Recentes'], ['F', 'Menu'], ['A', 'Abrir']]);
+}
+S.home = screen((g, t) => homeC(g, t, 'B'));
+S.homeA = screen((g, t) => homeC(g, t, 'A'));
+S.homeS = screen((g, t) => homeC(g, t, 'S'));
+
+S.homeList = screen(function (g, t) {
+  header(g, 'Jogos');
+  const st = selState(t, SYS.length, 1.5), cur = curOf(st);
+  list(g, SYS.map(([, name, cnt]) => ({ t: name, v: String(cnt), cycle: false })), st, { x: 16, y: 52, w: 300, rh: 48 });
+  frame(g, 336, 56, 284, 330);
+  text(g, 'CONSOLE ' + String(cur + 1).padStart(2, '0') + '/' + String(SYS.length).padStart(2, '0'), 350, 78, C(0.45), 12, { ls: 2, glow: 0 });
+  pad(g, 478, 238, 92, t, 1);
+  sysIcon(g, SYS[cur][0], 478, 226, 70, true, 'B', t, { prog: eo(clamp(st.lt / 0.6)) });
+  nameTyped(g, SYS[cur][1], 478, 300, 34, st.lt - 0.1, { align: 'center' });
+  text(g, SYS[cur][2] + ' JOGOS', 478, 324, C(0.6), 13, { align: 'center', ls: 2.5, glow: 0 });
+  text(g, 'ÚLTIMO: ' + LAST[cur], 478, 350, C(0.42), 13, { align: 'center', glow: 0 });
+  musicLine(g, 20, 420, t);
+  hints(g, [['SELECT', 'Recentes'], ['F', 'Menu'], ['A', 'Abrir']]);
+});
+
+S.homeGrid = screen(function (g, t) {
+  header(g, 'Jogos');
+  const n = SYS.length, per = 1.3, cur = Math.floor(t / per) % n, lt = t % per, pp = eo(clamp(lt / 0.3));
+  SYS.forEach(([tag, name, cnt], j) => {
+    const row = j < 4 ? 0 : 1, col = row ? j - 4 : j, cols = row ? 3 : 4;
+    const cw = 138, ch = 166, x = 320 + (col - (cols - 1) / 2) * 152 - cw / 2, y = row ? 232 : 54, sel = j === cur;
+    if (sel) frame(g, x, y, cw, ch, { k: 10 * (1 - pp), fill: C(0.05), line: C(0.35) });
+    else box(g, x, y, cw, ch, C(0.14));
+    if (sel) pad(g, x + cw / 2, y + 108, 44, t, 0.8);
+    sysIcon(g, tag, x + cw / 2, y + 100, 40, sel, 'B', t, { a: 0.5 });
+    text(g, up(name).length > 14 ? tag : up(name), x + cw / 2, y + 136, sel ? HI(1) : C(0.55), 13, { align: 'center', ls: 1, glow: sel ? 6 : 0 });
+    if (sel) text(g, cnt + ' JOGOS', x + cw / 2, y + 154, C(0.6), 11, { align: 'center', ls: 2, glow: 0 });
+  });
+  musicLine(g, 20, 420, t);
+  hints(g, [['SELECT', 'Recentes'], ['F', 'Menu'], ['A', 'Abrir']]);
+});
+
+function iconSheet(g, t, variant) {
+  const L = ANX_ICONS.SYSTEMS, n = L.length, cur = Math.floor(t / 0.9) % n, pp = eob(clamp((t % 0.9) / 0.35));
+  header(g, 'Jogos', 'Todos os consoles', n + ' sistemas · ' + (variant === 'A' ? 'controle' : 'console'));
+  L.forEach(([tag], j) => {
+    const row = Math.floor(j / 8), col = j % 8, x = 47 + col * 78, floorY = 128 + row * 64, sel = j === cur;
+    const s = variant === 'A' ? (sel ? 30 : 25) : (sel ? 27 : 22), lift = sel ? 5 * pp : 0;
+    if (sel) pad(g, x, floorY + 2, 30, t, 0.9);
+    sysIcon(g, tag, x, floorY - lift, s, sel, variant, t * 1.6, { a: 0.55, glow: 8 });
+  });
+  frame(g, 16, 402, 608, 32, { fill: 'rgba(0,0,0,0.6)', line: C(0.3), len: 8 });
+  text(g, L[cur][1], 30, 424, HI(1), 24, { d: true, glow: 10 });
+  text(g, L[cur][0], 610, 423, C(0.7), 14, { align: 'right', ls: 2 });
+  hints(g, [['B', 'Voltar'], ['A', 'Abrir']]);
+}
+S.iconsA = screen((g, t) => iconSheet(g, t, 'A'));
+S.iconsB = screen((g, t) => iconSheet(g, t, 'B'));
+
+// ---------- inside a console ----------
+function gamesC(g, t) {
+  const n = GAMES.length, per = 2.0, k = Math.floor(t / per), lt = t - k * per, m = 2 * n - 2;
+  const f = i => { const s = ((i % m) + m) % m; return s < n ? s : m - s; };
+  const p = eo(clamp(lt / 0.42)), c = lerp(f(k - 1), f(k), p), cur = Math.round(c);
+  header(g, 'Jogos', 'PlayStation', (cur + 1) + '/214');
+  const order = GAMES.map((_, j) => [j, j - c]).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  for (const [j, o] of order) {
+    const ao = Math.abs(o); if (ao > 2.6) continue;
+    const sc = ao < 1 ? lerp(1, 0.66, ao) : Math.max(0.42, 0.66 - (ao - 1) * 0.12);
+    const w = 150 * sc, h = 200 * sc, base = 300, cx = 320 + Math.sign(o) * (ao < 1 ? ao * 160 : 160 + (ao - 1) * 96);
+    const x = cx - w / 2, y = base - h, sel = ao < 0.5;
+    g.fillStyle = DK(0.03); g.fillRect(x, y, w, h);
+    pic(g, artImg('cv', j), 'cv' + j, x, y, w, h, { dim: Math.min(0.62, ao * 0.6), reveal: sel ? eo(clamp((lt - 0.3) / 0.5)) : 1 });
+    if (sel) frame(g, x, y, w, h, { k: 8 * (1 - eo(clamp((lt - 0.2) / 0.3))), line: C(0.4) }); else box(g, x, y, w, h, C(0.18));
+  }
+  nameTyped(g, GAMES[cur][0], 320, 346, 40, lt - 0.3, { align: 'center' });
+  text(g, GAMES[cur][1] ? 'CAPA ENCONTRADA' : 'SEM CAPA: A INICIAL VIRA A CAPA', 320, 370, C(0.42), 12, { align: 'center', ls: 2, glow: 0 });
+}
+S.games = screen(function (g, t) { gamesC(g, t); hints(g, [['B', 'Voltar'], ['SELECT', 'Recentes'], ['A', 'Jogar']]); });
+
+S.gamesList = screen(function (g, t) {
+  const st = selState(t, GAMES.length, 1.4), cur = curOf(st);
+  header(g, 'Jogos', 'PlayStation', (cur + 1) + '/214');
+  list(g, GAMES.map(([nm]) => ({ t: nm })), st, { x: 16, y: 86, w: 300, rh: 46, num: true });
+  const w = 186, h = 248, x = 434 - w / 2 + 10, y = 92;
+  g.fillStyle = DK(0.03); g.fillRect(x, y, w, h);
+  pic(g, artImg('cv', cur), 'cv' + cur, x, y, w, h, { reveal: eo(clamp((st.lt - 0.15) / 0.55)) });
+  frame(g, x, y, w, h, { line: C(0.35) });
+  text(g, ['SLOT 2 · 12H JOGADAS', 'SEM SAVE', 'SLOT 0 · 3H JOGADAS', 'SEM SAVE', 'RETOMADA · 40MIN', 'SLOT 1 · 8H JOGADAS', 'SEM SAVE'][cur], x + w / 2, 370, C(0.5), 12, { align: 'center', ls: 1.5, glow: 0 });
+  // scroll position on the left edge of the cover column
+  line(g, 330, 92, 330, 400, C(0.14), 2);
+  g.fillStyle = C(0.85); g.fillRect(328, 92 + cur / (GAMES.length - 1) * 268, 5, 40);
+  hints(g, [['B', 'Voltar'], ['SELECT', 'Recentes'], ['A', 'Jogar']]);
+});
+
+S.recent = screen(function (g, t) {
+  const n = 3, per = 2.6, k = Math.floor(t / per), lt = t - k * per, p = eo(clamp(lt / 0.5)), c = lerp(k - 1, k, p);
+  const cur = ((Math.round(c) % n) + n) % n;
+  header(g, 'Recentes', 'Continuar de onde parou', (cur + 1) + '/3');
+  const names = [['Star Hunt', 'PlayStation · slot 2 · ontem 22:10'], ['Pixel Kart', 'Super Nintendo · slot 0 · 08/11'], ['Crystal Vale', 'Game Boy Advance · retomada · 07/11']];
+  const order = [0, 1, 2].map(j => { let o = (((j - c) % 3) + 3) % 3; if (o > 1.5) o -= 3; return [j, o]; }).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  for (const [j, o] of order) {
+    const ao = Math.abs(o), sc = lerp(1, 0.6, clamp(ao)), w = 336 * sc, h = 252 * sc;
+    const cx = 320 + o * 330, y = 92 + (1 - sc) * 70, x = cx - w / 2, sel = ao < 0.5;
+    g.fillStyle = DK(0.03); g.fillRect(x, y, w, h);
+    pic(g, sceneImg(j), 'sc' + j, x, y, w, h, { dim: Math.min(0.6, ao * 0.6), reveal: sel ? eo(clamp((lt - 0.35) / 0.6)) : 1 });
+    if (sel) frame(g, x, y, w, h, { line: C(0.4) }); else box(g, x, y, w, h, C(0.18));
+  }
+  nameTyped(g, names[cur][0], 320, 384, 36, lt - 0.35, { align: 'center' });
+  text(g, up(names[cur][1]), 320, 408, C(0.5), 12, { align: 'center', ls: 1.5, glow: 0 });
+  hints(g, [['B', 'Voltar'], ['LR', 'Trocar'], ['A', 'Continuar']]);
+});
+
+const FMN = ['Ajustes', 'Loja de Paks', 'Ferramentas', 'Música', 'Recentes', 'Reiniciar', 'Desligar'];
+S.fmenu = screen(function (g, t) {
+  homeC(g, 0.3, 'B', true);
+  g.fillStyle = 'rgba(0,0,0,0.84)'; g.fillRect(0, 0, W, H);
+  const cyc = 2 * FMN.length - 2, lt0 = t % (1.4 * cyc), open = eo(clamp(lt0 / 0.35));
+  const bw = 290, bh = 340, x = 175, cy = 238, h = Math.max(2, bh * open), y = cy - h / 2;
+  g.fillStyle = DK(0.035); g.fillRect(x, y, bw, h);
+  box(g, x, y, bw, h, C(0.8)); box(g, x + 4, y + 4, bw - 8, Math.max(0, h - 8), C(0.3));
+  if (open < 1) { g.fillStyle = HI(0.9); g.shadowColor = C(1); g.shadowBlur = 14; g.fillRect(x, cy - 1, bw, 2); g.shadowBlur = 0; return; }
+  text(g, 'MENU', x + 20, y + 36, HI(1), 28, { d: true, glow: 10 });
+  text(g, 'F', x + bw - 22, y + 34, C(0.45), 14, { align: 'right', glow: 0 });
+  line(g, x + 14, y + 46, x + bw - 14, y + 46, C(0.3));
+  const st = selState(t, FMN.length, 1.4);
+  list(g, FMN.map((a, i) => ({ t: a, v: i === 5 ? '' : i === 6 ? '' : null, vc: C(0.4) })), st, { x: x + 14, y: y + 56, w: bw - 28, rh: 38 });
+  hints(g, [['B', 'Fechar'], ['A', 'OK']]);
+});
+
+const TOOLS = [['Atualizar AnberNext', 'online'], ['Disc Organizer', ''], ['Pak Plaza', 'loja'], ['AnberNext Rollback', ''], ['Bateria', '82%'], ['Relógio', '20:47'], ['Game Tracker', ''], ['Teste de botões', '']];
+S.tools = screen(function (g, t) {
+  header(g, 'Sistema', 'Ferramentas', '8 itens');
+  list(g, TOOLS.map(([a, v]) => ({ t: a, ic: 'tool', v: v ? up(v) : null, cycle: false })), selState(t, TOOLS.length, 1.4), { x: 16, y: 86, w: 608, rh: 42, num: true });
+  hints(g, [['B', 'Voltar'], ['A', 'Abrir']]);
+});
+
+const LOG = ['bios ........................ ok', 'save do slot 2 .............. ok', 'atalhos do jogo ............. ok', 'shader: nenhum'];
+S.loading = screen(function (g, t) {
+  const per = 3.4, lt = t % per;
+  pad(g, 320, 200, 104, t, eo(clamp(lt / 0.4)));
+  sysIcon(g, 'PS', 320, 196, 96, true, 'B', t * 0.6 + 0.4, { prog: eo(clamp((lt - 0.1) / 1.1)) });
+  text(g, 'Star Hunt', 320, 270, HI(1), 46, { d: true, align: 'center', glow: 14 });
+  const dots = '.'.repeat(1 + Math.floor(t * 3) % 3);
+  text(g, 'CARREGANDO' + dots, 320 - tw(g, 'CARREGANDO...', 13) / 2 - 3, 294, C(0.6), 13, { ls: 3, glow: 0 });
+  gauge(g, 320 - (28 * 15 - 3) / 2, 306, 28, clamp(lt / 2.6) * 28, 12, 10, 3);
+  LOG.forEach((s, i) => {
+    const a = lt - 0.5 - i * 0.55; if (a < 0) return;
+    const sh = typed('> ' + s, a, 60);
+    text(g, sh, 150, 350 + i * 20, C(i === 3 ? 0.4 : 0.6), 13, { glow: 0 });
+  });
+});
+
+S.osd = screen(function (g, t) {
+  gamesC(g, 1.7);
+  g.fillStyle = 'rgba(0,0,0,0.45)'; g.fillRect(0, 0, W, H);
+  const x = 160, y = 72, w = 320, h = 100;
+  frame(g, x, y, w, h, { fill: DK(0.03), line: C(0.5) });
+  const lvl = 9 + Math.round(Math.sin(t * 1.4) * 5);
+  text(g, 'VOLUME', x + 18, y + 26, C(0.65), 13, { ls: 3, glow: 0 });
+  text(g, Math.round(lvl / 16 * 100) + '%', x + w - 18, y + 30, HI(1), 28, { d: true, align: 'right', glow: 12 });
+  gauge(g, x + 18, y + 40, 16, lvl, 15, 26, 3, { rise: true });
+  text(g, 'BRILHO: SEGURE F E USE O VOLUME', x + w / 2, y + 88, C(0.45), 11, { align: 'center', ls: 1, glow: 0 });
+  hints(g, [['B', 'Voltar'], ['SELECT', 'Recentes'], ['A', 'Jogar']]);
+});
+
+// ---------- music ----------
+const ARTISTS = ['A Day To Remember', 'Arctic Lights', 'Bruma', 'Cidade Submersa', 'Faroeste Neon', 'Lumen', 'Midnight Pulse'];
+function scope(g, x, y, w, h, t, amp) {
+  g.strokeStyle = C(0.12); g.lineWidth = 1;
+  for (let i = 1; i < 4; i++) { g.beginPath(); g.moveTo(x, y + h * i / 4); g.lineTo(x + w, y + h * i / 4); g.stroke(); }
+  for (let i = 1; i < 8; i++) { g.beginPath(); g.moveTo(x + w * i / 8, y); g.lineTo(x + w * i / 8, y + h); g.stroke(); }
+  box(g, x, y, w, h, C(0.3));
+  g.save(); g.strokeStyle = HI(0.95); g.lineWidth = 1.6; g.shadowColor = C(1); g.shadowBlur = 8;
+  g.beginPath();
+  for (let i = 0; i <= w; i += 2) {
+    const u = i / w, env = Math.sin(u * Math.PI);
+    const v = Math.sin(u * 22 + t * 9) * 0.5 + Math.sin(u * 51 - t * 13) * 0.25 + Math.sin(u * 7 + t * 3) * 0.25;
+    const yy = y + h / 2 + v * env * h * 0.42 * (amp == null ? 1 : amp);
+    if (i === 0) g.moveTo(x + i, yy); else g.lineTo(x + i, yy);
+  }
+  g.stroke(); g.restore();
+}
+S.music = screen(function (g, t) {
+  header(g, 'Música', 'Biblioteca', '7 artistas');
+  const st = selState(t, ARTISTS.length, 1.5);
+  const cur = list(g, ARTISTS.map(a => ({ t: a, ic: 'dir', d: '2 álbuns · 18 faixas' })), st, { x: 16, y: 86, w: 316, rh: 48, fs: 17 });
+  const sz = 176, x = 360 + (260 - sz) / 2, y = 90;
+  g.fillStyle = DK(0.03); g.fillRect(x, y, sz, sz);
+  pic(g, artImg('al', cur), 'al' + cur, x, y, sz, sz, { reveal: eo(clamp((st.lt - 0.15) / 0.5)) });
+  frame(g, x, y, sz, sz, { line: C(0.35) });
+  text(g, ALBUMS[cur][0], 490, 296, HI(1), 28, { d: true, align: 'center', glow: 10 });
+  text(g, ARTISTS[cur], 490, 316, C(0.55), 13, { align: 'center', glow: 0 });
+  scope(g, 360, 334, 260, 64, t, 0.7);
+  hints(g, [['B', 'Voltar'], ['Y', 'Pausar'], ['A', 'Abrir']]);
+});
+
+S.playing = screen(function (g, t) {
+  header(g, 'Música', 'Tocando agora', 'faixa 3 de 9');
+  const x0 = 24, y0 = 92, sz = 196;
+  g.fillStyle = DK(0.03); g.fillRect(x0, y0, sz, sz);
+  pic(g, artImg('al', 6), 'al6', x0, y0, sz, sz);
+  frame(g, x0, y0, sz, sz, { line: C(0.35) });
+  const x = 246;
+  text(g, 'Ondas de Vidro', x, 122, HI(1), 40, { d: true, glow: 14 });
+  text(g, 'Midnight Pulse', x, 146, C(0.8), 16);
+  text(g, 'Noites Claras · 2025', x, 168, C(0.45), 13, { glow: 0 });
+  // spectrum: 24 columns of cells, with the peak cell hanging a moment
+  const cols = 24, cw = 13, gap = 2, base = 270, cells = 10, chh = 7;
+  for (let i = 0; i < cols; i++) {
+    const v = clamp(0.25 + 0.45 * Math.abs(Math.sin(t * 3.1 + i * 0.7)) * (1 - i / cols * 0.5) + 0.3 * Math.abs(Math.sin(t * 7.3 + i * 1.9)) * (i < 6 ? 1 : 0.6));
+    const lit = Math.round(v * cells);
+    for (let k = 0; k < cells; k++) {
+      g.fillStyle = k < lit ? (k >= cells - 2 ? HI(1) : C(0.85)) : C(0.08);
+      g.fillRect(x + i * (cw + gap), base - (k + 1) * (chh + 2), cw, chh);
+    }
+  }
+  const pos = (0.32 + t * 0.03) % 1, nb = 30;
+  gauge(g, x, 286, nb, pos * nb, 10, 6, 2.6, { glow: false });
+  const el = Math.floor(pos * 238);
+  text(g, Math.floor(el / 60) + ':' + String(el % 60).padStart(2, '0'), x, 312, C(0.7), 13, { glow: 0 });
+  text(g, '3:58', x + nb * 12.6 - 2.6, 312, C(0.45), 13, { align: 'right', glow: 0 });
+  const btn = [['PREV', 'Anterior'], ['PAUSE', 'Pausar (Y)'], ['NEXT', 'Próxima']];
+  btn.forEach(([k, lab], i) => {
+    const bx = x + i * 128, by = 330, bw = 112, prim = i === 1;
+    if (prim) { g.fillStyle = C(0.9); g.shadowColor = C(0.6); g.shadowBlur = 10; g.fillRect(bx, by, bw, 40); g.shadowBlur = 0; } else box(g, bx, by, bw, 40, C(0.55));
+    const ink = prim ? DK(0.07) : C(0.85), cx = bx + 28, cy = by + 20;
+    if (k === 'PREV') { g.fillStyle = ink; g.fillRect(cx - 9, cy - 6, 2, 12); tri(g, cx, cy, 6, -1, ink); tri(g, cx + 8, cy, 6, -1, ink); }
+    else if (k === 'NEXT') { tri(g, cx - 8, cy, 6, 1, ink); tri(g, cx, cy, 6, 1, ink); g.fillStyle = ink; g.fillRect(cx + 8, cy - 6, 2, 12); }
+    else { g.fillStyle = ink; g.fillRect(cx - 6, cy - 7, 4, 14); g.fillRect(cx + 2, cy - 7, 4, 14); }
+    text(g, up(lab), bx + 46, by + 25, ink, 12, { glow: 0 });
+  });
+  scope(g, 24, 330, 196, 70, t, 0.9);
+  hints(g, [['B', 'Voltar'], ['LR', 'Faixa'], ['A', 'Lista']]);
+});
+
+// ---------- in-game ----------
+const GM = ['Continuar', 'Salvar', 'Carregar', 'Opções', 'Música', 'Conquistas', 'Sair'];
+S.gamemenu = screen(function (g, t) {
+  pic(g, sceneImg(0), 'sc0', 0, 0, W, H, { dim: 0.45 });
+  g.fillStyle = 'rgba(1,3,2,0.94)'; g.fillRect(0, 0, 276, H);
+  line(g, 276.5, 0, 276.5, H, C(0.6));
+  g.fillStyle = C(0.4); for (let y = 8; y < H; y += 24) g.fillRect(277, y, 4, 1);
+  text(g, 'Star Hunt', 18, 40, HI(1), 34, { d: true, glow: 12 });
+  text(g, 'PLAYSTATION · PAUSADO', 18, 60, C(0.45), 11, { ls: 2, glow: 0 });
+  g.fillStyle = 'rgba(0,0,0,0.85)'; g.fillRect(470, 6, 160, 30); status(g, 620);
+  const st = selState(t, GM.length, 1.5);
+  const cur = list(g, GM.map(a => ({ t: a })), st, { x: 12, y: 76, w: 250, rh: 42 });
+  if (cur === 1 || cur === 2) {
+    const slot = 2, px = 300, py = 74, pw = 320, ph = 300;
+    frame(g, px, py, pw, ph, { fill: 'rgba(1,3,2,0.92)', line: C(0.4) });
+    text(g, (cur === 1 ? 'SALVAR NO SLOT ' : 'CARREGAR DO SLOT ') + slot, px + pw / 2, py + 26, C(0.65), 12, { align: 'center', ls: 2.5, glow: 0 });
+    pic(g, sceneImg(1), 'sc1', px + 32, py + 40, 256, 184, { reveal: eo(clamp((st.lt - 0.2) / 0.5)) });
+    box(g, px + 32, py + 40, 256, 184, C(0.5));
+    for (let i = 0; i < 9; i++) {
+      const bx = px + pw / 2 - (9 * 28 - 6) / 2 + i * 28, on = i === slot;
+      if (on) { g.fillStyle = C(0.9); g.fillRect(bx, py + 240, 22, 22); } else box(g, bx, py + 240, 22, 22, C(0.4));
+      text(g, String(i), bx + 11, py + 256, on ? DK(0.07) : C(0.7), 13, { align: 'center', glow: 0 });
+    }
+    text(g, cur === 1 ? 'VAZIO · GRAVA AGORA' : 'ONTEM 22:10', px + pw / 2, py + 286, C(0.45), 11, { align: 'center', ls: 1.5, glow: 0 });
+  }
+  hints(g, [['B', 'Voltar'], ['A', 'OK']], [0, 640]);
+});
+
+const OPT = [['Escala da tela', 'Aspecto'], ['Filtro', 'Nítido'], ['Mostrar FPS', 'Não'], ['Pular quadros', 'Auto'], ['Avanço rápido', '2x'], ['Controles', null], ['Atalhos', null], ['Salvar para este jogo', null]];
+const OPTD = ['Como a imagem do jogo ocupa a tela.', 'Suaviza ou deixa os pixels nítidos.', 'Mostra os quadros por segundo no canto.', 'Pula quadros quando o jogo pesa.', 'Velocidade do avanço rápido.', 'Mapa dos botões neste emulador.', 'Combinações para salvar, carregar e sair.', 'Grava estas opções só para este jogo.'];
+S.options = screen(function (g, t) {
+  header(g, null, 'Opções', 'Star Hunt');
+  const st = selState(t, OPT.length, 1.4);
+  const cur = list(g, OPT.map(([a, v]) => (v ? { t: a, v } : { t: a, arrow: true })), st, { x: 16, y: 50, w: 608, rh: 41 });
+  box(g, 16, 392, 608, 34, C(0.3));
+  const d = typed(OPTD[cur], st.lt - 0.2, 60);
+  const dw = text(g, d, 30, 414, C(0.75), 14, { glow: 0 });
+  cursor(g, 30 + dw, 414, 14, st.lt, C(0.7));
+  hints(g, [['B', 'Voltar'], ['LR', 'Mudar'], ['A', 'Abrir']]);
+});
+
+S.toasts = screen(function (g, t) {
+  g.save(); g.imageSmoothingEnabled = false; g.drawImage(sceneImg(2), 0, 0, W, H); g.restore();
+  const lt = t % 5.5;
+  // the game itself keeps its colours; only the notices are phosphor
+  frame(g, 220, 18, 200, 38, { fill: 'rgba(1,3,2,0.92)', line: C(0.5), len: 8 });
+  text(g, 'VOL', 232, 42, C(0.65), 12, { ls: 2, glow: 0 });
+  gauge(g, 266, 26, 12, 7, 8, 22, 4, { rise: true });
+  const pill = (a, y, s, k) => {
+    const x = lerp(-330, 18, a), jit = a < 1 ? (Math.sin(t * 90) * 3) * (1 - a) : 0;
+    g.fillStyle = 'rgba(1,3,2,0.92)'; g.fillRect(x + jit, y, 310, 36);
+    box(g, x + jit, y, 310, 36, C(0.8));
+    g.fillStyle = C(0.9); g.fillRect(x + jit, y, 6, 36);
+    if (k === 'save') { box(g, x + jit + 18, y + 10, 16, 16, C(0.9)); g.fillStyle = C(0.9); g.fillRect(x + jit + 22, y + 10, 8, 5); }
+    else { g.strokeStyle = C(0.9); g.lineWidth = 1.6; star(g, x + jit + 26, y + 18, 9); }
+    text(g, s, x + jit + 44, y + 23, HI(1), 14);
+  };
+  pill(eo(clamp(lt / 0.45)), 362, 'Estado salvo no slot 2', 'save');
+  pill(eo(clamp((lt - 0.9) / 0.45)), 406, 'Conquista: Primeira volta', 'ach');
+  // the glass is part of the theme even over the game
+});
+function star(g, cx, cy, r, fill) {
+  g.beginPath();
+  for (let i = 0; i < 10; i++) { const an = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * 0.45 : r; g.lineTo(cx + Math.cos(an) * rr, cy + Math.sin(an) * rr); }
+  g.closePath(); if (fill) g.fill(); else g.stroke();
+}
+
+const ACH = [['Primeira volta', 'Termine a primeira corrida', 1, 5, '08/11/2026 21:14'], ['Sem arranhões', 'Vença sem bater nenhuma vez', 1, 10, '08/11/2026 21:52'], ['Colecionador', 'Pegue 100 moedas', 1, 10, '09/11/2026 19:03'], ['Atalho secreto', 'Ache o túnel escondido', 0, 25], ['Recordista', 'Bata o tempo do fantasma', 0, 25], ['Campeão', 'Vença a copa estrela', 0, 50]];
+S.achievements = screen(function (g, t) {
+  header(g, null, 'Conquistas', 'Star Hunt');
+  text(g, 'PROGRESSO', 20, 66, C(0.55), 12, { ls: 2, glow: 0 });
+  gauge(g, 110, 56, 22, 11, 12, 10, 3);
+  text(g, '3/6 · 25/125 PTS', 620, 66, C(0.75), 12, { align: 'right', ls: 1, glow: 0 });
+  const st = selState(t, ACH.length, 1.5);
+  list(g, ACH.map(([a, d, u, pts]) => ({ t: a, d, chk: !!u, v: u ? 'FEITA' : pts + ' PTS', vc: u ? C(0.9) : C(0.38), cycle: false })), st, { x: 16, y: 80, w: 608, rh: 56, fs: 17 });
+  hints(g, [['B', 'Voltar'], ['A', 'Detalhes']]);
+});
+
+// emblem: hexagon, star inside, rays; a locked one is a dashed outline with a padlock
+function emblem(g, cx, cy, r, open, t) {
+  g.save();
+  g.strokeStyle = open ? HI(1) : C(0.45); g.lineWidth = 2; g.shadowColor = C(1); g.shadowBlur = open ? 14 : 0;
+  if (!open) g.setLineDash([6, 5]);
+  g.beginPath(); for (let i = 0; i < 6; i++) { const an = Math.PI / 6 + i * Math.PI / 3; g.lineTo(cx + Math.cos(an) * r, cy + Math.sin(an) * r); } g.closePath(); g.stroke();
+  g.setLineDash([]);
+  g.beginPath(); for (let i = 0; i < 6; i++) { const an = Math.PI / 6 + i * Math.PI / 3; g.lineTo(cx + Math.cos(an) * r * 0.8, cy + Math.sin(an) * r * 0.8); } g.closePath(); g.lineWidth = 1; g.stroke();
+  if (open) {
+    g.fillStyle = C(0.9); star(g, cx, cy, r * 0.45, true);
+    g.lineWidth = 2;
+    for (let i = 0; i < 12; i++) {
+      const an = i * Math.PI / 6 + t * 0.4, a = 0.4 + 0.6 * Math.abs(Math.sin(t * 2 + i));
+      g.globalAlpha = a; g.beginPath(); g.moveTo(cx + Math.cos(an) * r * 1.12, cy + Math.sin(an) * r * 1.12); g.lineTo(cx + Math.cos(an) * r * 1.3, cy + Math.sin(an) * r * 1.3); g.stroke();
+    }
+    g.globalAlpha = 1;
+  } else {
+    g.fillStyle = C(0.55); g.fillRect(cx - 14, cy - 2, 28, 22);
+    g.lineWidth = 3; g.beginPath(); g.arc(cx, cy - 2, 9, Math.PI, 0); g.stroke();
+    g.fillStyle = DK(0.05); g.fillRect(cx - 2, cy + 5, 4, 8);
+  }
+  g.restore();
+}
+S.achDetail = screen(function (g, t) {
+  const per = 4.2, k = Math.floor(t / per) % 2, lt = t % per, idx = k ? 3 : 0, a = ACH[idx], open = !!a[2];
+  header(g, null, 'Conquistas', (idx + 1) + ' de 6');
+  frame(g, 16, 54, 608, 376, { line: C(0.25) });
+  const rv = eo(clamp(lt / 0.5));
+  g.save(); g.beginPath(); g.rect(16, 54, 608, 376 * rv); g.clip();
+  emblem(g, 132, 196, 74, open, t);
+  text(g, open ? 'DESBLOQUEADA' : 'BLOQUEADA', 132, 312, open ? HI(1) : C(0.5), 13, { align: 'center', ls: 3, glow: open ? 8 : 0 });
+  const x = 248;
+  text(g, 'CONQUISTA ' + (idx + 1) + ' DE 6', x, 92, C(0.45), 12, { ls: 2, glow: 0 });
+  text(g, a[0], x, 134, HI(1), 46, { d: true, glow: 14 });
+  text(g, a[1] + '.', x, 162, C(0.8), 15);
+  line(g, x, 182, 604, 182, C(0.2));
+  const rows = open ? [['PONTOS', String(a[3])], ['QUANDO', a[4]], ['MODO', 'Normal'], ['TIPO', 'Progresso']]
+                    : [['PONTOS', String(a[3])], ['QUANDO', '—'], ['MODO', 'Normal ou difícil'], ['TIPO', 'Opcional']];
+  rows.forEach(([l, v], i) => {
+    const y = 210 + i * 30;
+    text(g, l, x, y, C(0.45), 12, { ls: 2, glow: 0 });
+    text(g, v, 604, y, C(0.9), 16, { align: 'right' });
+    g.fillStyle = C(0.12); for (let dx = x + 80; dx < 604 - tw(g, v, 16) - 10; dx += 6) g.fillRect(dx, y - 4, 2, 1);
+  });
+  text(g, 'JÁ CONSEGUIRAM', x, 350, C(0.45), 12, { ls: 2, glow: 0 });
+  const pct = open ? 34 : 6;
+  gauge(g, x, 362, 25, pct / 4, 10, 12, 4);
+  text(g, pct + '% DOS JOGADORES', 604, 350, C(0.8), 12, { align: 'right', ls: 1, glow: 0 });
+  g.restore();
+  if (rv < 1) { g.fillStyle = HI(0.9); g.shadowColor = C(1); g.shadowBlur = 12; g.fillRect(16, 54 + 376 * rv - 1, 608, 2); g.shadowBlur = 0; }
+  hints(g, [['B', 'Voltar'], ['LR', 'Anterior/próxima']]);
+});
+
+// ---------- settings ----------
+function bigIcon(g, k, cx, cy, s) {
+  const u = s;
+  g.save(); g.strokeStyle = HI(1); g.fillStyle = HI(1); g.lineWidth = 2.4; g.lineCap = 'round'; g.lineJoin = 'round'; g.shadowColor = C(1); g.shadowBlur = 12;
+  const circ = (x, y, r) => { g.beginPath(); g.arc(cx + x, cy + y, r, 0, Math.PI * 2); g.stroke(); };
+  if (k === 'pal') { circ(-u * 0.22, -u * 0.12, u * 0.32); circ(u * 0.22, -u * 0.12, u * 0.32); circ(0, u * 0.24, u * 0.32); }
+  else if (k === 'scr') { g.strokeRect(cx - u * 0.6, cy - u * 0.42, u * 1.2, u * 0.76); g.beginPath(); g.moveTo(cx - u * 0.25, cy + u * 0.55); g.lineTo(cx + u * 0.25, cy + u * 0.55); g.stroke(); g.lineWidth = 1; for (let i = 1; i < 5; i++) { g.beginPath(); g.moveTo(cx - u * 0.5, cy - u * 0.42 + i * u * 0.15); g.lineTo(cx + u * 0.5, cy - u * 0.42 + i * u * 0.15); g.stroke(); } }
+  else if (k === 'sys') { circ(0, 0, u * 0.34); circ(0, 0, u * 0.1); for (let i = 0; i < 8; i++) { const an = i * Math.PI / 4; g.beginPath(); g.moveTo(cx + Math.cos(an) * u * 0.42, cy + Math.sin(an) * u * 0.42); g.lineTo(cx + Math.cos(an) * u * 0.6, cy + Math.sin(an) * u * 0.6); g.stroke(); } }
+  else if (k === 'net') { for (const r of [0.22, 0.48, 0.74]) { g.beginPath(); g.arc(cx, cy + u * 0.38, u * r, -Math.PI * 0.8, -Math.PI * 0.2); g.stroke(); } g.beginPath(); g.arc(cx, cy + u * 0.38, u * 0.06, 0, Math.PI * 2); g.fill(); }
+  else if (k === 'bt') { g.beginPath(); g.moveTo(cx - u * 0.32, cy - u * 0.26); g.lineTo(cx + u * 0.32, cy + u * 0.26); g.lineTo(cx, cy + u * 0.58); g.lineTo(cx, cy - u * 0.58); g.lineTo(cx + u * 0.32, cy - u * 0.26); g.lineTo(cx - u * 0.32, cy + u * 0.26); g.stroke(); }
+  else if (k === 'info') { circ(0, 0, u * 0.58); g.beginPath(); g.arc(cx, cy - u * 0.26, u * 0.06, 0, Math.PI * 2); g.fill(); g.beginPath(); g.moveTo(cx, cy - u * 0.06); g.lineTo(cx, cy + u * 0.34); g.stroke(); }
+  g.restore();
+}
+const SET = [['Aparência', 'Tema, cores, fonte e animações.', 'pal'], ['Tela', 'Brilho, temperatura e contraste.', 'scr'], ['Sistema', 'Volume, hora, energia e saves.', 'sys'], ['Rede', 'Wi-Fi e conexões.', 'net'], ['Bluetooth', 'Fones e controles sem fio.', 'bt'], ['Sobre', 'Versão e armazenamento.', 'info']];
+S.settings = screen(function (g, t) {
+  header(g, 'Sistema', 'Ajustes');
+  const st = selState(t, SET.length, 1.6);
+  const cur = list(g, SET.map(([a]) => ({ t: a, arrow: true })), st, { x: 16, y: 86, w: 290, rh: 52, fs: 19 });
+  frame(g, 326, 86, 294, 312, { line: C(0.25) });
+  const rv = eo(clamp((st.lt - 0.1) / 0.4));
+  g.save(); g.globalAlpha = rv;
+  bigIcon(g, SET[cur][2], 473, 196, 88);
+  text(g, SET[cur][0], 473, 316, HI(1), 36, { d: true, align: 'center', glow: 12 });
+  text(g, SET[cur][1], 473, 342, C(0.6), 13, { align: 'center', glow: 0 });
+  g.restore();
+  text(g, 'ANBERNEXT V3.26 · 21,4 GB LIVRES', 473, 384, C(0.3), 11, { align: 'center', ls: 1, glow: 0 });
+  hints(g, [['B', 'Sair'], ['A', 'Abrir']]);
+});
+
+// ---------- appearance: the theme picker. Tema now has four; Fósforo adds its tube colour ----------
+const LOOK = [
+  { t: 'Tema', opts: ['Neon Drive', 'Bloco', 'Grafite', 'Fósforo'], def: 3, d: 'Muda o visual de tudo, inclusive o boot.' },
+  { t: 'Tela inicial', opts: ['Carrossel', 'Lista', 'Grade'], def: 0, d: 'Como os consoles aparecem na tela inicial.' },
+  { t: 'Ícone dos consoles', opts: ['Sigla', 'Controle', 'Console'], def: 2, d: 'O desenho de cada console na tela inicial.' },
+  { t: 'Biblioteca de jogos', opts: ['Carrossel', 'Lista'], def: 0, d: 'Como os jogos aparecem dentro de cada console.' },
+  { t: 'Cor do fósforo', opts: ['Verde', 'Âmbar', 'Branco'], def: 0, d: 'A cor do tubo. Vale para todas as telas e o boot.' },
+  { t: 'Idioma', opts: ['Português (Brasil)', 'English (US)'], def: 0, d: 'O idioma dos menus, dos avisos e do boot.' }
+];
+const PHK = ['verde', 'ambar', 'branco'];
+// the same rows once Idioma is on English, so the preview shows the switch taking effect
+const LOOK_EN = [['Theme', 'Fósforo'], ['Home screen', 'Carousel'], ['Console icon', 'Console'], ['Game library', 'Carousel'], ['Phosphor colour', 'Green'], ['Language', 'English (US)']];
+let thumbs = null;
+function lookAt(t) {
+  const per = 4.6, nr = LOOK.length, r = Math.floor(t / per) % nr, lt = t % per, L = LOOK[r];
+  const step = 1.4, k = Math.floor(Math.max(0, lt - 0.5) / step), on = lt < 0.5 ? L.def : (L.def + k + 1) % L.opts.length;
+  return { r, lt, L, on, pt: lt < 0.5 ? 1 : clamp(((lt - 0.5) % step) / 0.34) };
+}
+function neonThumb() {
+  const c = off(W, H), x = c.getContext('2d');
+  const gr = x.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#140a2a'); gr.addColorStop(0.6, '#2a0f3d'); gr.addColorStop(1, '#120a24');
+  x.fillStyle = gr; x.fillRect(0, 0, W, H);
+  x.save(); x.beginPath(); x.rect(0, 0, W, 250); x.clip();
+  const sg = x.createLinearGradient(0, 120, 0, 250); sg.addColorStop(0, '#fbd270'); sg.addColorStop(0.5, '#f2a33c'); sg.addColorStop(1, '#ff5ca8');
+  x.fillStyle = sg; x.beginPath(); x.arc(430, 250, 120, 0, Math.PI * 2); x.fill(); x.restore();
+  x.strokeStyle = 'rgba(58,214,224,0.45)'; x.lineWidth = 2;
+  for (let i = -12; i <= 12; i++) { x.beginPath(); x.moveTo(430, 250); x.lineTo(430 + i * 70, H); x.stroke(); }
+  for (let k = 0; k < 7; k++) { const y = 250 + Math.pow(k / 6, 2) * 230; x.beginPath(); x.moveTo(0, y); x.lineTo(W, y); x.stroke(); }
+  x.fillStyle = 'rgba(11,7,24,0.55)'; x.fillRect(0, 0, 330, H);
+  x.font = '700 30px "Segoe UI", sans-serif'; x.fillStyle = '#f9a62b'; x.fillText('ANBER', 28, 50); x.fillStyle = '#3ad6e0'; x.fillText('NEXT', 128, 50);
+  x.font = '28px "Segoe UI", sans-serif';
+  ['GAME BOY ADVANCE', 'SUPER NINTENDO', 'PLAYSTATION', 'MEGA DRIVE', 'GAME BOY'].forEach((s, i) => {
+    const y = 150 + i * 52, sel = i === 2;
+    if (sel) { x.fillStyle = '#f9a62b'; x.fillRect(28, y - 26, 7, 34); }
+    x.fillStyle = sel ? '#ffffff' : 'rgba(58,214,224,0.7)'; x.fillText(s, sel ? 52 : 44, y);
+  });
+  return c;
+}
+function blocoThumb() {
+  const c = off(W, H), x = c.getContext('2d');
+  const gr = x.createRadialGradient(320, 30, 0, 320, 30, 640); gr.addColorStop(0, '#1c2140'); gr.addColorStop(1, '#090b18');
+  x.fillStyle = gr; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(141,150,189,0.12)'; x.lineWidth = 1;
+  for (let k = -480; k < 900; k += 30) { x.beginPath(); x.moveTo(0, k); x.lineTo(W, k + 320); x.stroke(); x.beginPath(); x.moveTo(0, k); x.lineTo(W, k - 320); x.stroke(); }
+  const cube = (cx, cy, s, h, t1, l, r) => {
+    const P = (pts, f) => { x.fillStyle = f; x.beginPath(); pts.forEach((p, i) => (i ? x.lineTo(p[0], p[1]) : x.moveTo(p[0], p[1]))); x.closePath(); x.fill(); };
+    P([[cx - s, cy], [cx, cy + s / 2], [cx, cy + s / 2 + h], [cx - s, cy + h]], l);
+    P([[cx, cy + s / 2], [cx + s, cy], [cx + s, cy + h], [cx, cy + s / 2 + h]], r);
+    P([[cx, cy - s / 2], [cx + s, cy], [cx, cy + s / 2], [cx - s, cy]], t1);
+  };
+  cube(150, 190, 40, 44, '#3a4064', '#1c2140', '#141833'); cube(490, 190, 40, 44, '#3a4064', '#1c2140', '#141833');
+  cube(320, 150, 66, 72, '#fde08a', '#c6771d', '#8a4e12');
+  x.font = '500 30px "Segoe UI", sans-serif'; x.fillStyle = '#eef2ff'; x.textAlign = 'center'; x.fillText('PlayStation', 320, 340); x.textAlign = 'left';
+  x.font = '600 21px "Segoe UI", sans-serif'; x.fillStyle = '#eef2ff'; x.fillText('Anber', 48, 30); x.fillStyle = '#3ad6e0'; x.fillText('Next', 108, 30);
+  return c;
+}
+function grafiteThumb() {
+  const c = off(W, H), x = c.getContext('2d');
+  x.fillStyle = '#14171d'; x.fillRect(0, 0, W, H);
+  x.fillStyle = '#1d2129'; x.fillRect(0, 0, W, 44);
+  x.font = '600 22px "Segoe UI", sans-serif'; x.fillStyle = '#e8ecf3'; x.fillText('Biblioteca', 24, 30);
+  x.font = '18px "Segoe UI", sans-serif'; x.fillStyle = '#8c95a6'; x.fillText('20:47', 560, 30);
+  x.font = '600 20px "Segoe UI", sans-serif'; x.fillStyle = '#e8ecf3'; x.fillText('Jogados recentemente', 24, 92);
+  const cols = ['#3ad6e0', '#ff5ca8', '#f2a33c', '#9b7cff', '#51e0a3'];
+  cols.forEach((cc, i) => {
+    const w = i === 0 ? 170 : 118, h = i === 0 ? 226 : 158, xx = i === 0 ? 24 : 210 + (i - 1) * 128, yy = 110;
+    const gg = x.createLinearGradient(xx, yy, xx + w, yy + h); gg.addColorStop(0, cc); gg.addColorStop(1, '#1d2129');
+    x.fillStyle = gg; x.fillRect(xx, yy, w, h);
+    if (i === 0) { x.strokeStyle = '#4c9dff'; x.lineWidth = 5; x.strokeRect(xx - 4, yy - 4, w + 8, h + 8); }
+  });
+  x.font = '600 20px "Segoe UI", sans-serif'; x.fillStyle = '#e8ecf3'; x.fillText('Star Hunt', 24, 372);
+  x.fillStyle = '#1d2129'; x.fillRect(0, 436, W, 44);
+  return c;
+}
+function thumbOf(fn, t) { const c = off(W, H); fn(c.getContext('2d'), t); return c; }
+function ensureThumbs() {
+  if (thumbs) return;
+  thumbs = {
+    neon: neonThumb(), bloco: blocoThumb(), grafite: grafiteThumb(), fosforo: thumbOf(S.home, 2.9),
+    hc: thumbOf(S.home, 2.9), hl: thumbOf(S.homeList, 3.6), hg: thumbOf(S.homeGrid, 2.7),
+    carr: thumbOf(S.games, 2.5), lista: thumbOf(S.gamesList, 1.3)
+  };
+}
+function thumbCell(g, img, x, y, w, h, label, act, pt) {
+  const k = act ? 6 * (1 - eo(pt)) : 0;
+  g.drawImage(img, x, y, w, h);
+  if (!act) { g.fillStyle = 'rgba(0,0,0,0.6)'; g.fillRect(x, y, w, h); box(g, x, y, w, h, C(0.25)); }
+  else frame(g, x, y, w, h, { k, line: C(0.6), len: 9 });
+  text(g, up(label), x, y + h + 15, act ? HI(1) : C(0.45), 12, { ls: 1, glow: act ? 6 : 0 });
+  if (act && w >= 150) text(g, 'EM USO', x + w, y + h + 15, C(0.6), 11, { align: 'right', ls: 1, glow: 0 });
+}
+S.appearance = screen(function (g, t) {
+  const A = lookAt(t), { r, L, on, pt } = A;
+  LANG_EN = r === 5 && on === 1;
+  header(g, 'Sistema', LANG_EN ? 'Appearance' : 'Aparência');
+  const rows = LANG_EN ? LOOK_EN.map(([a, v]) => ({ t: a, v })) : LOOK.map((o, i) => ({ t: o.t, v: o.opts[i === r ? on : o.def] }));
+  list(g, rows, { sel: r, prev: (r + LOOK.length - 1) % LOOK.length, p: clamp(A.lt / 0.34), lt: A.lt }, { x: 16, y: 86, w: 344, rh: 46, fs: 16, vs: 14 });
+  const px = 376;
+  if (r === 0) {
+    const imgs = [thumbs.neon, thumbs.bloco, thumbs.grafite, thumbs.fosforo];
+    imgs.forEach((im, i) => thumbCell(g, im, px + (i % 2) * 126, 92 + Math.floor(i / 2) * 146, 116, 87, L.opts[i], i === on, pt));
+  } else if (r === 1) {
+    [thumbs.hc, thumbs.hl, thumbs.hg].forEach((im, i) => thumbCell(g, im, px + 40, 88 + i * 108, 116, 87, L.opts[i], i === on, pt));
+  } else if (r === 3) {
+    [thumbs.carr, thumbs.lista].forEach((im, i) => thumbCell(g, im, px + 20, 90 + i * 160, 170, 128, L.opts[i], i === on, pt));
+  } else if (r === 2) {
+    ['S', 'A', 'B'].forEach((v, i) => {
+      const act = i === on, cy = 150 + i * 104, x = 438;
+      if (act) pad(g, x, cy + 6, 46, t, 0.9);
+      sysIcon(g, 'PS', x, cy, 36, act, v, t, { a: 0.5 });
+      text(g, up(L.opts[i]), 500, cy - 18, act ? HI(1) : C(0.45), 14, { ls: 1, glow: act ? 6 : 0 });
+      if (act) text(g, 'EM USO', 500, cy, C(0.6), 11, { ls: 1, glow: 0 });
+    });
+  } else if (r === 4) {
+    PHK.forEach((nm, i) => {
+      const act = i === on, cy = 132 + i * 100, cx = 430, col = PHOS[nm], rgb = 'rgb(' + col.join(',') + ')';
+      const rad = act ? 30 + 3 * eob(pt) : 24;
+      g.save(); g.shadowColor = rgb; g.shadowBlur = act ? 24 : 8;
+      const gr = g.createRadialGradient(cx - rad * 0.3, cy - rad * 0.3, 0, cx, cy, rad);
+      gr.addColorStop(0, 'rgba(255,255,255,0.9)'); gr.addColorStop(0.35, rgb); gr.addColorStop(1, 'rgba(' + col.join(',') + ',0.25)');
+      g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, rad, 0, Math.PI * 2); g.fill(); g.restore();
+      box(g, cx - 42, cy - 42, 84, 84, act ? C(0.6) : C(0.18));
+      text(g, up(L.opts[i]), 488, cy - 4, act ? HI(1) : C(0.45), 15, { ls: 1, glow: act ? 6 : 0 });
+      text(g, act ? 'EM USO' : ['P1 · CLÁSSICO', 'P3 · QUENTE', 'P4 · FRIO'][i], 488, cy + 16, C(0.45), 11, { ls: 1, glow: 0 });
+    });
+  } else {
+    frame(g, px, 96, 244, 250, { line: C(0.25) });
+    const sample = LANG_EN ? ['GAMES', 'RECENT', 'MUSIC', 'SYSTEM', 'Settings', 'Continue', 'Save state', 'Turning on…'] : ['JOGOS', 'RECENTES', 'MÚSICA', 'SISTEMA', 'Ajustes', 'Continuar', 'Salvar estado', 'Ligando…'];
+    text(g, LANG_EN ? 'PREVIEW' : 'PRÉVIA', px + 14, 120, C(0.45), 11, { ls: 2, glow: 0 });
+    sample.slice(0, 4).forEach((s, i) => text(g, s, px + 14 + (i % 2) * 110, 150 + Math.floor(i / 2) * 26, i === 0 ? HI(1) : C(0.7), 14, { ls: 1 }));
+    sample.slice(4).forEach((s, i) => text(g, '> ' + s, px + 14, 222 + i * 28, C(0.85), 16));
+  }
+  text(g, LANG_EN ? 'The language of the menus, notices and boot.' : L.d, 16, 420, C(0.6), 13, { glow: 0 });
+  hints(g, [['B', LANG_EN ? 'Back' : 'Voltar'], ['LR', LANG_EN ? 'Change' : 'Trocar']]);
+  LANG_EN = false;
+}, t => { ensureThumbs(); const A = lookAt(t); return A.r === 4 ? PHOS[PHK[A.on]] : PHOS.verde; });
+
+S.color = screen(function (g, t) {
+  header(g, 'Sistema', 'Cor do fósforo', 'personalizada');
+  const st = selState(t, 3, 1.8), cur = curOf(st);
+  const base = [72, 255, 140];
+  const wob = Math.round(Math.sin(t * 1.3) * 60);
+  const val = base.map((v, i) => clamp(v + (i === cur ? wob : 0), 0, 255));
+  const labs = ['Vermelho', 'Verde', 'Azul'];
+  labs.forEach((lab, i) => {
+    const y = 92 + i * 92, sel = i === cur;
+    if (sel) frame(g, 16, y, 340, 76, { fill: C(0.05), line: C(0.35), len: 8 });
+    text(g, up(lab), 32, y + 28, sel ? HI(1) : C(0.6), 15, { ls: 2, glow: sel ? 6 : 0 });
+    text(g, String(val[i]).padStart(3, '0'), 340, y + 30, sel ? HI(1) : C(0.6), 30, { d: true, align: 'right', glow: sel ? 10 : 0 });
+    gauge(g, 32, y + 42, 24, val[i] / 255 * 24, 10, 16, 3, { glow: sel });
+  });
+  const rgb = 'rgb(' + val.join(',') + ')', cx = 496, cy = 196;
+  g.save(); g.shadowColor = rgb; g.shadowBlur = 30;
+  const gr = g.createRadialGradient(cx - 22, cy - 22, 0, cx, cy, 72);
+  gr.addColorStop(0, 'rgba(255,255,255,0.9)'); gr.addColorStop(0.35, rgb); gr.addColorStop(1, 'rgba(' + val.join(',') + ',0.2)');
+  g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, 72, 0, Math.PI * 2); g.fill(); g.restore();
+  frame(g, cx - 94, cy - 94, 188, 188, { line: C(0.2) });
+  text(g, '#' + val.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase(), cx, 322, HI(1), 32, { d: true, align: 'center', glow: 10 });
+  text(g, 'PRONTAS', cx, 350, C(0.45), 11, { align: 'center', ls: 3, glow: 0 });
+  [[72, 255, 140], [255, 184, 48], [214, 234, 255], [80, 220, 255], [255, 110, 160]].forEach((c, i) => {
+    const x = cx - 2 * 30 + i * 30, col = 'rgb(' + c.join(',') + ')';
+    g.save(); g.shadowColor = col; g.shadowBlur = 8; g.fillStyle = col; g.beginPath(); g.arc(x, 376, 8, 0, Math.PI * 2); g.fill(); g.restore();
+    if (i === 0) { g.fillStyle = C(0.9); g.fillRect(x - 8, 392, 16, 2); }
+  });
+  hints(g, [['B', 'Voltar'], ['LR', 'Ajustar'], ['A', 'Aplicar']]);
+});
+
+const NETS = [['Casa_5G', 4, 1, 'CONECTADO'], ['Casa_2G', 3, 1], ['Café Central', 3, 0], ['Escritório', 2, 1], ['Vizinho_123', 1, 1], ['Convidados', 1, 0]];
+S.wifi = screen(function (g, t) {
+  header(g, 'Sistema', 'Wi-Fi', 'buscando ' + '|/-\\'[Math.floor(t * 8) % 4]);
+  const items = [{ t: 'Wi-Fi', v: 'Ligado' }].concat(NETS.map(([a, s, l, v]) => ({ t: a, sig: s, lock: !!l, v, vc: HI(1), cycle: false })));
+  list(g, items, selState(t, items.length, 1.3), { x: 16, y: 86, w: 608, rh: 46 });
+  hints(g, [['B', 'Voltar'], ['Y', 'Buscar'], ['A', 'Conectar']]);
+});
+
+S.keyboard = screen(function (g, t) {
+  header(g, 'Sistema', 'Senha de Casa_5G');
+  frame(g, 16, 86, 608, 44, { line: C(0.4), len: 8 });
+  const typedN = Math.floor(t / 0.7) % 12;
+  const dw = text(g, '*'.repeat(Math.max(4, typedN)), 32, 116, HI(1), 24, { ls: 4 });
+  cursor(g, 32 + dw + 2, 116, 22, t);
+  const rows = ['1234567890', 'qwertyuiop', 'asdfghjkl@', 'zxcvbnm.-_'];
+  const path = [[1, 2], [1, 3], [2, 1], [2, 2], [1, 7], [3, 5], [3, 6], [2, 8], [4, 3]];
+  const st = path[Math.floor(t / 0.7) % path.length], pp = eo(clamp((t % 0.7) / 0.2));
+  rows.forEach((r, ri) => {
+    for (let ci = 0; ci < r.length; ci++) {
+      const x = 34 + ci * 58, y = 146 + ri * 52, sel = st[0] === ri && st[1] === ci;
+      if (sel) { g.fillStyle = C(0.9 * pp + 0.1); g.shadowColor = C(0.7); g.shadowBlur = 10; g.fillRect(x, y, 50, 42); g.shadowBlur = 0; text(g, r[ci], x + 25, y + 30, DK(0.07), 24, { d: true, align: 'center', glow: 0 }); }
+      else { box(g, x, y, 50, 42, C(0.35)); text(g, r[ci], x + 25, y + 30, C(0.8), 24, { d: true, align: 'center', glow: 4 }); }
+    }
+  });
+  const sp = [['Maiúsc.', 112], ['Espaço', 222], ['Apagar', 112], ['OK', 92]];
+  let x = 34;
+  sp.forEach(([lab, w], i) => {
+    const sel = st[0] === 4 && st[1] === i, y = 356;
+    if (sel) { g.fillStyle = C(0.9); g.shadowColor = C(0.7); g.shadowBlur = 10; g.fillRect(x, y, w, 40); g.shadowBlur = 0; text(g, up(lab), x + w / 2, y + 26, DK(0.07), 14, { align: 'center', ls: 1, glow: 0 }); }
+    else { box(g, x, y, w, 40, i === 3 ? C(0.8) : C(0.35)); text(g, up(lab), x + w / 2, y + 26, i === 3 ? HI(1) : C(0.75), 14, { align: 'center', ls: 1, glow: 0 }); }
+    x += w + 10;
+  });
+  hints(g, [['B', 'Apagar'], ['Y', 'Maiúsc.'], ['A', 'Digitar']]);
+});
+
+// ---------- boot: the tube switches on, the check list types, then the name ----------
+const BOOT = [['ANBERNEXT · RG353V', ''], ['processador rk3566', 'ok'], ['memória 2048 mb', 'ok'], ['cartão sd', 'ok'], ['tema', 'fósforo']];
+const PHRASES = ['aquecendo o tubo…', 'alinhando os feixes…', 'soprando o cartucho…', 'carregando os pixels…', 'afinando o som…', 'procurando os saves…'];
+S.boot = screen(function (g, t) {
+  const per = 7, lt = t % per;
+  if (lt < 0.45) {
+    // switch-on: a dot, a line, then the whole tube
+    g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+    const a = clamp(lt / 0.18), b = clamp((lt - 0.18) / 0.27);
+    g.fillStyle = HI(1); g.shadowColor = C(1); g.shadowBlur = 20;
+    const w = lerp(6, W, eo(a)), h = lerp(2, H, eo(b));
+    g.fillRect(320 - w / 2, 240 - h / 2, w, h); g.shadowBlur = 0;
+    if (b > 0) { g.fillStyle = 'rgba(0,0,0,' + eo(b) + ')'; g.fillRect(0, 0, W, H); bg(g); g.globalAlpha = 1 - eo(b); g.fillStyle = HI(1); g.fillRect(0, 0, W, H); g.globalAlpha = 1; }
+    return;
+  }
+  BOOT.forEach(([l, v], i) => {
+    const a = lt - 0.5 - i * 0.28; if (a < 0) return;
+    const y = 44 + i * 20, s = i ? up(l) : l;
+    const sh = typed(s, a, 70);
+    text(g, sh, 24, y, i ? C(0.6) : HI(1), 13, { glow: i ? 0 : 6 });
+    if (v && sh.length === s.length) {
+      g.fillStyle = C(0.18); for (let dx = 24 + tw(g, s, 13) + 8; dx < 250; dx += 6) g.fillRect(dx, y - 3, 2, 1);
+      text(g, up(v), 270, y, v === 'ok' ? HI(1) : C(0.9), 13, { glow: 6 });
+    }
+  });
+  const word = 'AnberNext';
+  font(g, 92, true); const total = g.measureText(word).width; let x = 320 - total / 2;
+  for (let i = 0; i < word.length; i++) {
+    const la = clamp((lt - 2.0 - i * 0.07) / 0.12), ch = word[i];
+    if (la > 0) {
+      const flick = la < 1 ? (Math.sin(t * 80 + i) > 0 ? 1 : 0.35) : 1;
+      g.save(); g.globalAlpha = flick; text(g, ch, x, 268, i >= 5 ? HI(1) : C(0.95), 92, { d: true, glow: 22 }); g.restore();
+    }
+    font(g, 92, true); x += g.measureText(ch).width;
+  }
+  const ul = eo(clamp((lt - 2.8) / 0.6));
+  if (ul > 0) { g.fillStyle = C(0.8); g.shadowColor = C(1); g.shadowBlur = 10; g.fillRect(320 - total / 2, 282, total * ul, 2); g.shadowBlur = 0; }
+  if (lt > 3.0) {
+    const ph = PHRASES[Math.floor(t / per) % PHRASES.length], s = typed(ph, lt - 3.0, 26);
+    const w = text(g, s, 320 - tw(g, ph, 16) / 2, 322, C(0.75), 16);
+    cursor(g, 320 - tw(g, ph, 16) / 2 + w, 322, 16, lt);
+  }
+  gauge(g, 320 - (32 * 12 - 3) / 2, 342, 32, clamp((lt - 3.0) / 3.6) * 32, 9, 9, 3);
+  text(g, 'AnberNext v3.26 · RG353V', 320, 446, C(0.42), 13, { align: 'center', glow: 0 });
+  text(g, 'segure F ao ligar para ir ao Android', 320, 466, C(0.26), 12, { align: 'center', glow: 0 });
+});
+
+// ---------- runtime ----------
+if (typeof window !== 'undefined') window.__FOSFORO = { sysIcon, pad, crt, bg, PHOS, setColor: k => { PC = PHOS[k] || PC; } };
+if (typeof module !== 'undefined' && module.exports) { module.exports = S; return; }
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cvs = Array.from(document.querySelectorAll('canvas[data-screen]'));
+const vis = new Set();
+function setup(c) { const dpr = Math.min(2, window.devicePixelRatio || 1); c.width = W * dpr; c.height = H * dpr; c._s = dpr; }
+function paint(c, t) {
+  const g = c.getContext('2d'); g.setTransform(c._s, 0, 0, c._s, 0, 0);
+  g.clearRect(0, 0, W, H);
+  try { S[c.dataset.screen](g, t + (+c.dataset.offset || 0)); } catch (e) { console.error(c.dataset.screen, e); }
+}
+function start() {
+  cvs.forEach(c => { setup(c); paint(c, 1.3); });
+  if (reduce) return;
+  const io = new IntersectionObserver(es => es.forEach(e => (e.isIntersecting ? vis.add(e.target) : vis.delete(e.target))), { rootMargin: '80px' });
+  cvs.forEach(c => io.observe(c));
+  const t0 = performance.now(); let last = 0;
+  (function loop(now) {
+    if (now - last > 32) { last = now; const t = (now - t0) / 1000; vis.forEach(c => paint(c, t)); }
+    requestAnimationFrame(loop);
+  })(t0);
+}
+const ready = document.fonts ? Promise.race([Promise.all([document.fonts.load('20px "Share Tech Mono"'), document.fonts.load('40px VT323')]), new Promise(r => setTimeout(r, 2500))]) : Promise.resolve();
+ready.then(start, start);
+})();
+
+</script>
+
+</body></html>

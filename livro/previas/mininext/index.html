@@ -1,0 +1,485 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>MiniNext no Miyoo Mini</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Share+Tech+Mono&family=VT323&family=Outfit:wght@300;400;500;600&display=swap">
+<style>
+  /* Layout: the same showroom as Neon, Bloco, Grafite and Fósforo, for the Miyoo Mini: the card
+     that every handheld shares, a working Mini to play with, then every screen numbered at the
+     Mini's own 640x480, in the theme picked at the top. */
+  :root{
+    --bg:#0b0a10; --shelf:#13121b; --panel:#191826;
+    --ink:#f3f1fa; --muted:#a19dba; --faint:#6b6784; --line:rgba(255,255,255,.08);
+    --amber:#f9a62b; --cyan:#3ad6e0; --mag:#ff5ca8; --ok:#59d98e; --warn:#ffcf5a;
+    --display:'Chakra Petch',system-ui,sans-serif;
+    --body:'Outfit',system-ui,sans-serif;
+    --mono:'Share Tech Mono',ui-monospace,monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(900px 520px at 90% -8%,rgba(249,166,43,.08),transparent 60%),radial-gradient(760px 520px at 0% 4%,rgba(58,214,224,.06),transparent 55%),var(--bg);
+    color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;
+    padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+  .wrap{max-width:1180px;margin:0 auto}
+  a{color:var(--cyan)}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+  header.top{padding:48px 0 26px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:32px;align-items:end}
+  @media(max-width:860px){header.top{grid-template-columns:1fr}}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:18px;font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:.02em}
+  .brand i{font-style:normal;color:var(--cyan)}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--amber);margin:0 0 12px}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,5.4vw,58px);line-height:1.02;margin:0 0 16px;text-wrap:balance}
+  h1 span{color:var(--amber)}
+  .lead{color:var(--muted);font-size:17px;line-height:1.6;max-width:62ch;margin:0}
+  .lead b,.gsub b,.motif b,footer b{color:var(--ink);font-weight:600}
+  .facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .fact{background:var(--shelf);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .fact small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+  .fact b{font-family:var(--display);font-weight:600;font-size:17px}
+  .fact span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+
+  section{padding:30px 0 6px}
+  .ghead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:6px}
+  .ghead h2{font-family:var(--display);font-weight:600;font-size:clamp(26px,3.4vw,34px);margin:0;line-height:1.1}
+  .ghead .who{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
+  .gsub{color:var(--muted);font-size:15px;line-height:1.55;margin:0 0 20px;max-width:74ch}
+
+  /* the shared card */
+  .card{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+  @media(max-width:900px){.card{grid-template-columns:1fr}}
+  .tree{background:var(--shelf);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.75;overflow-x:auto}
+  .tree .r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+  .tree .r .d{min-width:0;overflow-wrap:anywhere}
+  .tree .d{color:var(--ink)} .tree .c{color:var(--faint)}
+  .tree .in1{padding-left:18px} .tree .in2{padding-left:36px}
+  .tags{display:flex;gap:4px}
+  .tag{font-family:var(--mono);font-size:10.5px;padding:1px 6px;border-radius:4px;border:1px solid}
+  .tag.b{color:var(--amber);border-color:rgba(249,166,43,.5)} .tag.m{color:var(--cyan);border-color:rgba(58,214,224,.5)} .tag.a{color:var(--mag);border-color:rgba(255,92,168,.5)}
+  .who3{display:grid;gap:12px}
+  .dev{background:var(--shelf);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .dev h3{margin:0 0 4px;font-family:var(--display);font-weight:600;font-size:17px;display:flex;gap:8px;align-items:center}
+  .dev p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+
+  .motifs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .motif{border-top:1px solid var(--line);padding-top:14px}
+  .motif h3{font-family:var(--display);font-weight:600;font-size:16px;margin:0 0 6px;color:var(--ink)}
+  .motif p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+
+  /* theme picker */
+  .picker{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(11,10,16,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 0;margin-top:22px}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+  .picker .in{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .picker small{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-right:6px}
+  .chip{font-family:var(--display);font-weight:600;font-size:14px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
+  .chip[aria-pressed="true"]{color:#120c03;background:var(--amber);border-color:var(--amber)}
+
+  /* the playable Mini */
+  .play{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:28px;align-items:start}
+  @media(max-width:860px){.play{grid-template-columns:1fr}}
+  .mini{position:relative;width:100%;max-width:420px;aspect-ratio:420/640;border-radius:26px 26px 40px 26px;
+    background:linear-gradient(160deg,#d9d6dd,#b9b5bf 55%,#a8a4ae);box-shadow:0 30px 60px -28px rgba(0,0,0,.9),inset 0 2px 0 rgba(255,255,255,.6),inset 0 -3px 0 rgba(0,0,0,.18)}
+  .mini .bez{position:absolute;left:6.5%;right:6.5%;top:5%;aspect-ratio:4/3.25;background:#17161c;border-radius:14px 14px 14px 14px;padding:4.2% 4.6%}
+  .mini canvas{width:100%;aspect-ratio:4/3;display:block;border-radius:3px;background:#000}
+  .mini .lbl{position:absolute;left:9%;top:52.5%;font-family:var(--display);font-weight:700;font-size:13px;color:#56525d;letter-spacing:.06em}
+  .btn{position:absolute;border:0;cursor:pointer;color:#e9e6ee;font-family:var(--display);font-weight:700;font-size:12px;display:grid;place-items:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  .btn:active,.btn.press{filter:brightness(1.35)}
+  .dp{background:#2a2830;width:11%;height:11%}
+  .dp.u{left:17%;top:61%;border-radius:4px 4px 0 0} .dp.d{left:17%;top:83%;border-radius:0 0 4px 4px}
+  .dp.l{left:6%;top:72%;border-radius:4px 0 0 4px} .dp.r{left:28%;top:72%;border-radius:0 4px 4px 0}
+  .dpc{position:absolute;left:17%;top:72%;width:11%;height:11%;background:#2a2830}
+  .fb{width:12.5%;aspect-ratio:1;border-radius:50%;background:#3b3842;box-shadow:inset 0 -2px 0 rgba(0,0,0,.35)}
+  .fb.x{left:72%;top:60%} .fb.y{left:59%;top:69.5%} .fb.a{left:85%;top:69.5%} .fb.b{left:72%;top:79%}
+  .pill{background:#55515c;border-radius:999px;width:13%;height:3.4%;font-size:9px;color:#d8d4dd}
+  .pill.sel{left:33%;top:93.5%} .pill.st{left:52%;top:93.5%} .pill.mn{left:6%;top:93.5%;width:12%}
+  .sh{position:absolute;top:-1.6%;height:3%;width:20%;background:#8e8a95;border-radius:8px 8px 0 0;font-size:9px;color:#2a2830}
+  .sh.l1{left:8%} .sh.r1{right:8%}
+  .pw{position:absolute;right:-2%;top:12%;width:2.6%;height:7%;background:#8e8a95;border-radius:0 4px 4px 0}
+  .side{display:grid;gap:14px}
+  .keys{background:var(--shelf);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .keys h3{margin:0 0 8px;font-family:var(--display);font-weight:600;font-size:16px}
+  .keys dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:0;font-size:14px}
+  .keys dt{font-family:var(--mono);color:var(--amber)} .keys dd{margin:0;color:var(--muted)}
+  .now{font-family:var(--mono);font-size:13px;color:var(--cyan)}
+  .goto{display:flex;flex-wrap:wrap;gap:6px}
+  .goto button{font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 9px;cursor:pointer}
+  .goto button:hover{color:var(--ink)}
+
+  /* the screens */
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 26px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  figure{margin:0;min-width:0}
+  .bz{background:linear-gradient(145deg,#24222b,#0f0e14);border-radius:18px;padding:10px;border:1px solid rgba(255,255,255,.05);box-shadow:0 22px 44px -22px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.05)}
+  .bz canvas{display:block;width:100%;max-width:100%;aspect-ratio:4/3;border-radius:6px;background:#000}
+  .quad{display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .quad div{position:relative;min-width:0} .quad canvas{display:block;width:100%;aspect-ratio:4/3;border-radius:5px;background:#000}
+  .quad small{display:block;margin-top:4px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+  body.all .quad{display:grid} body.all .bz>canvas{display:none}
+  figcaption{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;margin-top:12px}
+  figcaption .no{grid-row:span 2;font-family:var(--mono);font-size:13px;color:var(--amber);padding-top:3px}
+  figcaption b{font-family:var(--display);font-weight:600;font-size:16px}
+  figcaption span{color:var(--muted);font-size:14px;line-height:1.5}
+
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:32px 0 80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+  footer h3{font-family:var(--display);font-weight:600;font-size:17px;margin:0 0 8px}
+  footer p,footer li{color:var(--muted);font-size:14.5px;line-height:1.6}
+  footer p{margin:0} footer ul{margin:0;padding-left:18px}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand">Mini<i>Next</i></div>
+      <p class="kicker">Miyoo Mini · Mini Plus · 640×480 · prévia para validar</p>
+      <h1>O visual do AnberNext no <span>Miyoo Mini</span>, no mesmo cartão do Brick.</h1>
+      <p class="lead">Um cartão micro SD com a sua biblioteca, que liga o <b>Brick</b>, liga o <b>Miyoo Mini</b> e entra no <b>slot 2 dos Anbernic</b>. No Mini os quatro temas vêm na <b>versão leve</b>: mesmas cores, mesmas letras, mesmos lugares, desenhados de um jeito que o Mini aguenta.</p>
+    </div>
+    <div class="facts" aria-label="O Miyoo Mini em números">
+      <div class="fact"><small>Tela</small><b>640×480</b><span>a mesma do RG353V e do RG35XX</span></div>
+      <div class="fact"><small>Memória</small><b>128 MB</b><span>o Brick tem 1 GB</span></div>
+      <div class="fact"><small>Processador</small><b>2 núcleos</b><span>Cortex-A7, sem 3D</span></div>
+      <div class="fact"><small>Cartão</small><b>1 slot</b><span>boot e biblioteca juntos</span></div>
+    </div>
+  </header>
+
+  <section aria-labelledby="h-card">
+    <div class="ghead"><h2 id="h-card">Um cartão para todos</h2><span class="who">a biblioteca anda com você</span></div>
+    <p class="gsub">O Brick e o Mini ligam do <b>mesmo cartão</b>: cada um tem a sua pasta de sistema, e os jogos, BIOS e saves são da biblioteca, de todos. Nos Anbernic o cartão de boot é outro, e este entra no <b>slot 2</b> só como biblioteca, como já fazemos hoje.</p>
+    <div class="card">
+      <div class="tree" role="list" aria-label="Pastas do cartão">
+        <div class="r"><span class="d">Roms/ <span class="c">"Game Boy Advance (GBA)", "Super Nintendo (SFC)"...</span></span><span class="tags"><span class="tag b">Brick</span><span class="tag m">Mini</span><span class="tag a">Anbernic</span></span></div>
+        <div class="r"><span class="d">Bios/ <span class="c">uma pasta por console</span></span><span class="tags"><span class="tag b">Brick</span><span class="tag m">Mini</span><span class="tag a">Anbernic</span></span></div>
+        <div class="r"><span class="d">Saves/ <span class="c">os saves de bateria (.sav), os mesmos em todos</span></span><span class="tags"><span class="tag b">Brick</span><span class="tag m">Mini</span><span class="tag a">Anbernic</span></span></div>
+        <div class="r"><span class="d">Collections/ · Music/</span><span class="tags"><span class="tag b">Brick</span><span class="tag m">Mini</span><span class="tag a">Anbernic</span></span></div>
+        <div class="r"><span class="d">.userdata/shared/ <span class="c">recentes; estados salvos de cada aparelho</span></span><span class="tags"><span class="tag b">Brick</span><span class="tag m">Mini</span><span class="tag a">Anbernic</span></span></div>
+        <div class="r"><span class="d">.system/tg5040/ · Emus/tg5040 · Tools/tg5040</span><span class="tags"><span class="tag b">BrickNext</span></span></div>
+        <div class="r"><span class="d">.system/miyoomini/ · Emus/miyoomini · Tools/miyoomini</span><span class="tags"><span class="tag m">MiniNext</span></span></div>
+        <div class="r"><span class="d">.userdata/tg5040/ · .userdata/miyoomini/ <span class="c">tema e ajustes de cada um</span></span><span class="tags"><span class="tag b">Brick</span><span class="tag m">Mini</span></span></div>
+        <div class="r"><span class="d">.tmp_update/ <span class="c">por onde cada aparelho entra no boot</span></span><span class="tags"><span class="tag b">Brick</span><span class="tag m">Mini</span></span></div>
+      </div>
+      <div class="who3">
+        <div class="dev"><h3><span class="tag b">Brick</span> liga deste cartão</h3><p>BrickNext completo, com os quatro temas cheios, LEDs no tema e o AnberTunes.</p></div>
+        <div class="dev"><h3><span class="tag m">Mini</span> liga deste cartão</h3><p>MiniNext, com os quatro temas leves. Os nomes das pastas de jogos são os mesmos, então a biblioteca aparece igual.</p></div>
+        <div class="dev"><h3><span class="tag a">Anbernic</span> lê no slot 2</h3><p>O cartão de boot do AnberNext fica no slot 1; deste cartão ele usa só jogos, BIOS, saves e música.</p></div>
+        <div class="dev"><h3>Saves e estados</h3><p>O save do jogo (o de bateria) é o mesmo em todos: você para no Mini e continua no Brick. Os <b>estados salvos</b> ficam separados por aparelho, porque cada um roda versões diferentes dos emuladores.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-lite">
+    <div class="ghead"><h2 id="h-lite">O que é a versão leve</h2><span class="who">feita para 128 MB</span></div>
+    <div class="motifs">
+      <div class="motif"><h3>Desenho pronto, não calculado</h3><p>Fundos, ícones e capas vêm de <b>imagens prontas</b>. Nada de brilho, desfoque ou sombra calculada a cada quadro, que é o que pesa no Brick.</p></div>
+      <div class="motif"><h3>Movimento só onde ajuda</h3><p>A seleção desliza e o cursor pisca. O resto fica parado, para a bateria pequena do Mini durar.</p></div>
+      <div class="motif"><h3>Os mesmos lugares</h3><p>Tela inicial, biblioteca, menu e Ajustes ficam nos mesmos lugares dos temas cheios. Quem usa o Brick se acha no Mini.</p></div>
+      <div class="motif"><h3>Base MinUI</h3><p>O NextUI não roda no Mini; o MiniNext usa o MinUI do Mini por baixo, com o nosso visual por cima, os mesmos emuladores leves e o mesmo menu dentro do jogo.</p></div>
+    </div>
+  </section>
+
+  <div class="picker" role="group" aria-label="Tema das telas">
+    <div class="in">
+      <small>Tema</small>
+      <button class="chip" data-th="todos" aria-pressed="false">Todos lado a lado</button>
+      <button class="chip" data-th="neon" aria-pressed="true">Neon Drive</button>
+      <button class="chip" data-th="bloco" aria-pressed="false">Bloco</button>
+      <button class="chip" data-th="grafite" aria-pressed="false">Grafite</button>
+      <button class="chip" data-th="fosforo" aria-pressed="false">Fósforo</button>
+    </div>
+  </div>
+
+  <section aria-labelledby="h-play">
+    <div class="ghead"><h2 id="h-play">Teste no Mini</h2><span class="who">simulador · todas as telas navegáveis</span></div>
+    <p class="gsub">Um Mini que funciona aqui na página: use as setas do teclado ou toque nos botões. Ele liga, mostra a tela inicial, abre um jogo, abre o menu do jogo, salva, vai aos Ajustes e troca o tema na hora.</p>
+    <div class="play">
+      <div class="mini" id="mini">
+        <span class="sh btn l1" data-k="L">L</span><span class="sh btn r1" data-k="R">R</span>
+        <span class="pw btn" data-k="POWER" aria-label="Liga e desliga"></span>
+        <div class="bez"><canvas id="emu" width="640" height="480" aria-label="Tela do Miyoo Mini simulado"></canvas></div>
+        <span class="lbl">MiniNext</span>
+        <span class="btn dp u" data-k="UP" aria-label="Cima"></span><span class="btn dp d" data-k="DOWN" aria-label="Baixo"></span>
+        <span class="btn dp l" data-k="LEFT" aria-label="Esquerda"></span><span class="btn dp r" data-k="RIGHT" aria-label="Direita"></span><span class="dpc"></span>
+        <span class="btn fb x" data-k="X">X</span><span class="btn fb y" data-k="Y">Y</span><span class="btn fb a" data-k="A">A</span><span class="btn fb b" data-k="B">B</span>
+        <span class="btn pill mn" data-k="MENU">MENU</span><span class="btn pill sel" data-k="SELECT">SELECT</span><span class="btn pill st" data-k="START">START</span>
+      </div>
+      <div class="side">
+        <div class="keys"><h3>Teclado</h3><dl>
+          <dt>setas</dt><dd>direcional</dd><dt>Z / Enter</dt><dd>A (confirma)</dd><dt>X / Backspace</dt><dd>B (volta)</dd>
+          <dt>Esc / M</dt><dd>MENU</dd><dt>Tab</dt><dd>SELECT (recentes)</dd><dt>Q / W</dt><dd>L / R</dd><dt>P</dt><dd>liga e desliga</dd></dl></div>
+        <div class="keys"><h3>Onde você está</h3><p class="now" id="now">boot</p></div>
+        <div class="keys"><h3>Ir direto para</h3><div class="goto" id="goto"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="groups"></div>
+
+  <footer>
+    <div><h3>Para você decidir</h3><ul>
+      <li>O nome: <b>MiniNext</b>, no mesmo jeito do BrickNext?</li>
+      <li>Os quatro temas leves, ou só um ou dois no começo?</li>
+      <li>Música no Mini entra numa segunda fase?</li></ul></div>
+    <div><h3>Fica para depois</h3><ul>
+      <li>Wi-Fi e atualização pelo aparelho (só o Mini Plus tem Wi-Fi).</li>
+      <li>Miyoo Mini v4 (tela 750×560): primeiro com faixas pretas.</li>
+      <li>Consoles mais pesados: o Mini roda até PlayStation 1.</li></ul></div>
+    <div><h3>Como ler esta página</h3><p>As telas são prévias desenhadas no navegador, no tamanho real do Mini. Cada número é fixo: para pedir um ajuste, diga o número da tela.</p></div>
+  </footer>
+</div>
+
+<script>
+'use strict';
+// ---------------------------------------------------------------- data
+const SYS=[['GB','Game Boy',41],['GBC','Game Boy Color',37],['GBA','Game Boy Advance',64],['FC','Nintendo',88],['SFC','Super Nintendo',72],['MD','Mega Drive',55],['PS','PlayStation',23],['PCE','TurboGrafx-16',18],['NGPC','Neo Geo Pocket',12]];
+const GAMES=['Advance Wars','Castlevania: Aria of Sorrow','Fire Emblem','Golden Sun','Kirby & the Amazing Mirror','Metroid Fusion','Pokémon Emerald','The Minish Cap'];
+const COVER=[['#2b5bd7','#f2c14e'],['#5b1f2e','#d9c9a3'],['#1e3d6b','#e94f37'],['#3c2a1e','#f5b041'],['#ff7eb6','#ffe066'],['#1b2a41','#7cf29c'],['#0f5132','#ef476f'],['#2f6f3e','#ffd166']];
+const RECENT=[['Golden Sun','GBA',2],['Super Metroid','SFC',1],['Sonic 2','MD',0]];
+// ---------------------------------------------------------------- the four light themes
+const T={
+  neon:{name:'Neon Drive',bg:['#1f0d36','#090414'],ink:'#f4ecff',mut:'#a497cf',dim:'#5d5280',acc:'#f9a62b',acc2:'#3ad6e0',acc3:'#ff5ca8',sel:'#f9a62b',selInk:'#1a0d02',f:'Chakra Petch',fm:'Chakra Petch',upper:true},
+  bloco:{name:'Bloco',bg:['#1c2140','#090b18'],ink:'#eef2ff',mut:'#8d96bd',dim:'#4a5280',acc:'#f2a33c',acc2:'#3ad6e0',acc3:'#f2a33c',sel:'#f2a33c',selInk:'#1d1206',f:'Inter',fm:'Chakra Petch',upper:false},
+  grafite:{name:'Grafite',bg:['#18212d','#0b1017'],ink:'#f4f7fb',mut:'#8b98a8',dim:'#3c4757',acc:'#2e8bff',acc2:'#8ec3ff',acc3:'#2e8bff',sel:'#2e8bff',selInk:'#ffffff',f:'Inter',fm:'Inter',upper:false},
+  fosforo:{name:'Fósforo',bg:['#03120a','#010603'],ink:'#48ff8c',mut:'#2fb565',dim:'#14532e',acc:'#48ff8c',acc2:'#b6ffd1',acc3:'#48ff8c',sel:'#48ff8c',selInk:'#021a0b',f:'Share Tech Mono',fm:'VT323',upper:true},
+};
+let TH='neon';
+const look={home:'lista',lib:'lista',lang:'pt'};
+// ---------------------------------------------------------------- drawing kit (flat shapes and text: what the Mini draws from ready images)
+function font(th,px,w){return `${w||500} ${px}px "${th.f}", system-ui, sans-serif`}
+function txt(c,th,s,x,y,px,col,opt){opt=opt||{};c.font=opt.disp?`${opt.w||600} ${px}px "${th.fm}", system-ui, sans-serif`:font(th,px,opt.w);c.fillStyle=col;c.textAlign=opt.al||'left';c.textBaseline='middle';
+  if(th.upper&&!opt.keep)s=s.toUpperCase();if(opt.max){while(c.measureText(s).width>opt.max&&s.length>3)s=s.slice(0,-2)+'…'}c.fillText(s,x,y);return c.measureText(s).width}
+function rr(c,x,y,w,h,r,col){c.beginPath();c.roundRect(x,y,w,h,r);c.fillStyle=col;c.fill()}
+function srr(c,x,y,w,h,r,col,lw){c.beginPath();c.roundRect(x,y,w,h,r);c.strokeStyle=col;c.lineWidth=lw||2;c.stroke()}
+function bg(c,th){const g=c.createLinearGradient(0,0,0,480);g.addColorStop(0,th.bg[0]);g.addColorStop(1,th.bg[1]);c.fillStyle=g;c.fillRect(0,0,640,480);
+  if(TH==='neon'){ // the horizon and its grid, one ready picture on the Mini
+    c.save();const sun=c.createLinearGradient(0,170,0,300);sun.addColorStop(0,'#f9a62b');sun.addColorStop(1,'#ff5ca8');c.globalAlpha=.32;c.fillStyle=sun;c.beginPath();c.arc(470,300,120,Math.PI,0);c.fill();
+    c.globalAlpha=.9;c.fillStyle='#0c0518';for(let i=0;i<6;i++)c.fillRect(350,230+i*12,240,3+i);c.restore();
+    c.strokeStyle='rgba(255,92,168,.28)';c.lineWidth=1;for(let i=0;i<9;i++){const y=300+i*i*3;c.beginPath();c.moveTo(0,y);c.lineTo(640,y);c.stroke()}
+    for(let i=-8;i<=8;i++){c.beginPath();c.moveTo(320+i*20,300);c.lineTo(320+i*90,480);c.stroke()}}
+  if(TH==='bloco'){c.strokeStyle='rgba(120,135,210,.08)';c.lineWidth=1;for(let i=-20;i<40;i++){c.beginPath();c.moveTo(i*30,0);c.lineTo(i*30+480,240);c.stroke();c.beginPath();c.moveTo(i*30,480);c.lineTo(i*30+480,240);c.stroke()}}
+  if(TH==='fosforo'){c.fillStyle='rgba(0,0,0,.22)';for(let y=0;y<480;y+=3)c.fillRect(0,y,640,1)}}
+function status(c,th,title,t){ // the top row: where you are, the clock, the battery
+  if(TH==='fosforo'){c.fillStyle=th.dim;c.fillRect(18,16,604,1);txt(c,th,'> '+title,20,32,20,th.ink,{disp:1});}
+  else if(TH==='neon'){let w=txt(c,th,title==='MiniNext'?'MINI':title,22,32,22,th.acc,{w:700});if(title==='MiniNext')txt(c,th,'NEXT',22+w,32,22,th.acc2,{w:700});}
+  else {if(TH==='bloco'){rr(c,22,22,20,20,4,th.acc)}else{srr(c,22,22,18,18,5,th.acc,2.5);rr(c,27,27,13,13,3,th.acc)}
+    if(title==='MiniNext'){let w=txt(c,th,'Mini',50,33,19,th.ink,{w:600,disp:1});txt(c,th,'Next',50+w,33,19,TH==='bloco'?th.acc2:th.acc,{w:600,disp:1})}else txt(c,th,title,50,33,18,th.ink,{w:600})}
+  txt(c,th,'12:40',548,32,15,th.mut,{al:'right',keep:1});battery(c,th,560,24,82)}
+function battery(c,th,x,y,p,red){srr(c,x,y,34,16,3,red?'#ff5a5a':th.mut,2);rr(c,x+34,y+5,3,6,1,red?'#ff5a5a':th.mut);rr(c,x+3,y+3,Math.max(2,28*p/100),10,2,red?'#ff5a5a':(TH==='fosforo'?th.ink:th.acc))}
+function hints(c,th,list){let x=22;const y=452;if(TH==='fosforo'){c.fillStyle=th.dim;c.fillRect(18,432,604,1)}
+  for(const [k,l] of list){const kw=Math.max(22,k.length*9+10);
+    if(TH==='fosforo')srr(c,x,y-11,kw,22,2,th.ink,1.5);else rr(c,x,y-11,kw,22,TH==='grafite'?11:5,TH==='bloco'?'#2a3160':(TH==='grafite'?'#2a3442':'rgba(249,166,43,.18)'));
+    txt(c,th,k,x+kw/2,y+1,12,TH==='neon'?th.acc:th.ink,{al:'center',w:700,keep:1});x+=kw+7;x+=txt(c,th,l,x,y+1,14,th.mut)+18}}
+function selbar(c,th,x,y,w,h,t){const p=TH==='neon'?(.85+.15*Math.sin(t*4)):1;c.save();c.globalAlpha=p;
+  if(TH==='fosforo')rr(c,x,y,w,h,0,th.sel);else if(TH==='grafite')rr(c,x,y,w,h,10,th.sel);else if(TH==='bloco'){rr(c,x,y+3,w,h,6,'#9c5d17');rr(c,x,y,w,h,6,th.sel)}else{rr(c,x,y,w,h,4,th.sel);rr(c,x-8,y,4,h,2,th.acc2)}c.restore()}
+function list(c,th,items,sel,x,y,w,rh,t,opt){opt=opt||{};const top=Math.max(0,Math.min(sel-Math.floor(opt.rows/2||3),items.length-(opt.rows||7)));
+  for(let i=top;i<Math.min(items.length,top+(opt.rows||7));i++){const yy=y+(i-top)*rh;const on=i===sel;
+    if(on)selbar(c,th,x-10,yy-rh/2+3,w+20,rh-6,t);const it=items[i];const label=Array.isArray(it)?it[0]:it;
+    txt(c,th,label,x,yy,opt.px||20,on?th.selInk:th.ink,{w:on?700:500,max:w-(it[1]!=null?70:0)});
+    if(Array.isArray(it)&&it[1]!=null)txt(c,th,String(it[1]),x+w,yy,15,on?th.selInk:th.mut,{al:'right',keep:1});
+    if(on&&TH==='fosforo'&&Math.floor(t*2)%2)rr(c,x+c.measureText(TH==='fosforo'?label.toUpperCase():label).width+6,yy-9,10,18,0,th.selInk)}}
+function icon(c,th,tag,x,y,s,on){ // a console as one ready picture: a cube on Bloco, a tube outline on Neon...
+  const col=on?th.acc:th.mut;
+  if(TH==='bloco'){const h=s*.55;c.fillStyle=on?'#f2a33c':'#3a4378';c.beginPath();c.moveTo(x,y-h);c.lineTo(x+s/2,y-h/2);c.lineTo(x,y);c.lineTo(x-s/2,y-h/2);c.fill();
+    c.fillStyle=on?'#c6771d':'#2c3360';c.beginPath();c.moveTo(x-s/2,y-h/2);c.lineTo(x,y);c.lineTo(x,y+h*.9);c.lineTo(x-s/2,y+h*.4);c.fill();
+    c.fillStyle=on?'#8a4d10':'#20264c';c.beginPath();c.moveTo(x+s/2,y-h/2);c.lineTo(x,y);c.lineTo(x,y+h*.9);c.lineTo(x+s/2,y+h*.4);c.fill();
+    txt(c,th,tag,x,y-h/2,s*.2,on?'#3a1d02':'#aab3e0',{al:'center',w:800,keep:1});return}
+  if(TH==='fosforo'){srr(c,x-s/2,y-s*.36,s,s*.62,2,col,2);srr(c,x-s*.3,y-s*.24,s*.6,s*.34,1,col,1.5);txt(c,th,tag,x,y+s*.45,s*.2,col,{al:'center',keep:1});return}
+  if(TH==='grafite'){rr(c,x-s/2,y-s*.42,s,s*.84,12,on?'#22406b':'#1e2733');if(on)srr(c,x-s/2,y-s*.42,s,s*.84,12,th.acc,3);
+    rr(c,x-s*.32,y-s*.3,s*.64,s*.34,4,on?'#9fcfff':'#556274');txt(c,th,tag,x,y+s*.22,s*.17,on?th.ink:th.mut,{al:'center',w:700,keep:1});return}
+  // neon: a glowing outline handheld (the glow is part of the ready picture)
+  c.save();if(on){c.shadowColor=th.acc3;c.shadowBlur=14}srr(c,x-s*.32,y-s*.46,s*.64,s*.92,8,on?th.acc3:th.dim,2.5);srr(c,x-s*.22,y-s*.34,s*.44,s*.32,3,on?th.acc2:th.dim,2);c.restore();
+  txt(c,th,tag,x,y+s*.22,s*.16,on?th.acc:th.mut,{al:'center',w:700,keep:1})}
+function cover(c,th,i,x,y,w,h,on){const [a,b]=COVER[i%COVER.length];if(TH==='fosforo'){srr(c,x,y,w,h,2,on?th.ink:th.dim,2);txt(c,th,GAMES[i%GAMES.length].split(' ').map(s=>s[0]).join('').slice(0,3),x+w/2,y+h/2,h*.3,on?th.ink:th.dim,{al:'center',disp:1});return}
+  const g=c.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,a);g.addColorStop(1,'#0c0c14');rr(c,x,y,w,h,TH==='grafite'?10:4,g);
+  c.fillStyle=b;c.beginPath();c.arc(x+w*.68,y+h*.36,w*.16,0,7);c.fill();c.fillStyle='rgba(0,0,0,.35)';c.fillRect(x,y+h*.62,w,h*.38);
+  txt(c,th,GAMES[i%GAMES.length].split(':')[0],x+8,y+h*.8,Math.max(10,w*.085),'#ffffff',{w:700,max:w-14,keep:1});if(on)srr(c,x-3,y-3,w+6,h+6,TH==='grafite'?12:6,th.sel,3)}
+function panel(c,th,x,y,w,h){if(TH==='fosforo'){rr(c,x,y,w,h,2,'rgba(1,8,4,.96)');srr(c,x,y,w,h,2,th.mut,1.5)}else if(TH==='grafite')rr(c,x,y,w,h,14,'rgba(30,39,51,.92)');else if(TH==='bloco')rr(c,x,y,w,h,8,'rgba(16,20,44,.94)');else{rr(c,x,y,w,h,6,'rgba(12,5,24,.9)');srr(c,x,y,w,h,6,'rgba(255,92,168,.45)',1.5)}}
+function toast(c,th,s){const w=c.measureText(s).width+60;panel(c,th,320-170,196,340,72);txt(c,th,s,320,232,20,th.ink,{al:'center',w:600})}
+function game(c,t,i){ // the game itself (our own pixel scene)
+  const sky=c.createLinearGradient(0,0,0,480);sky.addColorStop(0,'#5fb7ff');sky.addColorStop(1,'#bfe6ff');c.fillStyle=sky;c.fillRect(0,0,640,480);
+  c.fillStyle='#fff';for(let k=0;k<4;k++){const x=((k*190-t*20)%800+800)%800-80;c.fillRect(x,60+k%2*40,72,16);c.fillRect(x+16,48+k%2*40,40,14)}
+  c.fillStyle='#4caf50';c.fillRect(0,380,640,100);c.fillStyle='#8d5524';c.fillRect(0,404,640,76);
+  for(let x=0;x<640;x+=32){c.fillStyle='#6d3f17';c.fillRect(x+2,420,12,8);c.fillRect(x+18,446,10,8)}
+  c.fillStyle='#c97c2b';for(let k=0;k<5;k++)c.fillRect(200+k*36,250,32,32);c.fillStyle='#ffd23f';c.fillRect(272,250,32,32);c.fillStyle='#8a4b00';c.fillRect(284,258,8,16);
+  const jx=120+Math.abs(((t*60)%300)-150),jy=348-Math.abs(Math.sin(t*3))*60;c.fillStyle='#e63946';c.fillRect(jx,jy,26,32);c.fillStyle='#ffe0bd';c.fillRect(jx+4,jy-14,18,14);c.fillStyle='#1d3557';c.fillRect(jx,jy+32,10,8);c.fillRect(jx+16,jy+32,10,8);
+  c.fillStyle='#2d6a4f';c.beginPath();c.arc(520,380,46,Math.PI,0);c.fill();c.fillStyle='#000';c.font='700 18px monospace';c.textAlign='left';c.fillText('MOEDAS 12   VIDAS 3',20,26)}
+// ---------------------------------------------------------------- the screens (one function each; s carries what the simulator changes)
+const S={};
+S.install=(c,th,t)=>{c.fillStyle='#000';c.fillRect(0,0,640,480);txt(c,th,'MiniNext',320,190,46,TH==='fosforo'?th.ink:'#fff',{al:'center',w:700,disp:1,keep:1});
+  txt(c,th,'Instalando no cartão…',320,250,18,th.mut,{al:'center'});rr(c,170,290,300,8,4,'#222');rr(c,170,290,300*((t*.18)%1),8,4,th.acc);
+  txt(c,th,'na primeira vez leva uns 2 minutos',320,330,14,'#777',{al:'center'})};
+S.boot=(c,th,t)=>{bg(c,th);const k=Math.min(1,(t%4)/2.4);
+  if(TH==='fosforo'){const ls=['MININEXT 1.0 · MIYOO MINI','PROCESSADOR SSD202','MEMÓRIA 128 MB','CARTÃO SD','TEMA'];ls.forEach((l,i)=>{if(t%4>i*.35){txt(c,th,l,40,70+i*26,18,th.mut);if(i&&t%4>i*.35+.2)txt(c,th,i==4?'FÓSFORO':'OK',600,70+i*26,18,th.ink,{al:'right'})}});
+    txt(c,th,'MiniNext',320,300,92,th.ink,{al:'center',disp:1,keep:1});}
+  else if(TH==='neon'){let w=txt(c,th,'MINI',196,190,64,th.acc,{w:700});txt(c,th,'NEXT',196+w,190,64,th.acc2,{w:700});}
+  else{if(TH==='bloco')icon(c,th,'',320,150,90,true);else{rr(c,288,112,46,46,12,'#cfd8e3');rr(c,304,128,46,46,12,th.acc)}
+    let w=txt(c,th,'Mini',254,232,46,th.ink,{w:600,disp:1});txt(c,th,'Next',254+w,232,46,TH==='bloco'?th.acc2:th.acc,{w:600,disp:1})}
+  const bx=170,by=TH==='fosforo'?380:300;rr(c,bx,by,300,8,4,TH==='fosforo'?th.dim:'rgba(255,255,255,.1)');rr(c,bx,by,300*k,8,4,th.acc);
+  txt(c,th,['soprando o cartucho…','carregando os pixels…','procurando os saves…'][Math.floor(t/1.4)%3],320,by+32,16,th.mut,{al:'center'});
+  txt(c,th,'MiniNext 1.0 · Miyoo Mini',320,446,13,th.dim,{al:'center',keep:1})};
+S.home=(c,th,t,s)=>{bg(c,th);status(c,th,'MiniNext');const sel=s.sys;const it=SYS.map(x=>[x[1],x[2]]);
+  if((s.layout||look.home)==='carrossel'){for(let k=-2;k<=2;k++){const i=(sel+k+SYS.length)%SYS.length;const x=320+k*130,sz=k?70:120;icon(c,th,SYS[i][0],x,200+(k?14:0),sz,!k)}
+    txt(c,th,SYS[sel][1],320,315,28,th.ink,{al:'center',w:700});txt(c,th,SYS[sel][2]+' jogos',320,345,15,th.mut,{al:'center'});
+    for(let i=0;i<SYS.length;i++)rr(c,320-SYS.length*9+i*18,372,i===sel?14:6,6,3,i===sel?th.acc:th.dim)}
+  else if((s.layout||look.home)==='grade'){for(let i=0;i<8;i++){const x=104+(i%4)*144,y=140+Math.floor(i/4)*150;icon(c,th,SYS[i][0],x,y,92,i===sel%8);txt(c,th,SYS[i][1],x,y+64,13,i===sel%8?th.ink:th.mut,{al:'center',max:130})}}
+  else{list(c,th,it,sel,44,96,300,46,t,{rows:7});icon(c,th,SYS[sel][0],490,220,150,true);txt(c,th,SYS[sel][2]+' jogos',490,330,15,th.mut,{al:'center'})}
+  hints(c,th,[['MENU','Menu'],['SELECT','Recentes'],['A','Abrir']])};
+S.games=(c,th,t,s)=>{bg(c,th);status(c,th,SYS[2][1]);const sel=s.game;
+  if((s.lib||look.lib)==='carrossel'){for(let k=-2;k<=2;k++){const i=(sel+k+GAMES.length)%GAMES.length;const w=k?110:170,h=k?148:226,x=320+k*150-w/2;cover(c,th,i,x,250-h/2,w,h,!k)}
+    txt(c,th,GAMES[sel],320,400,22,th.ink,{al:'center',w:700,max:560});txt(c,th,sel===3?'save no slot 2 · jogado ontem':'sem estado salvo',320,422,13,th.mut,{al:'center'})}
+  else{list(c,th,GAMES,sel,44,94,290,44,t,{rows:7,px:18});cover(c,th,sel,400,94,190,250,false);txt(c,th,sel===3?'Jogado ontem · 14 h':'Nunca jogado',495,368,14,th.mut,{al:'center'});
+    if(sel===3){rr(c,430,388,130,26,13,TH==='fosforo'?'transparent':'rgba(255,255,255,.08)');txt(c,th,'save no slot 2',495,401,13,th.acc,{al:'center'})}}
+  hints(c,th,[['B','Voltar'],['SELECT','Recentes'],['A','Jogar']])};
+S.empty=(c,th)=>{bg(c,th);status(c,th,'MiniNext');panel(c,th,100,130,440,200);txt(c,th,'Nenhum jogo no cartão',320,180,24,th.ink,{al:'center',w:700});
+  txt(c,th,'Coloque os jogos em Roms/, numa pasta',320,226,15,th.mut,{al:'center'});txt(c,th,'por console, como no Brick:',320,248,15,th.mut,{al:'center'});
+  txt(c,th,'Roms/Game Boy Advance (GBA)/',320,290,16,th.acc,{al:'center',keep:1});hints(c,th,[['MENU','Menu']])};
+S.recents=(c,th,t,s)=>{bg(c,th);status(c,th,'Continuar jogando');const sel=s.rec||0;
+  for(let i=0;i<3;i++){const x=40+i*192,on=i===sel;panel(c,th,x,90,176,250);cover(c,th,[3,5,1][i],x+14,104,148,170,on);
+    txt(c,th,RECENT[i][0],x+88,298,15,on?th.ink:th.mut,{al:'center',w:600,max:160});txt(c,th,RECENT[i][1]+' · slot '+RECENT[i][2],x+88,320,12,th.dim,{al:'center',keep:1})}
+  txt(c,th,'Volta exatamente onde você parou, em qualquer aparelho com este cartão.',320,372,14,th.mut,{al:'center',max:600});
+  hints(c,th,[['B','Fechar'],['←→','Trocar'],['A','Continuar']])};
+S.collections=(c,th,t)=>{bg(c,th);status(c,th,'Coleções');list(c,th,[['RPGs de bolso',12],['Clássicos do Mega Drive',9],['Para jogar no ônibus',15],['Zerar em 2025',6]],0,44,110,560,52,t,{rows:6});
+  hints(c,th,[['B','Voltar'],['A','Abrir']])};
+S.quick=(c,th,t,s)=>{S.home(c,th,t,{sys:s.homeSys||2});c.fillStyle='rgba(0,0,0,.55)';c.fillRect(0,0,640,480);panel(c,th,170,70,300,340);
+  txt(c,th,'MENU',320,104,22,th.acc,{al:'center',w:700,disp:1});list(c,th,['Ajustes','Ferramentas','Recentes','Coleções','Reiniciar','Desligar'],s.q||0,212,152,216,42,t,{rows:6,px:18});
+  hints(c,th,[['B','Fechar'],['A','OK']])};
+S.tools=(c,th,t,s)=>{bg(c,th);status(c,th,'Ferramentas');list(c,th,['Bateria','Relógio','Explorador de arquivos','Teste dos botões','Limpar cache das capas','Sobre o cartão'],s.tool||0,44,96,550,48,t,{rows:7});
+  hints(c,th,[['B','Voltar'],['A','Abrir']])};
+S.game=(c,th,t)=>{game(c,t,0)};
+S.osd=(c,th,t)=>{game(c,t,0);panel(c,th,170,24,300,58);txt(c,th,'Volume',190,46,15,th.ink,{w:600});const p=.6;rr(c,190,62,260,8,4,'rgba(255,255,255,.15)');rr(c,190,62,260*p,8,4,th.acc);txt(c,th,'60%',450,46,14,th.mut,{al:'right',keep:1})};
+S.ingame=(c,th,t,s)=>{game(c,1.2,0);c.fillStyle='rgba(0,0,0,.6)';c.fillRect(0,0,640,480);panel(c,th,30,30,250,420);
+  txt(c,th,'Golden Sun',52,62,19,th.ink,{w:700,max:210});txt(c,th,'Game Boy Advance',52,84,12,th.mut);
+  list(c,th,['Continuar','Salvar','Carregar','Opções','Sair'],s.m||0,54,134,200,46,t,{rows:6,px:19});
+  if((s.m||0)===1||(s.m||0)===2){panel(c,th,300,30,310,250);cover(c,th,3,318,48,274,180,false);txt(c,th,'slot 2 · hoje 12:31',455,252,13,th.mut,{al:'center'})}
+  hints(c,th,[['B','Voltar'],['A','OK']])};
+S.saveslots=(c,th,t,s)=>{game(c,1.2,0);c.fillStyle='rgba(0,0,0,.66)';c.fillRect(0,0,640,480);txt(c,th,s.load?'Carregar estado':'Salvar estado',320,44,22,th.ink,{al:'center',w:700});
+  const sel=s.slot==null?2:s.slot;for(let i=0;i<4;i++){const x=40+i*144,on=i===sel;panel(c,th,x,90,128,150);if(i<3)cover(c,th,[3,3,3,0][i],x+10,100,108,96,on);else txt(c,th,'vazio',x+64,148,14,th.dim,{al:'center'});
+    txt(c,th,'slot '+(i+1),x+64,214,14,on?th.ink:th.mut,{al:'center',w:600});txt(c,th,i<3?['ontem','hoje 09:10','hoje 12:31'][i]:'—',x+64,232,12,th.dim,{al:'center',keep:1})}
+  txt(c,th,'Os estados ficam neste aparelho; o save do jogo vale em todos.',320,290,14,th.mut,{al:'center'});if(s.done)toast(c,th,s.load?'Estado carregado':'Estado salvo no slot '+(sel+1));
+  hints(c,th,[['B','Voltar'],['←→','Slot'],['A',s.load?'Carregar':'Salvar']])};
+S.options=(c,th,t,s)=>{bg(c,th);status(c,th,'Opções do jogo');list(c,th,[['Escala da tela','Aspecto'],['Filtro','Nítido'],['Mostrar FPS','Não'],['Avanço rápido','2x'],['Botões','Padrão'],['Trapaças','0']],s.o||0,44,96,550,48,t,{rows:7});
+  hints(c,th,[['B','Voltar'],['←→','Mudar']])};
+S.settings=(c,th,t,s)=>{bg(c,th);status(c,th,'Ajustes');list(c,th,[['Aparência','>'],['Tela','>'],['Sistema','>'],['Dentro do jogo','>'],['Sobre','>']],s.st||0,44,96,550,52,t,{rows:6});
+  hints(c,th,[['B','Voltar'],['A','Abrir']])};
+S.appearance=(c,th,t,s)=>{bg(c,th);status(c,th,'Aparência');const rows=[['Tema',T[TH].name],['Tela inicial',cap(look.home)],['Biblioteca de jogos',cap(look.lib)],['Idioma',look.lang==='pt'?'Português (Brasil)':'English (US)']];
+  list(c,th,rows.map(r=>[r[0],'‹ '+r[1]+' ›']),s.ap||0,44,100,330,52,t,{rows:5});panel(c,th,406,88,212,170);
+  // the preview of the theme in use, one small ready picture per option
+  c.save();c.beginPath();c.rect(414,96,196,147);c.clip();c.translate(414,96);c.scale(196/640,147/480);S.home(c,th,t,{sys:2});c.restore();
+  txt(c,th,T[TH].name+' leve',512,276,14,th.mut,{al:'center',keep:1});hints(c,th,[['B','Voltar'],['←→','Trocar']])};
+S.display=(c,th,t)=>{bg(c,th);status(c,th,'Tela');const rows=[['Brilho',6],['Cor (temperatura)',4],['Desligar a tela após','1 min']];
+  rows.forEach((r,i)=>{const y=110+i*70,on=i===0;if(on)selbar(c,th,34,y-24,572,58,t);txt(c,th,r[0],50,y-6,18,on?th.selInk:th.ink,{w:600});
+    if(typeof r[1]==='number'){for(let k=0;k<10;k++)rr(c,50+k*26,y+14,20,8,2,k<r[1]?(on?th.selInk:th.acc):(on?'rgba(0,0,0,.25)':th.dim))}else txt(c,th,r[1],590,y+4,16,on?th.selInk:th.mut,{al:'right'})});
+  hints(c,th,[['B','Voltar'],['←→','Mudar']])};
+S.system=(c,th,t)=>{bg(c,th);status(c,th,'Sistema');list(c,th,[['Volume','12'],['Dormir após','5 min'],['Data e hora','12/11 12:40'],['Vibração','Não tem'],['Salvar ao desligar','Sim']],0,44,96,550,50,t,{rows:6});
+  hints(c,th,[['B','Voltar'],['←→','Mudar']])};
+S.about=(c,th)=>{bg(c,th);status(c,th,'Sobre');panel(c,th,40,80,560,300);
+  [['Aparelho','Miyoo Mini Plus'],['Sistema','MiniNext 1.0 (MinUI)'],['Cartão','64 GB · 41 GB livres'],['Também liga no','TrimUI Brick (BrickNext)'],['Também lê no slot 2','Anbernic (AnberNext)'],['Jogos no cartão','410']].forEach((r,i)=>{txt(c,th,r[0],64,116+i*42,16,th.mut);txt(c,th,r[1],576,116+i*42,16,th.ink,{al:'right',w:600})});
+  hints(c,th,[['B','Voltar']])};
+S.lowbat=(c,th,t)=>{bg(c,th);status(c,th,'MiniNext');panel(c,th,140,150,360,170);battery(c,th,296,186,8,true);txt(c,th,'Bateria em 8%',320,238,24,th.ink,{al:'center',w:700});
+  txt(c,th,'Ligue o carregador. Os estados',320,272,15,th.mut,{al:'center'});txt(c,th,'serão salvos se a bateria acabar.',320,292,15,th.mut,{al:'center'})};
+S.charging=(c,th,t)=>{c.fillStyle='#000';c.fillRect(0,0,640,480);const p=64+Math.floor((t*6)%10);srr(c,250,190,130,70,10,'#555',4);rr(c,380,210,10,30,3,'#555');rr(c,260,200,110*p/100,50,6,TH==='fosforo'?'#48ff8c':'#59d98e');
+  txt(c,th,p+'%',320,300,22,'#ddd',{al:'center',keep:1});txt(c,th,'carregando · tela apagada',320,330,14,'#777',{al:'center'})};
+S.sleep=(c,th,t)=>{c.fillStyle='#000';c.fillRect(0,0,640,480);txt(c,th,'dormindo',320,240,16,'#333',{al:'center'})};
+S.poweroff=(c,th,t)=>{bg(c,th);panel(c,th,170,170,300,140);txt(c,th,'Desligando…',320,222,24,th.ink,{al:'center',w:700});txt(c,th,'salvando onde você parou',320,258,15,th.mut,{al:'center'})};
+S.shared=(c,th)=>{bg(c,th);status(c,th,'Sobre o cartão');panel(c,th,40,80,560,300);txt(c,th,'Este cartão é a sua biblioteca',320,116,20,th.ink,{al:'center',w:700});
+  [['Brick','liga dele','BrickNext'],['Miyoo Mini','liga dele','MiniNext'],['Anbernic','lê no slot 2','AnberNext']].forEach((r,i)=>{const x=110+i*210;icon(c,th,r[0]==='Brick'?'BRK':r[0]==='Miyoo Mini'?'MINI':'RG',x,212,84,i===1);txt(c,th,r[0],x,276,16,th.ink,{al:'center',w:600});txt(c,th,r[1],x,298,13,th.mut,{al:'center'});txt(c,th,r[2],x,318,13,th.acc,{al:'center',keep:1})});
+  txt(c,th,'Jogos, BIOS e saves são os mesmos nos três.',320,356,14,th.mut,{al:'center'});hints(c,th,[['B','Voltar']])};
+function cap(s){return s[0].toUpperCase()+s.slice(1)}
+// ---------------------------------------------------------------- the numbered gallery
+const GROUPS=[
+ ['Ligar','primeira vez, boot e energia',[
+  ['01','Instalando','Só na primeira vez que o Mini liga com o cartão: copia o sistema e volta sozinho.','install',{}],
+  ['02','Boot','A animação do tema, leve: o nome, a barra e as frases. No Fósforo, a lista de checagem.','boot',{}],
+  ['03','Bateria fraca','Aviso antes de acabar; os estados se salvam sozinhos se a bateria morrer.','lowbat',{}],
+  ['04','Carregando desligado','Com o Mini desligado e na tomada, só a bateria na tela.','charging',{}],
+  ['05','Desligando','Salva onde você parou antes de apagar.','poweroff',{}]]],
+ ['Tela inicial','os consoles do cartão',[
+  ['06','Tela inicial · lista','O padrão do Neon e do Fósforo: nomes à esquerda, o console grande à direita.','home',{sys:2,layout:'lista'}],
+  ['07','Tela inicial · carrossel','O padrão do Bloco e do Grafite: o console no meio e os vizinhos de lado.','home',{sys:2,layout:'carrossel'}],
+  ['08','Tela inicial · grade','Oito consoles por página.','home',{sys:2,layout:'grade'}],
+  ['09','Cartão sem jogos','Explica onde colocar os jogos, com o mesmo nome de pasta do Brick.','empty',{}]]],
+ ['Biblioteca','os jogos de um console',[
+  ['10','Jogos · lista','Lista com a capa ao lado, o tempo de jogo e o slot do último save.','games',{game:3,lib:'lista'}],
+  ['11','Jogos · carrossel','As capas em fila, a do meio maior.','games',{game:3,lib:'carrossel'}],
+  ['12','Continuar jogando (SELECT)','Os últimos jogos de qualquer aparelho com este cartão, com a imagem do estado.','recents',{rec:0}],
+  ['13','Coleções','As mesmas listas que você monta no Brick.','collections',{}]]],
+ ['Menu e ferramentas','o botão MENU fora do jogo',[
+  ['14','Menu','Por cima da tela inicial: Ajustes, Ferramentas, Recentes, Coleções, Reiniciar, Desligar.','quick',{q:0}],
+  ['15','Ferramentas','Os paks do Mini, na lista do tema.','tools',{tool:0}],
+  ['16','Sobre o cartão','Mostra que este cartão liga o Brick e o Mini e é lido pelos Anbernic.','shared',{}]]],
+ ['No jogo','o jogo rodando e o botão MENU',[
+  ['17','Jogo rodando','O jogo em tela cheia, sem nada por cima.','game',{}],
+  ['18','Volume e brilho','A barra aparece por um instante quando você aperta os botões.','osd',{}],
+  ['19','Menu do jogo','Continuar, Salvar, Carregar, Opções e Sair, no tema.','ingame',{m:1}],
+  ['20','Salvar estado','Quatro slots com a imagem de cada um.','saveslots',{slot:2}],
+  ['21','Carregar estado','Os mesmos slots, para voltar.','saveslots',{slot:2,load:1}],
+  ['22','Opções do jogo','Escala, filtro, avanço rápido, botões e trapaças.','options',{o:0}]]],
+ ['Ajustes','as telas do Ajustes',[
+  ['23','Ajustes','Aparência, Tela, Sistema, Dentro do jogo e Sobre.','settings',{st:0}],
+  ['24','Aparência','Tema, Tela inicial, Biblioteca e Idioma, com a prévia do lado. Muda tudo na hora.','appearance',{ap:0}],
+  ['25','Tela','Brilho, cor e quando apagar.','display',{}],
+  ['26','Sistema','Volume, sono, data e hora.','system',{}],
+  ['27','Sobre','O aparelho, o sistema e o que mais este cartão liga.','about',{}],
+  ['28','Dormindo','Tela apagada; qualquer botão acorda.','sleep',{}]]]];
+const figs=[];
+function buildGallery(){const root=document.getElementById('groups');
+  for(const [h,who,items] of GROUPS){const sec=document.createElement('section');sec.innerHTML=`<div class="ghead"><h2>${h}</h2><span class="who">${who}</span></div><div class="grid"></div>`;
+    const grid=sec.querySelector('.grid');for(const [no,name,desc,scr,st] of items){const f=document.createElement('figure');
+      f.innerHTML=`<div class="bz"><canvas width="640" height="480" aria-label="Tela ${no}: ${name}"></canvas><div class="quad">${THS.map(t=>`<div><canvas width="640" height="480" data-th="${t}" aria-label="Tela ${no}: ${name}, ${T[t].name}"></canvas><small>${T[t].name}</small></div>`).join('')}</div></div><figcaption><span class="no">${no}</span><b>${name}</b><span>${desc}</span></figcaption>`;
+      grid.appendChild(f);figs.push({el:f,cv:f.querySelector('canvas'),quad:[...f.querySelectorAll('.quad canvas')],scr,st,vis:false})}root.appendChild(sec)}}
+// ---------------------------------------------------------------- the simulator
+const E={scr:'boot',t0:0,s:{sys:2,game:3,m:0,q:0,st:0,ap:0,tool:0,o:0,rec:0,slot:2}};
+const NAMES={boot:'boot',home:'tela inicial',games:'biblioteca',recents:'continuar jogando',quick:'menu',tools:'ferramentas',game:'jogo rodando',ingame:'menu do jogo',saveslots:'salvar / carregar',options:'opções do jogo',settings:'ajustes',appearance:'aparência',display:'tela',system:'sistema',about:'sobre',shared:'sobre o cartão',sleep:'dormindo',poweroff:'desligando',collections:'coleções'};
+function go(scr,extra){E.scr=scr;E.t0=performance.now()/1000;Object.assign(E.s,extra||{});E.s.done=0;document.getElementById('now').textContent=NAMES[scr]||scr}
+function step(v,n,d){return (v+d+n)%n}
+function key(k){const s=E.s;
+  if(k==='POWER'){if(E.scr==='sleep'||E.scr==='off')return go('boot');return go('poweroff')}
+  switch(E.scr){
+   case 'boot':if(k==='A'||k==='START')go('home');break;
+   case 'home':if(k==='UP'||k==='LEFT')s.sys=step(s.sys,SYS.length,-1);if(k==='DOWN'||k==='RIGHT')s.sys=step(s.sys,SYS.length,1);if(k==='A')go('games',{game:3});if(k==='SELECT')go('recents',{rec:0});if(k==='MENU')go('quick',{q:0,homeSys:s.sys});break;
+   case 'games':if(k==='UP'||k==='LEFT')s.game=step(s.game,GAMES.length,-1);if(k==='DOWN'||k==='RIGHT')s.game=step(s.game,GAMES.length,1);if(k==='A')go('game');if(k==='B')go('home');if(k==='SELECT')go('recents',{rec:0});break;
+   case 'recents':if(k==='LEFT')s.rec=step(s.rec,3,-1);if(k==='RIGHT')s.rec=step(s.rec,3,1);if(k==='A')go('game');if(k==='B'||k==='SELECT')go('home');break;
+   case 'game':if(k==='MENU')go('ingame',{m:0});break;
+   case 'ingame':if(k==='UP')s.m=step(s.m,5,-1);if(k==='DOWN')s.m=step(s.m,5,1);if(k==='B')go('game');
+     if(k==='A'){if(s.m===0)go('game');if(s.m===1)go('saveslots',{load:0,slot:2});if(s.m===2)go('saveslots',{load:1,slot:2});if(s.m===3)go('options',{o:0});if(s.m===4)go('games')}break;
+   case 'saveslots':if(k==='LEFT')s.slot=step(s.slot,4,-1);if(k==='RIGHT')s.slot=step(s.slot,4,1);if(k==='A'){s.done=1;setTimeout(()=>{if(E.scr==='saveslots')go('game')},900)}if(k==='B')go('ingame');break;
+   case 'options':if(k==='UP')s.o=step(s.o,6,-1);if(k==='DOWN')s.o=step(s.o,6,1);if(k==='B')go('ingame');break;
+   case 'quick':if(k==='UP')s.q=step(s.q,6,-1);if(k==='DOWN')s.q=step(s.q,6,1);if(k==='B'||k==='MENU')go('home');
+     if(k==='A'){[()=>go('settings',{st:0}),()=>go('tools',{tool:0}),()=>go('recents',{rec:0}),()=>go('collections'),()=>go('boot'),()=>go('poweroff')][s.q]()}break;
+   case 'tools':if(k==='UP')s.tool=step(s.tool,6,-1);if(k==='DOWN')s.tool=step(s.tool,6,1);if(k==='A'&&s.tool===5)go('shared');if(k==='B')go('quick');break;
+   case 'shared':case 'collections':if(k==='B')go(E.scr==='shared'?'tools':'quick');break;
+   case 'settings':if(k==='UP')s.st=step(s.st,5,-1);if(k==='DOWN')s.st=step(s.st,5,1);if(k==='B')go('quick');
+     if(k==='A'){[()=>go('appearance',{ap:0}),()=>go('display'),()=>go('system'),()=>go('options',{o:0}),()=>go('about')][s.st]()}break;
+   case 'appearance':if(k==='UP')s.ap=step(s.ap,4,-1);if(k==='DOWN')s.ap=step(s.ap,4,1);if(k==='B')go('settings');
+     if(k==='LEFT'||k==='RIGHT'){const d=k==='LEFT'?-1:1;const ths=['neon','bloco','grafite','fosforo'];
+       if(s.ap===0)setTheme(ths[step(ths.indexOf(TH),4,d)]);if(s.ap===1)look.home=['lista','carrossel','grade'][step(['lista','carrossel','grade'].indexOf(look.home),3,d)];
+       if(s.ap===2)look.lib=look.lib==='lista'?'carrossel':'lista';if(s.ap===3)look.lang=look.lang==='pt'?'en':'pt'}break;
+   case 'display':case 'system':case 'about':if(k==='B')go('settings');break;
+   case 'poweroff':if(k==='A')go('boot');break;
+   case 'sleep':go('home');break}}
+const KEYMAP={ArrowUp:'UP',ArrowDown:'DOWN',ArrowLeft:'LEFT',ArrowRight:'RIGHT',z:'A',Z:'A',Enter:'A',x:'B',X:'B',Backspace:'B',Escape:'MENU',m:'MENU',M:'MENU',Tab:'SELECT',q:'L',w:'R',p:'POWER',P:'POWER'};
+let emuFocus=false;
+document.addEventListener('keydown',e=>{const k=KEYMAP[e.key];if(!k)return;const r=document.getElementById('mini').getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;
+  e.preventDefault();key(k);flash(k)});
+function flash(k){const b=document.querySelector(`.btn[data-k="${k}"]`);if(b){b.classList.add('press');setTimeout(()=>b.classList.remove('press'),120)}}
+document.querySelectorAll('.btn[data-k]').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();key(b.dataset.k)}));
+const GOTO=[['Tela inicial','home'],['Biblioteca','games'],['Jogo','game'],['Menu do jogo','ingame'],['Ajustes','settings'],['Aparência','appearance'],['Recentes','recents'],['Boot','boot']];
+const gw=document.getElementById('goto');for(const [l,s] of GOTO){const b=document.createElement('button');b.textContent=l;b.addEventListener('click',()=>go(s));gw.appendChild(b)}
+// ---------------------------------------------------------------- theme and drawing loop
+const THS=['neon','bloco','grafite','fosforo'];let ALL=false;
+function homeOf(th){return th==='bloco'||th==='grafite'?'carrossel':'lista'}
+function setTheme(th){ALL=th==='todos';document.body.classList.toggle('all',ALL);if(ALL)th=T[TH]?TH:'neon';TH=th;document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',String(ALL?c.dataset.th==='todos':c.dataset.th===th)));
+  look.home=homeOf(th);look.lib=look.home;try{localStorage.setItem('mininext-theme',ALL?'todos':th)}catch(e){}drawAll(performance.now()/1000,true)}
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>setTheme(c.dataset.th)));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function drawAll(now,all){const th=T[TH];
+  for(const f of figs){if(!all&&!f.vis)continue;
+    if(ALL){const keep=TH;for(const cv of f.quad){TH=cv.dataset.th;const st=Object.assign({},f.st);if(!st.layout&&f.scr==='home')st.layout=homeOf(TH);if(!st.lib&&f.scr==='games')st.lib=homeOf(TH);S[f.scr](cv.getContext('2d'),T[TH],reduce?1.5:now,st)}TH=keep;continue}
+    const c=f.cv.getContext('2d');const st=Object.assign({},f.st);if(!st.layout&&f.scr==='home')st.layout=look.home;if(!st.lib&&f.scr==='games')st.lib=look.lib;S[f.scr](c,th,reduce?1.5:now,st)}
+  const ec=document.getElementById('emu').getContext('2d');const t=now-E.t0;
+  if(E.scr==='boot'&&t>4.2)go('home');S[E.scr](ec,th,E.scr==='boot'?t:now,Object.assign({},E.s,{layout:look.home,lib:look.lib}))}
+const io=new IntersectionObserver(es=>{for(const e of es){const f=figs.find(x=>x.el===e.target);if(f)f.vis=e.isIntersecting}});
+let last=0;function loop(ms){if(ms-last>60){last=ms;drawAll(ms/1000,false)}requestAnimationFrame(loop)}
+function start(){buildGallery();figs.forEach(f=>io.observe(f.el));let th='todos';try{th=localStorage.getItem('mininext-theme')||'todos'}catch(e){}const h=location.hash.slice(1);if(T[h]||h==='todos')th=h;setTheme(T[th]||th==='todos'?th:'todos');
+  addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(T[h]||h==='todos')setTheme(h)});go('boot');requestAnimationFrame(loop)}
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(start);
+</script>
+
+</body></html>

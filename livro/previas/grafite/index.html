@@ -1,0 +1,1441 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AnberNext Grafite</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: a dark showroom. Every Grafite screen at the RG353V's own 640x480, animated,
+     grouped by where it lives on the device; the page is only the shelf they stand on. */
+  :root{
+    --bg:#0a0e14; --panel:#141b25; --panel2:#1f2834;
+    --ink:#f2f5f9; --muted:#8a97a8; --faint:#5b6879;
+    --amber:#1a9fff; --amber-hi:#6cc2ff; --amber-deep:#0c6fc4; --amber-dark:#0a4f8c; --cyan:#6cc2ff;
+    --line:rgba(200,215,235,.12);
+    --display:'Inter',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1100px 600px at 80% -10%,rgba(26,159,255,.08),transparent 60%),radial-gradient(900px 600px at 0% 0%,rgba(90,120,160,.08),transparent 55%),var(--bg);
+    color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;
+    padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  header.top{padding:48px 0 28px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:end}
+  @media(max-width:860px){header.top{grid-template-columns:1fr}}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .brand svg{width:34px;height:34px}
+  .brand b{font-family:var(--display);font-weight:600;font-size:19px}
+  .brand b i{font-style:normal;color:var(--cyan)}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin:0 0 12px}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(32px,5.4vw,54px);line-height:1.02;margin:0 0 16px;letter-spacing:-.5px;text-wrap:balance}
+  h1 span{color:var(--amber)}
+  .lead{color:var(--muted);font-size:17px;line-height:1.6;max-width:62ch;margin:0}
+  .lead b{color:var(--ink);font-weight:600}
+
+  /* how the switch works: three keycaps in a row */
+  .path{display:flex;flex-wrap:wrap;align-items:center;gap:10px 8px}
+  .cap{font-family:var(--display);font-weight:600;font-size:15px;color:#fff;background:linear-gradient(#2aa8ff,#0c6fc4);padding:9px 16px;border-radius:10px;
+    box-shadow:0 0 0 2px rgba(26,159,255,.35),0 8px 22px -8px rgba(26,159,255,.7)}
+  .cap.n{background:#283342;color:var(--ink);box-shadow:0 6px 16px -8px rgba(0,0,0,.8)}
+  .path .sep{color:var(--faint);font-family:var(--mono)}
+  .switch p{color:var(--muted);font-size:14.5px;line-height:1.55;margin:18px 0 0;max-width:46ch}
+  .switch p b{color:var(--ink);font-weight:600}
+
+  .motifs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:12px}
+  .motif h3{font-family:var(--display);font-weight:600;font-size:16px;margin:0 0 4px;color:var(--amber-hi)}
+  .motif p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+
+  section.group{padding:34px 0 8px}
+  .ghead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:6px}
+  .ghead h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,3.2vw,30px);margin:0}
+  .ghead .who{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
+  .gsub{color:var(--muted);font-size:15px;line-height:1.55;margin:0 0 20px;max-width:72ch}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 26px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  figure{margin:0;min-width:0}
+  .bz{background:linear-gradient(145deg,#232a35,#0d1117);border-radius:18px;padding:10px;border:1px solid rgba(255,255,255,.05);
+    box-shadow:0 22px 44px -22px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.05)}
+  canvas{display:block;width:100%;max-width:100%;aspect-ratio:4/3;border-radius:6px;background:#090b18}
+  figcaption{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;margin-top:12px}
+  figcaption .no{grid-row:span 2;font-family:var(--mono);font-size:13px;color:var(--amber);padding-top:3px}
+  figcaption b{font-family:var(--display);font-weight:600;font-size:17px}
+  figcaption span{color:var(--muted);font-size:14px;line-height:1.5}
+
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:32px 0 80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+  footer h3{font-family:var(--display);font-weight:600;font-size:18px;margin:0 0 8px}
+  footer p,footer li{color:var(--muted);font-size:14.5px;line-height:1.6}
+  footer p{margin:0}
+  footer ul{margin:0;padding-left:18px}
+  footer b{color:var(--ink);font-weight:600}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="10" y="10" width="56" height="56" rx="14" fill="none" stroke="#c8d1dc" stroke-width="8"/><rect x="34" y="34" width="56" height="56" rx="14" fill="#1a9fff"/></svg>
+        <b>Anber<i>Next</i></b>
+      </div>
+      <p class="kicker">Tema 3 · RG353V · 640×480</p>
+      <h1>Grafite: cara de portátil de PC, <span>no RG353V</span>.</h1>
+      <p class="lead">As telas do sistema redesenhadas no tema Grafite, no tamanho real da tela do RG353V e com a animação que vão ter. Fundo de ardósia, <b>um azul só</b> para o que está escolhido, cartões grandes em prateleiras e painéis que deslizam da borda. Neon Drive e Bloco continuam lá: o tema se escolhe nos Ajustes e <b>tudo troca junto</b>.</p>
+    </div>
+    <div class="switch">
+      <div class="path" aria-label="Caminho no aparelho">
+        <span class="cap n">Ajustes</span><span class="sep">›</span><span class="cap n">Aparência</span><span class="sep">›</span><span class="cap">Tema: Grafite</span>
+      </div>
+      <p>Troca a tela inicial, o menu dentro dos jogos, a música, os Ajustes e a tela de boot. Os emuladores com menu próprio (Dreamcast, N64, NDS e PSP) ficam como estão, igual nos outros temas.</p>
+    </div>
+  </header>
+
+  <div class="motifs">
+    <div class="motif"><h3>Um azul só</h3><p>Tudo é cinza-ardósia; o azul aparece só no que está escolhido, como um contorno que brilha ou uma faixa que desliza na lista.</p></div>
+    <div class="motif"><h3>Prateleiras de cartões</h3><p>Consoles e capas são cartões arredondados numa fileira. O escolhido cresce e empurra os vizinhos; a fileira anda junto.</p></div>
+    <div class="motif"><h3>Painéis que deslizam</h3><p>O menu do F entra pela esquerda, volume e brilho pela direita, o teclado sobe de baixo. Nada abre do nada.</p></div>
+    <div class="motif"><h3>A cor de quem está na tela</h3><p>O fundo ganha um brilho da cor do console ou da capa escolhida. Fonte Inter, limpa e fácil de ler.</p></div>
+  </div>
+
+  <section class="group">
+    <div class="ghead"><h2>Tela inicial: três jeitos</h2><span class="who">escolha nos Ajustes</span></div>
+    <p class="gsub">Em Ajustes › Aparência › Tela inicial você escolhe como os consoles aparecem: Carrossel (o padrão do Grafite), Lista ou Grade. As três usam o ícone que estiver escolhido.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="home" aria-label="Tela inicial em carrossel"></canvas></div><figcaption><span class="no">01</span><b>Carrossel</b><span>O console escolhido aparece grande em cima, com o número de jogos e o último jogado. Embaixo, uma fileira para continuar de onde parou. A música tocando fica no rodapé.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeList" aria-label="Tela inicial em lista"></canvas></div><figcaption><span class="no">01b</span><b>Lista</b><span>Os nomes à esquerda com o número de jogos de cada um, e o cartão grande do escolhido à direita.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeGrid" aria-label="Tela inicial em grade"></canvas></div><figcaption><span class="no">01c</span><b>Grade</b><span>Todos os consoles de uma vez. O direcional anda em quatro direções; o escolhido cresce e mostra quantos jogos tem.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Ícones nos cartões dos consoles</h2><span class="who">mesma opção dos outros temas</span></div>
+    <p class="gsub">Ajustes › Aparência › Ícone dos consoles: Sigla, Controle ou Console (o padrão). São os mesmos 39 desenhos dos outros temas, pintados no jeito Grafite: cinza fosco, com o azul nas partes que se apertam.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="iconsB" aria-label="Os 39 consoles: console"></canvas></div><figcaption><span class="no">B</span><b>Os 39 consoles: console</b><span>A miniatura de cada console em cinza fosco. O escolhido acende o azul.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="iconsA" aria-label="Os 39 consoles: controle"></canvas></div><figcaption><span class="no">A</span><b>Os 39 consoles: controle</b><span>O controle de cada console, chapado e com sombra suave. O escolhido fica claro.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="iconsS" aria-label="Os 39 consoles: sigla"></canvas></div><figcaption><span class="no">S</span><b>Os 39 consoles: sigla</b><span>Só a sigla, grande e grossa, com um traço azul embaixo no escolhido.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeA" data-offset="2" aria-label="Início com controles"></canvas></div><figcaption><span class="no">A</span><b>Início com controles</b><span>Como fica a prateleira com o estilo Controle.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Tela inicial</h2><span class="who">launcher</span></div>
+    <p class="gsub">Onde se escolhe o console e o jogo.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="games" aria-label="Capas em prateleira"></canvas></div><figcaption><span class="no">02</span><b>Dentro do console: carrossel</b><span>As capas ficam numa fileira; a escolhida cresce com o contorno azul. Embaixo vêm o nome, quando foi jogado e etiquetas (capa, save, conquistas). Jogo sem capa ganha a inicial do nome. É o padrão.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="gamesList" aria-label="Jogos em lista"></canvas></div><figcaption><span class="no">02b</span><b>Dentro do console: lista</b><span>Nomes em lista com quando foi jogado, mais jogos por tela, e a capa do escolhido à direita.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="recent" aria-label="Recentes"></canvas></div><figcaption><span class="no">03</span><b>Recentes (SELECT)</b><span>O último save de cada jogo vira um cartão grande; esquerda e direita trocam, A continua de onde parou.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="fmenu" aria-label="Menu do botão F"></canvas></div><figcaption><span class="no">04</span><b>Menu do F</b><span>Um painel entra pela esquerda por cima da tela inicial escurecida, com um símbolo para cada item.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="tools" aria-label="Ferramentas"></canvas></div><figcaption><span class="no">05</span><b>Ferramentas</b><span>Lista com símbolo à esquerda e um cartão à direita explicando o que a ferramenta escolhida faz.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="loading" aria-label="Carregando"></canvas></div><figcaption><span class="no">06</span><b>Carregando</b><span>A capa do jogo aparece no meio, com um anel girando e uma barra fina enchendo.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="osd" aria-label="Volume e brilho"></canvas></div><figcaption><span class="no">07</span><b>Volume e brilho</b><span>Um painel de acesso rápido entra pela direita com as duas barras, os atalhos de Wi-Fi e Bluetooth e quanto ainda dura a bateria.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Música</h2><span class="who">launcher e menu do jogo</span></div>
+    <p class="gsub">O mesmo player abre pelo menu do F e pelo menu dentro do jogo, então é desenhado uma vez só.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="music" aria-label="Biblioteca de música"></canvas></div><figcaption><span class="no">08</span><b>Biblioteca</b><span>Artistas à esquerda com quantos álbuns e faixas têm; a capa do álbum à direita com Tocar e Mix.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="playing" aria-label="Tocando agora"></canvas></div><figcaption><span class="no">09</span><b>Tocando agora</b><span>Capa grande, barra fina com o tempo e três botões redondos; o do meio, azul, pulsa no ritmo.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Dentro do jogo</h2><span class="who">motor dos emuladores</span></div>
+    <p class="gsub">O menu do botão F durante o jogo e tudo que aparece por cima dele.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="gamemenu" aria-label="Menu do jogo"></canvas></div><figcaption><span class="no">10</span><b>Menu do jogo</b><span>Painel à esquerda com a capa e o tempo de jogo; o jogo continua visível ao lado. Em Salvar e Carregar os slots viram cartões, com o escolhido maior.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="options" aria-label="Opções do emulador"></canvas></div><figcaption><span class="no">11</span><b>Opções</b><span>Abas no topo (L1 e R1 trocam), chave de liga e desliga onde a resposta é sim ou não, e a explicação da opção embaixo.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="toasts" aria-label="Avisos"></canvas></div><figcaption><span class="no">12</span><b>Avisos</b><span>Save e conquista entram pela direita no canto de cima; o volume aparece como uma pílula embaixo.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="achievements" aria-label="Conquistas"></canvas></div><figcaption><span class="no">13</span><b>Conquistas</b><span>O progresso fica no topo (quantas feitas e quantos pontos). Cada conquista tem seu selo colorido; a que falta fica com cadeado. Pontos e data à direita.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="achDetail" aria-label="Detalhe da conquista"></canvas></div><figcaption><span class="no">13b</span><b>Detalhe da conquista</b><span>Abre com A: selo grande, descrição, pontos, data em que foi conseguida e quantos jogadores têm. Esquerda e direita passam para a próxima.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Ajustes</h2><span class="who">app de ajustes</span></div>
+    <p class="gsub">Inclui a tela de onde se troca o tema, agora com quatro opções.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="settings" aria-label="Ajustes"></canvas></div><figcaption><span class="no">14</span><b>Ajustes</b><span>Seções numa coluna à esquerda; à direita, o que tem dentro da escolhida, já com os valores atuais.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="appearance" aria-label="Aparência e troca de tema"></canvas></div><figcaption><span class="no">15</span><b>Aparência: tema e disposição</b><span>Cinco escolhas no topo: Tema (Neon Drive, Bloco, Grafite ou Fósforo), Tela inicial, Ícone dos consoles, Biblioteca de jogos e Idioma. Esquerda e direita trocam, com a prévia ao lado e a marca "em uso".</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="color" aria-label="Seletor de cor"></canvas></div><figcaption><span class="no">16</span><b>Seletor de cor</b><span>Matiz, saturação e luz em barras com a própria cor, e a prévia mostrando o contorno e o botão já na cor nova. As cores prontas ficam embaixo.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="wifi" aria-label="Wi-Fi"></canvas></div><figcaption><span class="no">17</span><b>Wi-Fi</b><span>Chave de liga no topo, sinal em arcos, cadeado nas redes com senha e a rede conectada em azul.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="keyboard" aria-label="Teclado"></canvas></div><figcaption><span class="no">18</span><b>Teclado</b><span>O teclado sobe da parte de baixo da tela; a tecla escolhida fica azul e cresce um pouco.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Boot</h2><span class="who">tela de boot</span></div>
+    <p class="gsub">A versão Grafite da bootscreen animada, com a mesma frase divertida e o mesmo rodapé.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="boot" aria-label="Tela de boot"></canvas></div><figcaption><span class="no">19</span><b>Tela de boot</b><span>O contorno da marca se desenha, o quadrado azul desliza para o lugar com um brilho, o nome aparece e a barra fina enche.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <h3>O que preciso de você</h3>
+      <p>Aprovar, ou pedir ajuste citando o <b>número da tela</b>. Depois da aprovação eu monto no código, conferindo cada tela na prévia do PC antes de ir para o aparelho.</p>
+    </div>
+    <div>
+      <h3>O que é ilustrativo</h3>
+      <ul>
+        <li>Capas, saves, álbuns, redes e conquistas são exemplos. No aparelho vêm dos seus arquivos.</li>
+        <li>Os nomes dos jogos são inventados para a prévia.</li>
+        <li>O visual é original, no espírito dos portáteis de PC atuais; não usa marca nem desenho de nenhum fabricante.</li>
+      </ul>
+    </div>
+  </footer>
+</div>
+<script>
+// Console icons shared by both themes: each system's controller (flat, in units u) and its console
+// (a model of boxes in the cube-top world, -1..1). Themes pass a painter that decides the look:
+// Bloco fills and extrudes, Neon draws tubes and wireframes. The 39 systems match anbernext-storage.
+(function () {
+'use strict';
+const SYSTEMS = [
+  ['GBA', 'Game Boy Advance'], ['GB', 'Game Boy'], ['GBC', 'Game Boy Color'], ['SGB', 'Super Game Boy'],
+  ['FC', 'Nintendo'], ['FDS', 'Famicom Disk System'], ['SFC', 'Super Nintendo'], ['N64', 'Nintendo 64'],
+  ['NDS', 'Nintendo DS'], ['VB', 'Virtual Boy'], ['PKM', 'Pokémon mini'], ['MD', 'Mega Drive'],
+  ['SMS', 'Master System'], ['GG', 'Game Gear'], ['SG1000', 'SG-1000'], ['SEGACD', 'Sega CD'],
+  ['32X', 'Sega 32X'], ['DC', 'Dreamcast'], ['PS', 'PlayStation'], ['PSP', 'PSP'],
+  ['PCE', 'PC Engine'], ['NGP', 'Neo Geo Pocket'], ['NGPC', 'Neo Geo Pocket Color'], ['FBN', 'Arcade'],
+  ['A2600', 'Atari 2600'], ['A5200', 'Atari 5200'], ['A7800', 'Atari 7800'], ['LYNX', 'Atari Lynx'],
+  ['COLECO', 'ColecoVision'], ['MSX', 'MSX'], ['CPC', 'Amstrad CPC'], ['C64', 'Commodore 64'],
+  ['C128', 'Commodore 128'], ['VIC', 'VIC-20'], ['PET', 'Commodore PET'], ['PLUS4', 'Commodore Plus/4'],
+  ['PUAE', 'Amiga'], ['P8', 'PICO-8'], ['PRBOOM', 'Doom']
+];
+// alternative cores share their console's drawing
+const ALIAS = { MGBA: 'GBA', SUPA: 'SFC' };
+
+function rr(g, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+
+// ---------- controllers ----------
+function ctrl(tag, P, u) {
+  const g = P.g, k = ALIAS[tag] || tag;
+  const R = (x, y, w, h, r) => () => { g.beginPath(); rr(g, x * u, y * u, w * u, h * u, r * u); };
+  const E = (x, y, rx, ry) => () => { g.beginPath(); g.ellipse(x * u, y * u, rx * u, ry * u, 0, 0, Math.PI * 2); };
+  const cross = (x, y, z) => P.cross(x * u, y * u, z * u);
+  const dot = (x, y, r, a) => P.dot(x * u, y * u, r * u, a);
+  const pill = (x, y, w) => P.pill(x * u, y * u, w * u);
+  const scr = (x, y, w, h) => P.scr(x * u, y * u, w * u, h * u);
+  const ring = (x, y, r) => P.line(() => { g.beginPath(); g.arc(x * u, y * u, r * u, 0, Math.PI * 2); });
+  const stick = (x, y, r) => { ring(x, y, r); dot(x, y, r * 0.48, true); };
+  const keys = (x, y, cols, rows, s) => { for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) P.shape(() => { g.beginPath(); g.rect((x + i * s) * u, (y + j * s) * u, s * 0.72 * u, s * 0.72 * u); }, 'ink'); };
+  const joystick = btns => { P.body(R(-0.62, -0.62, 1.24, 1.24, 0.14)); stick(0.05, 0.08, 0.32); dot(-0.38, -0.38, 0.11, true); if (btns > 1) dot(0.4, -0.38, 0.11, true); };
+  const mouse = () => { P.body(R(-0.55, -0.88, 1.1, 1.76, 0.52)); P.line(() => { g.beginPath(); g.moveTo(-0.55 * u, -0.3 * u); g.lineTo(0.55 * u, -0.3 * u); g.moveTo(0, -0.88 * u); g.lineTo(0, -0.3 * u); }); };
+  const sega = six => { P.body(E(0, 0.02, 1.12, 0.56)); cross(-0.62, 0.04, 0.25); pill(0, -0.26, 0.2); dot(0.34, 0.2, 0.12); dot(0.62, 0.06, 0.12); dot(0.9, -0.08, 0.12); if (six) { dot(0.3, -0.06, 0.08); dot(0.56, -0.2, 0.08); dot(0.82, -0.32, 0.08); } };
+  const snes = () => { P.body(() => { g.beginPath(); g.arc(-0.62 * u, 0, 0.52 * u, Math.PI * 0.5, Math.PI * 1.5); g.lineTo(0.62 * u, -0.52 * u); g.arc(0.62 * u, 0, 0.52 * u, -Math.PI * 0.5, Math.PI * 0.5); g.closePath(); }); cross(-0.62, 0, 0.26); pill(-0.1, 0.06, 0.16); pill(0.12, 0.06, 0.16); dot(0.62, -0.2, 0.1); dot(0.62, 0.2, 0.1); dot(0.42, 0, 0.1); dot(0.82, 0, 0.1, true); };
+  const nes = () => { P.body(R(-1.15, -0.48, 2.3, 0.96, 0.08)); P.shape(R(-0.3, -0.36, 0.6, 0.72, 0.04), 'ink'); cross(-0.72, 0, 0.27); pill(-0.12, 0.12, 0.14); pill(0.12, 0.12, 0.14); dot(0.58, 0.08, 0.13, true); dot(0.9, 0.08, 0.13, true); };
+  const portrait = (round, acc) => { P.body(round ? R(-0.62, -0.95, 1.24, 1.9, 0.22) : () => { g.beginPath(); g.moveTo(-0.62 * u, -0.95 * u); g.lineTo(0.62 * u, -0.95 * u); g.lineTo(0.62 * u, 0.7 * u); g.quadraticCurveTo(0.62 * u, 0.95 * u, 0.3 * u, 0.95 * u); g.lineTo(-0.62 * u, 0.95 * u); g.closePath(); }); scr(-0.4, -0.78, 0.8, 0.62); cross(-0.3, 0.32, 0.17); dot(0.22, 0.42, 0.09); dot(0.42, 0.28, 0.09, acc); pill(-0.1, 0.7, 0.14); pill(0.1, 0.7, 0.14); };
+  const wide = (w, h, r, sw, sh) => { P.body(R(-w / 2, -h / 2, w, h, r)); scr(-sw / 2, -sh / 2 - 0.02, sw, sh); };
+  switch (k) {
+    case 'FC': case 'FDS': nes(); break;
+    case 'SFC': case 'SGB': snes(); break;
+    case 'MD': case 'SEGACD': sega(false); break;
+    case '32X': sega(true); break;
+    case 'PS': P.body(() => { g.beginPath(); g.moveTo(-0.7 * u, -0.42 * u); g.lineTo(0.7 * u, -0.42 * u); g.quadraticCurveTo(1.05 * u, -0.4 * u, 1.05 * u, 0.1 * u); g.quadraticCurveTo(1.05 * u, 0.62 * u, 0.78 * u, 0.62 * u); g.quadraticCurveTo(0.55 * u, 0.62 * u, 0.42 * u, 0.22 * u); g.lineTo(-0.42 * u, 0.22 * u); g.quadraticCurveTo(-0.55 * u, 0.62 * u, -0.78 * u, 0.62 * u); g.quadraticCurveTo(-1.05 * u, 0.62 * u, -1.05 * u, 0.1 * u); g.quadraticCurveTo(-1.05 * u, -0.4 * u, -0.7 * u, -0.42 * u); g.closePath(); }); cross(-0.66, -0.08, 0.22); pill(-0.12, -0.08, 0.14); pill(0.12, -0.08, 0.14); for (const [dx, dy] of [[0, -0.19], [0, 0.03], [-0.11, -0.08], [0.11, -0.08]]) dot(0.66 + dx * 1.1, dy, 0.075); break;
+    case 'N64': P.body(() => { g.beginPath(); rr(g, -1.1 * u, -0.5 * u, 2.2 * u, 0.62 * u, 0.3 * u); rr(g, -1.05 * u, -0.2 * u, 0.42 * u, 0.8 * u, 0.2 * u); rr(g, 0.63 * u, -0.2 * u, 0.42 * u, 0.8 * u, 0.2 * u); rr(g, -0.2 * u, -0.1 * u, 0.4 * u, 0.85 * u, 0.2 * u); }); cross(-0.78, -0.2, 0.17); stick(0, 0.18, 0.15); dot(0.6, -0.12, 0.09, true); dot(0.42, -0.26, 0.08); for (const [dx, dy] of [[0.86, -0.36], [0.86, -0.12], [0.74, -0.24], [0.98, -0.24]]) dot(dx, dy, 0.055); dot(0, -0.3, 0.06); break;
+    case 'DC': P.body(R(-0.98, -0.56, 1.96, 1.06, 0.46)); scr(-0.22, -0.48, 0.44, 0.34); stick(-0.58, -0.14, 0.16); cross(-0.38, 0.26, 0.14); for (const [dx, dy] of [[0.62, -0.22], [0.62, 0.1], [0.46, -0.06], [0.78, -0.06]]) dot(dx, dy, 0.08, dx === 0.78); break;
+    case 'PSP': wide(2.4, 0.92, 0.46, 1.2, 0.62); cross(-0.92, -0.08, 0.15); dot(-0.92, 0.28, 0.07, true); for (const [dx, dy] of [[0, -0.17], [0, 0.11], [-0.14, -0.03], [0.14, -0.03]]) dot(0.92 + dx, dy, 0.06); break;
+    case 'NDS': P.body(R(-0.78, -0.95, 1.56, 1.9, 0.14)); pill(0, 0, 1.3); scr(-0.48, -0.82, 0.96, 0.66); scr(-0.38, 0.14, 0.76, 0.62); cross(-0.6, 0.38, 0.11); dot(0.6, 0.3, 0.06); dot(0.6, 0.5, 0.06, true); break;
+    case 'GG': wide(2.4, 1.04, 0.3, 0.9, 0.66); cross(-0.86, 0, 0.2); dot(0.78, 0.1, 0.1, true); dot(0.98, -0.08, 0.1); dot(0.88, -0.36, 0.05); break;
+    case 'LYNX': wide(2.4, 1.0, 0.2, 0.92, 0.62); cross(-0.88, 0, 0.2); dot(0.86, -0.13, 0.1, true); dot(0.86, 0.15, 0.1); pill(-0.55, 0.4, 0.14); pill(0.55, 0.4, 0.14); break;
+    case 'NGP': case 'NGPC': wide(2.1, 0.96, 0.42, 0.76, 0.58); stick(-0.76, 0, 0.17); dot(0.68, 0.08, 0.1, k === 'NGPC'); dot(0.88, -0.08, 0.1); break;
+    case 'VB': P.body(() => { g.beginPath(); rr(g, -1.15 * u, -0.38 * u, 2.3 * u, 0.56 * u, 0.22 * u); rr(g, -1.12 * u, -0.1 * u, 0.56 * u, 0.78 * u, 0.28 * u); rr(g, 0.56 * u, -0.1 * u, 0.56 * u, 0.78 * u, 0.28 * u); }); cross(-0.8, -0.1, 0.18); cross(0.8, -0.1, 0.18); dot(-0.22, -0.08, 0.06, true); dot(0.22, -0.08, 0.06, true); break;
+    case 'PKM': P.body(R(-0.58, -0.78, 1.16, 1.56, 0.32)); scr(-0.38, -0.58, 0.76, 0.52); cross(-0.24, 0.32, 0.14); dot(0.24, 0.4, 0.09, true); dot(0.4, 0.22, 0.09); break;
+    case 'FBN': P.body(R(-1.2, -0.52, 2.4, 1.04, 0.1)); stick(-0.7, 0, 0.24); for (let i = 0; i < 3; i++) { dot(0.16 + i * 0.3, -0.16, 0.1, i === 0); dot(0.22 + i * 0.3, 0.16, 0.1); } break;
+    case 'A2600': joystick(1); break;
+    case 'A7800': P.body(R(-0.48, -0.92, 0.96, 1.84, 0.3)); stick(0, -0.36, 0.26); dot(-0.28, 0.36, 0.1, true); dot(0.28, 0.36, 0.1, true); break;
+    case 'A5200': case 'COLECO': P.body(R(-0.6, -0.95, 1.2, 1.9, 0.16)); stick(0, -0.55, 0.24); keys(-0.36, 0.0, 3, 4, 0.26); dot(-0.48, -0.88, 0.06, true); dot(0.48, -0.88, 0.06, true); break;
+    case 'SG1000': P.body(R(-1.05, -0.48, 2.1, 0.96, 0.12)); stick(-0.52, 0, 0.28); dot(0.5, 0.06, 0.12, true); dot(0.82, 0.06, 0.12, true); break;
+    case 'SMS': P.body(R(-1.05, -0.5, 2.1, 1.0, 0.12)); cross(-0.6, 0, 0.26); dot(0.52, 0.06, 0.13, true); dot(0.84, 0.06, 0.13); break;
+    case 'PCE': P.body(R(-0.98, -0.44, 1.96, 0.88, 0.1)); cross(-0.6, 0.02, 0.24); pill(-0.12, 0.18, 0.14); pill(0.12, 0.18, 0.14); dot(0.5, 0.12, 0.11, true); dot(0.78, 0.12, 0.11, true); P.shape(R(0.42, -0.26, 0.16, 0.08, 0.02), 'ink'); P.shape(R(0.7, -0.26, 0.16, 0.08, 0.02), 'ink'); break;
+    case 'PUAE': case 'PRBOOM': mouse(); break;
+    case 'P8': P.body(R(-1.0, -0.5, 2.0, 1.0, 0.5)); cross(-0.52, 0, 0.22); dot(0.44, 0.1, 0.11, true); dot(0.7, -0.08, 0.11); break;
+    case 'GB': portrait(false, false); break;
+    case 'GBC': portrait(true, true); break;
+    case 'GBA': wide(2.3, 1.0, 0.42, 0.84, 0.56); cross(-0.8, 0, 0.19); dot(0.76, 0.1, 0.1, true); dot(0.98, -0.08, 0.1); break;
+    default: joystick(2); // MSX, CPC and the Commodores: their classic two-button stick
+  }
+}
+
+// ---------- consoles ----------
+function model(tag, M) {
+  const k = ALIAS[tag] || tag;
+  const B = M.box, rect = M.rect, circ = M.circ, lf = M.lface, grid = M.grid;
+  const cart = (a, b, z, w, h) => B(a, b, z, w, 0.14, h, 'acc');
+  const hand = (w, d, body, sw, sd, dpadX, btn) => {
+    B(-w / 2, -d / 2, 0, w, d, 0.17, body); rect(0.17, -sw / 2, -sd / 2 - 0.02, sw, sd, 'scr');
+    B(dpadX - 0.13, -0.04, 0.17, 0.26, 0.08, 0.05, 'acc'); B(dpadX - 0.04, -0.13, 0.17, 0.08, 0.26, 0.05, 'acc');
+    (btn || [[-dpadX - 0.06, -0.02], [-dpadX + 0.12, -0.16]]).forEach(([x, y]) => B(x, y, 0.17, 0.12, 0.12, 0.06, 'acc'));
+  };
+  const keyboard = (a, b, w, d, h, body, keyRole) => { B(a, b, 0, w, d, h, body); grid(h, a + 0.08, b + 0.12, w - 0.16, d - 0.2, 12, 4, keyRole || 'det'); };
+  const monitor = (a, b, w, d, h, body) => { B(a, b, 0, w, d, h, body); lf(a + 0.1, b + d, h * 0.2, w - 0.2, h * 0.65, 'scr'); };
+  switch (k) {
+    case 'SFC': B(-0.8, -0.62, 0, 1.6, 1.24, 0.3, 'body'); rect(0.3, -0.5, -0.42, 1.0, 0.3, 'det'); cart(-0.42, -0.36, 0.3, 0.84, 0.5); B(-0.62, 0.28, 0.3, 0.26, 0.18, 0.06, 'dark'); B(0.32, 0.28, 0.3, 0.26, 0.18, 0.06, 'acc'); break;
+    case 'SGB': B(-0.8, -0.62, 0, 1.6, 1.24, 0.3, 'body'); rect(0.3, -0.5, -0.42, 1.0, 0.3, 'det'); B(-0.42, -0.36, 0.3, 0.84, 0.14, 0.42, 'dark'); B(-0.22, -0.34, 0.72, 0.44, 0.1, 0.32, 'light'); break;
+    case 'PS': B(-0.82, -0.7, 0, 1.64, 1.4, 0.26, 'body'); circ(0.26, -0.08, -0.08, 0.55, 'light'); circ(0.26, -0.08, -0.08, 0.46, 'det'); circ(0.26, -0.08, -0.08, 0.1, 'light'); B(0.38, 0.4, 0.26, 0.22, 0.16, 0.07, 'dark'); B(-0.62, 0.4, 0.26, 0.22, 0.16, 0.07, 'dark'); break;
+    case 'MD': B(-0.82, -0.62, 0, 1.64, 1.24, 0.28, 'dark'); circ(0.28, 0, 0, 0.58, 'body'); circ(0.28, 0, 0, 0.48, 'dark'); cart(-0.36, -0.08, 0.28, 0.72, 0.46); break;
+    case 'SEGACD': B(-0.86, -0.66, 0, 1.72, 1.32, 0.24, 'dark'); lf(-0.5, 0.66, 0.06, 0.9, 0.1, 'det'); B(-0.8, -0.6, 0.24, 1.6, 1.2, 0.26, 'dark'); circ(0.5, 0, 0, 0.5, 'body'); cart(-0.34, -0.08, 0.5, 0.68, 0.34); break;
+    case '32X': B(-0.82, -0.62, 0, 1.64, 1.24, 0.28, 'dark'); circ(0.28, 0, 0, 0.58, 'body'); B(-0.42, -0.3, 0.28, 0.84, 0.6, 0.3, 'body'); circ(0.58, 0, 0, 0.3, 'det'); cart(-0.3, -0.07, 0.58, 0.6, 0.3); break;
+    case 'SMS': B(-0.88, -0.6, 0, 1.76, 1.2, 0.28, 'dark'); B(-0.88, -0.6, 0.28, 1.76, 0.42, 0.1, 'dark'); rect(0.28, -0.88, 0.2, 1.76, 0.08, 'acc'); cart(-0.34, -0.45, 0.38, 0.68, 0.36); break;
+    case 'SG1000': B(-0.82, -0.6, 0, 1.64, 1.2, 0.26, 'light'); rect(0.26, -0.82, 0.1, 1.64, 0.1, 'acc'); cart(-0.32, -0.36, 0.26, 0.64, 0.4); break;
+    case 'GG': hand(2.0, 1.0, 'dark', 0.62, 0.52, -0.7); break;
+    case 'DC': B(-0.84, -0.8, 0, 1.68, 1.6, 0.3, 'light'); circ(0.3, -0.04, -0.14, 0.56, 'body'); circ(0.3, -0.04, -0.14, 0.1, 'acc'); for (let i = 0; i < 4; i++) lf(-0.7 + i * 0.36, 0.8, 0.08, 0.2, 0.1, 'det'); break;
+    case 'N64': B(-0.86, -0.66, 0, 1.72, 1.32, 0.22, 'dark'); B(-0.86, -0.66, 0.22, 1.72, 0.42, 0.12, 'dark'); cart(-0.32, -0.2, 0.22, 0.64, 0.46); B(-0.62, 0.36, 0.22, 0.2, 0.14, 0.06, 'body'); B(0.42, 0.36, 0.22, 0.2, 0.14, 0.06, 'body'); break;
+    case 'NDS': B(-0.8, -0.05, 0, 1.6, 0.95, 0.12, 'light'); rect(0.12, -0.38, 0.12, 0.76, 0.6, 'scr'); B(-0.06, 0.32, 0.12, 0.1, 0.1, 0.04, 'acc'); B(-0.65, 0.32, 0.12, 0.18, 0.06, 0.04, 'acc'); B(-0.8, -0.18, 0, 1.6, 0.13, 0.95, 'light'); lf(-0.6, -0.05, 0.18, 1.2, 0.62, 'scr'); break;
+    case 'VB': B(-0.12, -0.12, 0, 0.24, 0.24, 0.5, 'dark'); B(-0.7, -0.4, 0, 0.3, 0.3, 0.06, 'dark'); B(0.4, -0.4, 0, 0.3, 0.3, 0.06, 'dark'); B(-0.78, -0.32, 0.5, 1.56, 0.52, 0.36, 'acc'); lf(-0.6, 0.2, 0.56, 0.4, 0.22, 'scr'); lf(0.2, 0.2, 0.56, 0.4, 0.22, 'scr'); break;
+    case 'PKM': hand(1.0, 1.3, 'light', 0.62, 0.5, -0.22, [[0.16, 0.22], [0.3, 0.08]]); break;
+    case 'PSP': hand(2.1, 0.86, 'dark', 1.0, 0.56, -0.78); break;
+    case 'PCE': B(-0.62, -0.62, 0, 1.24, 1.24, 0.24, 'light'); B(-0.62, -0.62, 0.24, 1.24, 0.36, 0.08, 'dark'); B(-0.36, 0.0, 0.24, 0.72, 0.06, 0.26, 'acc'); break;
+    case 'NGP': hand(1.9, 0.92, 'light', 0.66, 0.5, -0.66); break;
+    case 'NGPC': hand(1.9, 0.92, 'alt', 0.66, 0.5, -0.66); break;
+    case 'LYNX': hand(2.2, 0.9, 'dark', 0.82, 0.54, -0.82); break;
+    case 'FBN': B(-0.52, -0.6, 0, 1.04, 0.8, 1.2, 'dark'); lf(-0.38, 0.2, 0.72, 0.76, 0.36, 'scr'); B(-0.6, 0.2, 0, 1.2, 0.46, 0.56, 'body'); circ(0.56, -0.25, 0.42, 0.08, 'acc'); circ(0.56, 0.1, 0.36, 0.06, 'acc'); circ(0.56, 0.28, 0.36, 0.06, 'acc'); B(-0.52, 0.08, 1.2, 1.04, 0.12, 0.14, 'acc'); break;
+    case 'A2600': B(-0.9, -0.62, 0, 1.8, 1.24, 0.22, 'dark'); lf(-0.9, 0.62, 0, 1.8, 0.14, 'wood'); for (let i = 0; i < 5; i++) rect(0.22, -0.8, -0.5 + i * 0.12, 1.6, 0.04, 'det'); cart(-0.3, -0.3, 0.22, 0.6, 0.34); break;
+    case 'A5200': B(-0.95, -0.7, 0, 1.9, 1.4, 0.26, 'dark'); rect(0.26, -0.6, -0.5, 1.2, 0.5, 'det'); cart(-0.34, -0.34, 0.26, 0.68, 0.36); B(0.5, 0.3, 0.26, 0.3, 0.2, 0.05, 'light'); break;
+    case 'A7800': B(-0.86, -0.6, 0, 1.72, 1.2, 0.24, 'dark'); rect(0.24, -0.86, 0.12, 1.72, 0.14, 'light'); cart(-0.32, -0.32, 0.24, 0.64, 0.36); break;
+    case 'COLECO': B(-0.9, -0.62, 0, 1.8, 1.24, 0.22, 'dark'); B(0.3, -0.5, 0.22, 0.45, 0.9, 0.1, 'body'); grid(0.32, 0.36, -0.1, 0.33, 0.42, 3, 4, 'det'); cart(-0.6, -0.3, 0.22, 0.6, 0.34); break;
+    case 'MSX': keyboard(-0.95, -0.4, 1.9, 0.95, 0.18, 'dark'); cart(0.4, -0.52, 0.0, 0.42, 0.42); break;
+    case 'CPC': keyboard(-0.95, -0.05, 1.9, 0.82, 0.16, 'dark'); monitor(-0.6, -0.95, 1.2, 0.72, 0.9, 'light'); break;
+    case 'C64': keyboard(-0.95, -0.52, 1.9, 1.04, 0.22, 'light', 'dark'); rect(0.22, 0.62, -0.42, 0.2, 0.08, 'acc'); break;
+    case 'C128': keyboard(-1.0, -0.56, 2.0, 1.12, 0.18, 'light', 'dark'); rect(0.18, 0.62, -0.44, 0.24, 0.6, 'det'); break;
+    case 'VIC': keyboard(-0.95, -0.52, 1.9, 1.04, 0.22, 'light', 'dark'); rect(0.22, 0.6, -0.4, 0.22, 0.08, 'acc'); rect(0.22, 0.6, -0.26, 0.22, 0.08, 'acc'); break;
+    case 'PLUS4': keyboard(-0.95, -0.48, 1.9, 0.96, 0.14, 'dark', 'light'); rect(0.14, 0.62, 0.12, 0.2, 0.2, 'acc'); break;
+    case 'PET': B(-0.8, 0.02, 0, 1.6, 0.76, 0.2, 'light'); grid(0.2, -0.7, 0.14, 1.4, 0.52, 11, 4, 'dark'); monitor(-0.8, -0.95, 1.6, 0.97, 0.95, 'light'); break;
+    case 'PUAE': keyboard(-1.0, -0.56, 2.0, 1.12, 0.2, 'light', 'det'); rect(0.2, 0.62, -0.46, 0.26, 0.06, 'dark'); rect(0.2, -0.9, -0.48, 0.18, 0.06, 'acc'); break;
+    case 'P8': B(-0.62, -0.62, 0, 1.24, 1.24, 0.6, 'dark'); lf(-0.46, 0.62, 0.14, 0.92, 0.36, 'scr'); cart(-0.3, -0.3, 0.6, 0.6, 0.32); break;
+    case 'PRBOOM': B(0.38, -0.72, 0, 0.46, 1.1, 0.95, 'light'); lf(0.46, 0.38, 0.6, 0.3, 0.08, 'det'); monitor(-0.88, -0.6, 1.12, 0.9, 0.78, 'light'); break;
+    case 'FC': B(-0.82, -0.55, 0, 1.64, 1.1, 0.24, 'body'); B(-0.82, 0.3, 0, 1.64, 0.25, 0.27, 'dark'); cart(-0.36, -0.34, 0.24, 0.72, 0.42); B(-0.78, -0.45, 0.24, 0.28, 0.6, 0.05, 'dark'); B(0.5, -0.45, 0.24, 0.28, 0.6, 0.05, 'dark'); break;
+    case 'FDS': B(-0.82, -0.85, 0, 1.64, 0.95, 0.22, 'body'); cart(-0.3, -0.7, 0.22, 0.6, 0.36); B(-0.72, 0.25, 0, 1.44, 0.62, 0.36, 'dark'); rect(0.36, -0.5, 0.42, 1.0, 0.1, 'det'); break;
+    case 'GBA': hand(1.8, 0.96, 'alt', 0.68, 0.52, -0.62); break;
+    case 'GB': case 'GBC': {
+      B(-0.5, -0.88, 0, 1.0, 1.76, 0.17, k === 'GBC' ? 'alt' : 'body');
+      rect(0.17, -0.38, -0.76, 0.76, 0.66, 'scr');
+      B(-0.34, 0.24, 0.17, 0.26, 0.08, 0.05, 'acc'); B(-0.25, 0.15, 0.17, 0.08, 0.26, 0.05, 'acc');
+      B(0.12, 0.3, 0.17, 0.12, 0.12, 0.06, 'acc'); B(0.3, 0.16, 0.17, 0.12, 0.12, 0.06, 'acc');
+      break;
+    }
+    default: B(-0.7, -0.7, 0, 1.4, 1.4, 0.3, 'body');
+  }
+}
+const API = { SYSTEMS, ALIAS, ctrl, model, rr };
+if (typeof module !== 'undefined' && module.exports) module.exports = API;
+globalThis.ANX_ICONS = API;
+})();
+
+</script>
+<script>
+(function () {
+'use strict';
+// Grafite theme renderer: every screen at the RG353V's 640x480. Dark slate, one bright blue,
+// rounded cards on horizontal shelves, panels that slide in from the edges. Drawn with the
+// same kinds of primitives the device code uses (rounded rects, gradients, text, image quads).
+const W = 640, H = 480;
+const FF = '"Inter", "Segoe UI", system-ui, sans-serif';
+const P = {
+  ink: '#f2f5f9', soft: '#c8d1dc', muted: '#8a97a8', faint: '#5b6879', dim: '#3a4555',
+  blue: '#1a9fff', blueHi: '#6cc2ff', blueDeep: '#0c6fc4', onBlue: '#ffffff',
+  card: '#1f2834', card2: '#283342', card3: '#323f50', line: 'rgba(200,215,235,0.08)',
+  green: '#59d28a', red: '#ff6b6b', gold: '#f2c14e'
+};
+
+const clamp = (v, a = 0, b = 1) => (v < a ? a : v > b ? b : v);
+const lerp = (a, b, p) => a + (b - a) * p;
+const eo = p => 1 - Math.pow(1 - p, 3);
+const eio = p => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+const eob = p => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); };
+const off = (w, h) => {
+  const c = typeof document !== 'undefined' ? document.createElement('canvas') : globalThis.MOCK_CANVAS();
+  c.width = w; c.height = h; return c;
+};
+
+// ---------- primitives ----------
+function font(g, px, w) { g.font = (w || 400) + ' ' + px + 'px ' + FF; }
+function tw(g, s, px, w) { font(g, px, w); return g.measureText(s).width; }
+function text(g, s, x, y, col, px, o) {
+  o = o || {};
+  font(g, px, o.w); g.fillStyle = col; g.textBaseline = 'alphabetic';
+  if (o.max) { while (s.length > 3 && g.measureText(s).width > o.max) s = s.slice(0, -2) + '…'; }
+  if (o.ls) {
+    let total = 0; for (const ch of s) total += g.measureText(ch).width; total += o.ls * (s.length - 1);
+    let cx = o.align === 'center' ? x - total / 2 : o.align === 'right' ? x - total : x;
+    g.textAlign = 'left';
+    for (const ch of s) { g.fillText(ch, cx, y); cx += g.measureText(ch).width + o.ls; }
+    return total;
+  }
+  g.textAlign = o.align || 'left'; g.fillText(s, x, y); g.textAlign = 'left';
+  return g.measureText(s).width;
+}
+function rr(g, x, y, w, h, r) {
+  r = Math.max(0, Math.min(r, w / 2, h / 2));
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function box(g, x, y, w, h, r, fill) { rr(g, x, y, w, h, r); g.fillStyle = fill; g.fill(); }
+function vgrad(g, y0, y1, a, b) { const gr = g.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, a); gr.addColorStop(1, b); return gr; }
+// a card: soft drop shadow, slate face, a hairline of light on the top edge
+function card(g, x, y, w, h, r, o) {
+  o = o || {};
+  g.save();
+  g.shadowColor = 'rgba(0,0,0,' + (o.sh == null ? 0.45 : o.sh) + ')'; g.shadowBlur = o.blur || 16; g.shadowOffsetY = o.oy == null ? 6 : o.oy;
+  box(g, x, y, w, h, r, o.fill || vgrad(g, y, y + h, o.top || P.card2, o.bot || P.card));
+  g.restore();
+  g.save(); rr(g, x, y, w, h, r); g.clip();
+  g.fillStyle = 'rgba(255,255,255,0.06)'; g.fillRect(x, y, w, 1);
+  g.restore();
+}
+// the focus: a bright blue ring around the chosen thing, with a soft glow that breathes
+function ring(g, x, y, w, h, r, a, t) {
+  if (a <= 0) return;
+  g.save(); g.globalAlpha *= a;
+  g.shadowColor = 'rgba(26,159,255,0.75)'; g.shadowBlur = 14 + (t != null ? Math.sin(t * 3) * 4 : 0);
+  rr(g, x - 3, y - 3, w + 6, h + 6, r + 3); g.strokeStyle = P.blue; g.lineWidth = 3; g.stroke();
+  g.shadowBlur = 0; rr(g, x - 1.5, y - 1.5, w + 3, h + 3, r + 1.5); g.strokeStyle = 'rgba(255,255,255,0.35)'; g.lineWidth = 1; g.stroke();
+  g.restore();
+}
+function shade(hex, f) {
+  const n = parseInt(hex.slice(1), 16);
+  const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => Math.round(clamp(f >= 1 ? v + (255 - v) * (f - 1) : v * f, 0, 255)));
+  return 'rgb(' + c.join(',') + ')';
+}
+function rgba(hex, a) { const n = parseInt(hex.slice(1), 16); return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
+function circle(g, x, y, r, fill) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fillStyle = fill; g.fill(); }
+
+// ---------- background: slate with a wash of colour from whatever is chosen ----------
+let bgImg = null;
+function bg(g, wash, wa) {
+  if (!bgImg) {
+    bgImg = off(W, H); const x = bgImg.getContext('2d');
+    x.fillStyle = vgrad(x, 0, H, '#141b25', '#0b1017'); x.fillRect(0, 0, W, H);
+    const gr = x.createRadialGradient(80, -40, 0, 80, -40, 520); gr.addColorStop(0, 'rgba(60,90,130,0.28)'); gr.addColorStop(1, 'rgba(60,90,130,0)');
+    x.fillStyle = gr; x.fillRect(0, 0, W, H);
+  }
+  g.drawImage(bgImg, 0, 0, W, H);
+  if (wash) {
+    const gr = g.createRadialGradient(470, 40, 0, 470, 40, 460);
+    gr.addColorStop(0, rgba(wash, 0.34 * (wa == null ? 1 : wa))); gr.addColorStop(1, rgba(wash, 0));
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  }
+}
+
+// ---------- chrome: top bar and the hint bar ----------
+function wifiGlyph(g, x, y, col, lvl) {
+  g.save(); g.lineCap = 'round'; g.lineWidth = 2;
+  for (let i = 0; i < 3; i++) { g.strokeStyle = i < (lvl == null ? 3 : lvl) ? col : P.dim; g.beginPath(); g.arc(x, y, 3 + i * 4, -Math.PI * 0.75, -Math.PI * 0.25); g.stroke(); }
+  circle(g, x, y, 1.6, col); g.restore();
+}
+function battery(g, x, y, pct, col) {
+  rr(g, x, y, 24, 12, 3); g.strokeStyle = P.soft; g.lineWidth = 1.4; g.stroke();
+  box(g, x + 24.5, y + 3.5, 2.5, 5, 1, P.soft);
+  box(g, x + 2.5, y + 2.5, 19 * pct, 7, 1.5, col || P.ink);
+}
+function topbar(g, title, sub) {
+  if (title) {
+    const w = text(g, title, 20, 30, P.ink, 18, { w: 700 });
+    if (sub) text(g, sub, 32 + w, 30, P.muted, 14);
+  } else {
+    mark(g, 20, 14, 18, 1);
+    text(g, 'AnberNext', 46, 29, P.ink, 16, { w: 600 });
+  }
+  text(g, '82%', 620, 29, P.soft, 13, { align: 'right', w: 500 });
+  battery(g, 562, 19, 0.82);
+  wifiGlyph(g, 540, 30, P.soft);
+  text(g, '20:47', 524, 29, P.ink, 14, { align: 'right', w: 600 });
+}
+// the AnberNext mark in this theme: two rounded tiles, one outlined and one filled, overlapping
+function mark(g, x, y, s, a, t) {
+  g.save(); g.globalAlpha *= a == null ? 1 : a;
+  const k = t == null ? 1 : t;
+  rr(g, x, y, s * 0.72, s * 0.72, s * 0.18); g.strokeStyle = P.soft; g.lineWidth = Math.max(1.5, s * 0.09); g.stroke();
+  const o = s * 0.28 * k;
+  g.shadowColor = 'rgba(26,159,255,0.6)'; g.shadowBlur = s * 0.4;
+  box(g, x + o, y + o, s * 0.72, s * 0.72, s * 0.18, P.blue);
+  g.restore();
+}
+const BTN = { A: 1, B: 1, X: 1, Y: 1 };
+function btnGlyph(g, x, cy, k, prim) {
+  if (BTN[k]) {
+    circle(g, x + 10, cy, 10, prim ? P.blue : P.card3);
+    text(g, k, x + 10, cy + 4.5, P.ink, 12, { align: 'center', w: 700 });
+    return 20;
+  }
+  if (k === 'LR' || k === 'UD') {
+    box(g, x, cy - 10, 26, 20, 6, P.card3);
+    g.fillStyle = P.ink; g.beginPath();
+    if (k === 'LR') { g.moveTo(x + 5, cy); g.lineTo(x + 10, cy - 4); g.lineTo(x + 10, cy + 4); g.moveTo(x + 21, cy); g.lineTo(x + 16, cy - 4); g.lineTo(x + 16, cy + 4); }
+    else { g.moveTo(x + 13, cy - 7); g.lineTo(x + 9, cy - 2); g.lineTo(x + 17, cy - 2); g.moveTo(x + 13, cy + 7); g.lineTo(x + 9, cy + 2); g.lineTo(x + 17, cy + 2); }
+    g.fill(); return 26;
+  }
+  const w = tw(g, k, 10, 700) + 14;
+  box(g, x, cy - 9, w, 18, 9, P.card3);
+  text(g, k, x + w / 2, cy + 3.5, P.ink, 10, { align: 'center', w: 700 });
+  return w;
+}
+function hintW(g, k) { return BTN[k] ? 20 : k === 'LR' || k === 'UD' ? 26 : tw(g, k, 10, 700) + 14; }
+function hints(g, pairs, left) {
+  g.fillStyle = 'rgba(7,10,15,0.82)'; g.fillRect(0, 444, W, 36);
+  g.fillStyle = P.line; g.fillRect(0, 444, W, 1);
+  const cy = 462;
+  let x = 620;
+  for (let i = pairs.length - 1; i >= 0; i--) {
+    const [k, lab] = pairs[i];
+    x -= tw(g, lab, 13, 500); text(g, lab, x, cy + 4.5, P.soft, 13, { w: 500 }); x -= 7;
+    x -= hintW(g, k); btnGlyph(g, x, cy, k, k === 'A'); x -= 18;
+  }
+  if (left) left(g, cy);
+}
+function nowPlaying(g, t) {
+  return (gg, cy) => {
+    for (let c = 0; c < 4; c++) { const h = 4 + (Math.sin(t * 7 + c * 1.9) + 1) * 4; box(gg, 20 + c * 5, cy + 6 - h, 3, h, 1.5, P.blue); }
+    text(gg, 'Midnight Pulse', 46, cy + 4.5, P.soft, 13, { w: 500 });
+    text(gg, 'Ondas de Vidro', 46 + tw(gg, 'Midnight Pulse', 13, 500) + 8, cy + 4.5, P.faint, 13);
+  };
+}
+
+// ---------- selection over time (same rhythm as the other themes) ----------
+function selState(t, n, per, off0) {
+  const tt = Math.max(0, t + (off0 || 0)), k = Math.floor(tt / per), m = Math.max(1, 2 * n - 2);
+  const f = i => { const s = ((i % m) + m) % m; return s < n ? s : m - s; };
+  return { sel: f(k), prev: f(k - 1), p: clamp((tt - k * per) / 0.32) };
+}
+function curOf(st) { return eio(st.p) > 0.5 ? st.sel : st.prev; }
+// list: rows on slate; the chosen row is a blue pill that glides between rows
+function list(g, items, st, o) {
+  const x = o.x, y = o.y, w = o.w, rh = o.rh, pe = eio(st.p), cur = curOf(st);
+  const sy = lerp(y + st.prev * rh, y + st.sel * rh, pe);
+  g.save(); g.shadowColor = 'rgba(26,159,255,0.45)'; g.shadowBlur = 16;
+  box(g, x, sy + 3, w, rh - 6, 10, vgrad(g, sy, sy + rh, '#2aa8ff', P.blueDeep));
+  g.restore();
+  items.forEach((it, i) => row(g, it, x, y + i * rh, w, rh, i === cur, o));
+  return cur;
+}
+function row(g, it, x, y, w, rh, sel, o) {
+  const fs = o.fs || 17, mid = y + rh / 2, two = !!it.d;
+  let tx = x + 16;
+  if (it.ic) { iconTile(g, it.ic, x + 12, mid - 14, 28, sel); tx = x + 52; }
+  const by = two ? mid - 2 : mid + fs * 0.36;
+  text(g, it.t, tx, by, sel ? P.onBlue : P.soft, fs, { w: sel ? 600 : 400, max: o.tmax || (w - (tx - x) - (it.v != null || it.sig != null || it.tog != null ? 120 : 24)) });
+  if (two) text(g, it.d, tx, mid + 15, sel ? 'rgba(255,255,255,0.78)' : P.faint, 12.5);
+  let rx = x + w - 16;
+  if (it.arrow) {
+    g.strokeStyle = sel ? P.onBlue : P.faint; g.lineWidth = 2; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(rx - 5, mid - 5); g.lineTo(rx, mid); g.lineTo(rx - 5, mid + 5); g.stroke(); rx -= 18;
+  }
+  if (it.sig != null) {
+    wifiGlyph(g, rx - 8, mid + 6, sel ? P.onBlue : P.blueHi, it.sig); rx -= 26;
+    if (it.lock) { const c = sel ? P.onBlue : P.muted; box(g, rx - 10, mid - 2, 10, 8, 2, c); g.strokeStyle = c; g.lineWidth = 1.6; g.beginPath(); g.arc(rx - 5, mid - 2, 3, Math.PI, 0); g.stroke(); rx -= 20; }
+  }
+  if (it.tog != null) {
+    const on = it.tog, tx2 = rx - 34;
+    box(g, tx2, mid - 9, 34, 18, 9, on ? (sel ? '#ffffff' : P.blue) : (sel ? 'rgba(255,255,255,0.3)' : P.card3));
+    circle(g, on ? tx2 + 25 : tx2 + 9, mid, 6.5, on ? (sel ? P.blue : '#ffffff') : (sel ? '#ffffff' : P.muted));
+    rx -= 44;
+  }
+  if (it.sw) { box(g, rx - 20, mid - 10, 20, 20, 6, it.sw); rr(g, rx - 20, mid - 10, 20, 20, 6); g.strokeStyle = 'rgba(255,255,255,0.4)'; g.lineWidth = 1; g.stroke(); rx -= 30; }
+  if (it.v != null) {
+    if (sel && it.cycle !== false) {
+      const vw = tw(g, it.v, 14, 600);
+      g.fillStyle = P.onBlue;
+      g.beginPath(); g.moveTo(rx, mid); g.lineTo(rx - 5, mid - 5); g.lineTo(rx - 5, mid + 5); g.fill();
+      text(g, it.v, rx - 12, mid + 5, P.onBlue, 14, { align: 'right', w: 600 });
+      g.beginPath(); g.moveTo(rx - 20 - vw, mid); g.lineTo(rx - 15 - vw, mid - 5); g.lineTo(rx - 15 - vw, mid + 5); g.fill();
+    } else text(g, it.v, rx, mid + 5, sel ? P.onBlue : (it.vc || P.muted), 14, { align: 'right', w: sel ? 600 : 400 });
+  }
+}
+// little rounded square holding a symbol (tools, settings, achievements)
+function iconTile(g, ic, x, y, s, sel) {
+  const col = ic.c || P.card3;
+  box(g, x, y, s, s, s * 0.26, sel ? 'rgba(255,255,255,0.22)' : col);
+  if (ic.k) glyphIcon(g, ic.k, x + s / 2, y + s / 2, s * 0.5, sel ? '#fff' : (ic.ink || P.ink));
+  else if (ic.tag) text(g, ic.tag, x + s / 2, y + s / 2 + s * 0.14, sel ? '#fff' : (ic.ink || P.soft), Math.round(s * 0.36 * Math.min(1, 3 / ic.tag.length)), { align: 'center', w: 700 });
+}
+// simple line symbols (outline style, 2px)
+function glyphIcon(g, k, cx, cy, s, col) {
+  const u = s / 2;
+  g.save(); g.translate(cx, cy); g.strokeStyle = col; g.fillStyle = col; g.lineWidth = Math.max(1.6, s * 0.11); g.lineCap = 'round'; g.lineJoin = 'round';
+  const L = (...p) => { g.beginPath(); g.moveTo(p[0] * u, p[1] * u); for (let i = 2; i < p.length; i += 2) g.lineTo(p[i] * u, p[i + 1] * u); g.stroke(); };
+  const C = (x, y, r, f) => { g.beginPath(); g.arc(x * u, y * u, r * u, 0, Math.PI * 2); f ? g.fill() : g.stroke(); };
+  const R = (x, y, w, h, r) => { rr(g, x * u, y * u, w * u, h * u, r * u); g.stroke(); };
+  switch (k) {
+    case 'gear': C(0, 0, 0.42); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; L(Math.cos(a) * 0.62, Math.sin(a) * 0.62, Math.cos(a) * 0.9, Math.sin(a) * 0.9); } break;
+    case 'store': R(-0.8, -0.3, 1.6, 1.1, 0.15); L(-0.4, -0.3, -0.4, -0.6, 0.4, -0.6, 0.4, -0.3); break;
+    case 'tools': L(-0.7, 0.7, 0.2, -0.2); C(0.42, -0.42, 0.32); break;
+    case 'music': L(-0.3, 0.5, -0.3, -0.7, 0.6, -0.85, 0.6, 0.35); C(-0.5, 0.55, 0.22, 1); C(0.4, 0.4, 0.22, 1); break;
+    case 'clock': C(0, 0, 0.82); L(0, -0.45, 0, 0, 0.35, 0.22); break;
+    case 'power': g.beginPath(); g.arc(0, 0.06 * u, 0.72 * u, -Math.PI * 0.32, Math.PI * 1.32); g.stroke(); L(0, -0.85, 0, -0.1); break;
+    case 'restart': g.beginPath(); g.arc(0, 0, 0.72 * u, -Math.PI * 0.2, Math.PI * 1.5); g.stroke(); L(0.1, -0.95, 0, -0.72, 0.22, -0.5); break;
+    case 'recent': C(0, 0, 0.82); L(0, -0.45, 0, 0, -0.35, 0.2); break;
+    case 'update': L(0, -0.8, 0, 0.4); L(-0.4, 0, 0, 0.42, 0.4, 0); L(-0.75, 0.8, 0.75, 0.8); break;
+    case 'disc': C(0, 0, 0.82); C(0, 0, 0.2); break;
+    case 'undo': g.beginPath(); g.arc(0.05 * u, 0.1 * u, 0.62 * u, -Math.PI * 0.9, Math.PI * 0.55); g.stroke(); L(-0.75, -0.6, -0.6, -0.05, -0.05, -0.2); break;
+    case 'battery': R(-0.85, -0.42, 1.5, 0.84, 0.15); L(0.85, -0.18, 0.85, 0.18); g.fillRect(-0.65 * u, -0.22 * u, 0.8 * u, 0.44 * u); break;
+    case 'chart': L(-0.75, 0.7, -0.75, -0.75); L(-0.75, 0.7, 0.8, 0.7); L(-0.45, 0.3, -0.05, -0.15, 0.25, 0.1, 0.7, -0.5); break;
+    case 'pad': R(-0.9, -0.45, 1.8, 0.95, 0.42); L(-0.5, 0.02, -0.18, 0.02); L(-0.34, -0.14, -0.34, 0.18); C(0.36, -0.06, 0.09, 1); C(0.56, 0.12, 0.09, 1); break;
+    case 'screen': R(-0.85, -0.6, 1.7, 1.05, 0.12); L(-0.35, 0.78, 0.35, 0.78); break;
+    case 'palette': C(0, 0, 0.82); C(-0.3, -0.25, 0.13, 1); C(0.2, -0.38, 0.13, 1); C(0.42, 0.05, 0.13, 1); break;
+    case 'speaker': L(-0.75, -0.25, -0.4, -0.25, 0.1, -0.7, 0.1, 0.7, -0.4, 0.25, -0.75, 0.25, -0.75, -0.25); g.beginPath(); g.arc(0.2 * u, 0, 0.5 * u, -0.8, 0.8); g.stroke(); break;
+    case 'sun': C(0, 0, 0.36); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; L(Math.cos(a) * 0.58, Math.sin(a) * 0.58, Math.cos(a) * 0.82, Math.sin(a) * 0.82); } break;
+    case 'wifi': for (let i = 0; i < 3; i++) { g.beginPath(); g.arc(0, 0.55 * u, (0.3 + i * 0.35) * u, -Math.PI * 0.78, -Math.PI * 0.22); g.stroke(); } C(0, 0.55, 0.1, 1); break;
+    case 'bt': L(-0.4, -0.35, 0.4, 0.35, 0, 0.75, 0, -0.75, 0.4, -0.35, -0.4, 0.35); break;
+    case 'info': C(0, 0, 0.82); C(0, -0.4, 0.08, 1); L(0, -0.1, 0, 0.45); break;
+    case 'trophy': L(-0.5, -0.75, 0.5, -0.75, 0.42, 0.05); g.beginPath(); g.moveTo(-0.5 * u, -0.75 * u); g.lineTo(-0.42 * u, 0.05 * u); g.quadraticCurveTo(0, 0.4 * u, 0.42 * u, 0.05 * u); g.stroke(); L(0, 0.3, 0, 0.6); L(-0.35, 0.75, 0.35, 0.75); L(-0.5, -0.55, -0.8, -0.55, -0.7, -0.15, -0.45, -0.05); L(0.5, -0.55, 0.8, -0.55, 0.7, -0.15, 0.45, -0.05); break;
+    case 'lock': R(-0.55, -0.1, 1.1, 0.85, 0.15); g.beginPath(); g.arc(0, -0.1 * u, 0.35 * u, Math.PI, 0); g.stroke(); break;
+    case 'save': R(-0.75, -0.75, 1.5, 1.5, 0.15); L(-0.4, -0.75, -0.4, -0.3, 0.35, -0.3, 0.35, -0.75); break;
+    case 'play': g.beginPath(); g.moveTo(-0.4 * u, -0.6 * u); g.lineTo(0.65 * u, 0); g.lineTo(-0.4 * u, 0.6 * u); g.closePath(); g.fill(); break;
+    case 'exit': R(-0.8, -0.75, 0.9, 1.5, 0.1); L(-0.15, 0, 0.85, 0); L(0.55, -0.3, 0.85, 0, 0.55, 0.3); break;
+    case 'sliders': L(-0.8, -0.45, 0.8, -0.45); L(-0.8, 0.45, 0.8, 0.45); C(0.25, -0.45, 0.2, 1); C(-0.3, 0.45, 0.2, 1); break;
+    case 'download': L(0, -0.8, 0, 0.35); L(-0.4, -0.05, 0, 0.38, 0.4, -0.05); L(-0.8, 0.45, -0.8, 0.8, 0.8, 0.8, 0.8, 0.45); break;
+  }
+  g.restore();
+}
+
+// ---------- art placeholders (the device reads the real covers and saves) ----------
+const cache = {};
+function sceneImg(v) {
+  const key = 'sc' + v; if (cache[key]) return cache[key];
+  const c = off(160, 120), x = c.getContext('2d');
+  const pals = [['#1b1446', '#ff8a5c', '#3a2a7a', '#241c56', '#5ad1a0', '#16123a'], ['#0b2a4a', '#ffd27a', '#1d5a6a', '#123a48', '#f2a33c', '#0a2030'], ['#2a0b2a', '#ff5ca8', '#4a1f4a', '#2a1030', '#3ad6e0', '#1a0818'], ['#0e2a1c', '#9be7a0', '#1f4a32', '#163a26', '#ffd27a', '#0a1f14']];
+  const p = pals[v % 4];
+  const sk = x.createLinearGradient(0, 0, 0, 84); sk.addColorStop(0, p[0]); sk.addColorStop(1, p[1]);
+  x.fillStyle = sk; x.fillRect(0, 0, 160, 120);
+  x.fillStyle = '#ffe6a8'; x.beginPath(); x.arc(116, 54, 13, 0, Math.PI * 2); x.fill();
+  x.fillStyle = 'rgba(255,255,255,0.5)'; x.fillRect(20, 20, 22, 4); x.fillRect(26, 16, 12, 4); x.fillRect(84, 28, 18, 3);
+  x.fillStyle = p[2]; x.beginPath(); x.moveTo(0, 120);
+  for (let i = 0; i <= 160; i += 8) x.lineTo(i, 74 + Math.sin(i * 0.05 + v) * 8);
+  x.lineTo(160, 120); x.fill();
+  x.fillStyle = p[3]; x.beginPath(); x.moveTo(0, 120);
+  for (let i = 0; i <= 160; i += 8) x.lineTo(i, 86 + Math.sin(i * 0.09 + v * 2) * 5);
+  x.lineTo(160, 120); x.fill();
+  for (let gx = 0; gx < 160; gx += 8) for (let gy = 96; gy < 120; gy += 8) { x.fillStyle = ((gx + gy) / 8) % 2 ? p[5] : p[3]; x.fillRect(gx, gy, 8, 8); }
+  x.fillStyle = p[4]; x.fillRect(0, 96, 160, 3);
+  x.fillStyle = '#fff2c8'; x.fillRect(42, 78, 8, 6); x.fillStyle = p[4]; x.fillRect(40, 84, 12, 10); x.fillStyle = '#20183a'; x.fillRect(41, 94, 4, 2); x.fillRect(47, 94, 4, 2);
+  x.fillStyle = '#ffd27a'; x.fillRect(70, 70, 5, 5); x.fillRect(80, 66, 5, 5); x.fillRect(90, 70, 5, 5);
+  return (cache[key] = c);
+}
+function drawScene(g, x, y, w, h, v) { g.save(); g.imageSmoothingEnabled = false; g.drawImage(sceneImg(v), x, y, w, h); g.restore(); }
+const GAMES = [['Star Hunt', ['#3ad6e0', '#143f6b']], ['Neon Alley', ['#ff5ca8', '#7a1f5a']], ['Pixel Kart', ['#f2a33c', '#7a3d12']], ['Mecha Dawn', ['#9b7cff', '#2a1f5a']], ['Tide Runner', null], ['Crystal Vale', ['#51e0a3', '#145741']], ['Iron Comet', ['#ff8a5c', '#6b2814']]];
+const GMETA = ['Jogado ontem · 14 h', 'Jogado há 3 dias · 6 h', 'Jogado há 1 semana · 22 h', 'Nunca jogado', 'Jogado há 2 meses · 1 h', 'Jogado hoje · 9 h', 'Nunca jogado'];
+const ALBUMS = [['Ondas de Vidro', ['#3ad6e0', '#2a1f5a']], ['Arctic Lights', ['#9be7ff', '#143f6b']], ['Bruma', ['#8d96bd', '#1c2140']], ['Cidade Submersa', ['#51e0a3', '#0b2a4a']], ['Faroeste Neon', ['#ff8a5c', '#3a0f2a']], ['Lumen', ['#fbd270', '#7a3d12']], ['Noites Claras', ['#ff5ca8', '#140a2a']]];
+function artImg(kind, i) {
+  const key = kind + i; if (cache[key]) return cache[key];
+  const sq = kind === 'al', [name, cols] = (sq ? ALBUMS : GAMES)[i];
+  const w = sq ? 200 : 150, h = 200, c = off(w, h), x = c.getContext('2d');
+  if (!cols) {
+    x.fillStyle = vgrad(x, 0, h, '#2b3646', '#1a222e'); x.fillRect(0, 0, w, h);
+    text(x, name[0], w / 2, h / 2 + 22, P.blueHi, 72, { align: 'center', w: 700 });
+    text(x, name, w / 2, h - 18, P.muted, 14, { align: 'center', w: 500 });
+    return (cache[key] = c);
+  }
+  const gr = x.createLinearGradient(0, 0, w, h); gr.addColorStop(0, cols[0]); gr.addColorStop(1, cols[1]);
+  x.fillStyle = gr; x.fillRect(0, 0, w, h);
+  x.globalAlpha = 0.22; x.fillStyle = '#fff';
+  x.beginPath(); x.arc(w * 0.72, h * 0.32, w * 0.34, 0, Math.PI * 2); x.fill();
+  x.globalAlpha = 0.14; for (let k = 0; k < 6; k++) x.fillRect(0, h * 0.5 + k * 11, w, 4);
+  x.globalAlpha = 1;
+  const sh = x.createLinearGradient(0, h * 0.5, 0, h); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.6)');
+  x.fillStyle = sh; x.fillRect(0, 0, w, h);
+  text(x, name, 12, h - 16, '#ffffff', sq ? 19 : 17, { w: 700 });
+  return (cache[key] = c);
+}
+function coverColor(i) { return (GAMES[i][1] || ['#6cc2ff'])[0]; }
+// a picture on a rounded card (cover, album, save)
+function picture(g, img, x, y, w, h, r, o) {
+  o = o || {};
+  g.save(); g.shadowColor = 'rgba(0,0,0,0.55)'; g.shadowBlur = 18; g.shadowOffsetY = 8;
+  box(g, x, y, w, h, r, '#000'); g.restore();
+  g.save(); rr(g, x, y, w, h, r); g.clip();
+  if (o.scene != null) drawScene(g, x, y, w, h, o.scene); else g.drawImage(img, x, y, w, h);
+  if (o.dim) { g.fillStyle = 'rgba(11,16,23,' + o.dim + ')'; g.fillRect(x, y, w, h); }
+  g.fillStyle = 'rgba(255,255,255,0.12)'; g.fillRect(x, y, w, 1);
+  g.restore();
+}
+
+// ---------- console icons: the Grafite painters for icons.js ----------
+// controller: a flat, soft-lit piece of hardware; light grey when chosen, slate otherwise
+function controller(g, k, u, sel, mode) {
+  const C = sel ? { body: '#dfe6ee', hi: '#ffffff', ink: '#1b2431', btn: '#2b3646', acc: P.blue, scr: '#16202c', glare: 'rgba(108,194,255,0.45)' }
+               : { body: '#5b697c', hi: '#7d8ba0', ink: '#1a222d', btn: '#c8d1dc', acc: '#8fc4ef', scr: '#0f151d', glare: 'rgba(143,196,239,0.3)' };
+  const flat = mode === 'shadow';
+  g.save();
+  const Pn = {
+    g,
+    body: fn => { fn(); if (flat) { g.fillStyle = 'rgba(0,0,0,0.4)'; g.fill(); return; } g.fillStyle = vgrad(g, -u, u, C.hi, C.body); g.fill(); },
+    cross: (x, y, z) => { if (flat) return; const t = z * 0.38; g.fillStyle = C.ink; rr(g, x - z, y - t / 2, z * 2, t, t * 0.3); g.fill(); rr(g, x - t / 2, y - z, t, z * 2, t * 0.3); g.fill(); },
+    dot: (x, y, r, acc) => { if (flat) return; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fillStyle = acc ? C.acc : C.btn; g.fill(); },
+    pill: (x, y, w) => { if (flat) return; rr(g, x - w / 2, y - u * 0.035, w, u * 0.07, u * 0.035); g.fillStyle = C.ink; g.fill(); },
+    scr: (x, y, w, h) => { if (flat) return; rr(g, x - u * 0.06, y - u * 0.06, w + u * 0.12, h + u * 0.12, u * 0.06); g.fillStyle = C.ink; g.fill(); g.fillStyle = k === 'GB' ? '#4d6436' : C.scr; g.fillRect(x, y, w, h); g.fillStyle = C.glare; g.fillRect(x + w * 0.1, y + h * 0.15, w * 0.35, h * 0.12); },
+    line: fn => { if (flat) return; fn(); g.strokeStyle = C.ink; g.lineWidth = u * 0.07; g.stroke(); },
+    shape: (fn, role) => { if (flat) return; fn(); g.fillStyle = role === 'acc' ? C.acc : C.ink; g.fill(); }
+  };
+  ANX_ICONS.ctrl(k, Pn, u);
+  g.restore();
+}
+// console: a small isometric model in matte slate with the theme blue on the parts you touch
+function proj(x, y, s, a, b, z) { return [x + s * (a - b) / 2, y + s * (a + b) / 4 - z * 0.55 * s]; }
+function poly(g, pts, fill) { g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]); g.closePath(); g.fillStyle = fill; g.fill(); }
+function mbox(g, x, y, s, a, b, z, w, d, h, c) {
+  const p = (A, B, Z) => proj(x, y, s, A, B, Z), a1 = a + w, b1 = b + d, z1 = z + h;
+  poly(g, [p(a, b1, z), p(a1, b1, z), p(a1, b1, z1), p(a, b1, z1)], c.l);
+  poly(g, [p(a1, b, z), p(a1, b1, z), p(a1, b1, z1), p(a1, b, z1)], c.r);
+  poly(g, [p(a, b, z1), p(a1, b, z1), p(a1, b1, z1), p(a, b1, z1)], c.t);
+}
+function plane(g, x, y, s, z, fn) { g.save(); g.translate(x, y - z * 0.55 * s); g.transform(1, 0.5, -1, 0.5, 0, 0); g.scale(s / 2, s / 2); fn(); g.restore(); }
+const MROLE = {
+  body: { t: '#8593a8', l: '#5d6a7e', r: '#465264' }, light: { t: '#b4bfcd', l: '#8592a4', r: '#6a7688' },
+  dark: { t: '#3a4556', l: '#262f3c', r: '#1c232e' }, scr: { t: '#0d131a', l: '#0d131a', r: '#0d131a' },
+  wood: { t: '#8a5a2e', l: '#6a4220', r: '#4e3016' }, det: { t: '#2b3442', l: '#1e2631', r: '#161c25' }
+};
+const MALT = { GBA: { t: '#7e74c9', l: '#564c98', r: '#40387a' }, GBC: { t: '#4fb6c2', l: '#2c8794', r: '#1f6670' }, NGPC: { t: '#cf6a7c', l: '#9c4556', r: '#763242' } };
+function model(g, k, x, y, s, sel) {
+  const acc = sel ? { t: '#6cc2ff', l: '#1a9fff', r: '#0c6fc4' } : { t: '#9cb6d0', l: '#6d88a4', r: '#52687f' };
+  const lift = r => { const c = MROLE[r] || MROLE.body; return sel ? { t: shade(c.t.slice(0, 7), 1.12), l: c.l, r: c.r } : c; };
+  const role = r => (r === 'acc' ? acc : r === 'alt' ? (MALT[ANX_ICONS.ALIAS[k] || k] || MROLE.body) : lift(r));
+  const flatCol = r => (r === 'scr' ? (k === 'GB' ? '#4d6436' : sel ? '#10314d' : '#121a24') : role(r).t);
+  ANX_ICONS.model(k, {
+    box: (a, b, z, w, d, h, r) => mbox(g, x, y, s, a, b, z, w, d, h, role(r)),
+    rect: (z, rx, ry, w, h, r) => plane(g, x, y, s, z, () => { g.fillStyle = flatCol(r); g.fillRect(rx, ry, w, h); }),
+    circ: (z, cx, cy, rad, r) => plane(g, x, y, s, z, () => { g.beginPath(); g.arc(cx, cy, rad, 0, Math.PI * 2); g.fillStyle = flatCol(r); g.fill(); }),
+    lface: (a, b1, z, w, h, r) => poly(g, [proj(x, y, s, a, b1, z), proj(x, y, s, a + w, b1, z), proj(x, y, s, a + w, b1, z + h), proj(x, y, s, a, b1, z + h)], r === 'scr' ? flatCol('scr') : role(r).l),
+    grid: (z, gx, gy, w, h, cols, rows, r) => plane(g, x, y, s, z, () => { g.fillStyle = role(r).t; const cw = w / cols, ch = h / rows; for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) g.fillRect(gx + i * cw + cw * 0.12, gy + j * ch + ch * 0.12, cw * 0.76, ch * 0.76); })
+  });
+}
+// the icon inside a console card. variant: 'S' sigla, 'A' controle, 'B' console
+function sysIcon(g, tag, variant, cx, cy, size, sel) {
+  if (variant === 'S') {
+    const px = Math.round(size * 0.36 * Math.min(1, 3.2 / tag.length));
+    text(g, tag, cx, cy + px * 0.36, sel ? P.ink : P.soft, px, { align: 'center', w: 800 });
+    g.fillStyle = sel ? P.blue : P.dim; g.fillRect(cx - size * 0.16, cy + px * 0.62, size * 0.32, 3);
+    return;
+  }
+  if (variant === 'A') {
+    const u = size * 0.33;
+    g.save(); g.translate(cx + u * 0.05, cy + u * 0.12); controller(g, tag, u, sel, 'shadow'); g.restore();
+    g.save(); g.translate(cx, cy); controller(g, tag, u, sel, 'top'); g.restore();
+    return;
+  }
+  const s = size * 0.4;
+  g.save(); g.translate(cx, cy + s * 0.5); g.scale(1, 0.4);
+  const gr = g.createRadialGradient(0, 0, 0, 0, 0, s * 1.2); gr.addColorStop(0, 'rgba(0,0,0,0.45)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = gr; g.fillRect(-s * 1.3, -s * 1.3, s * 2.6, s * 2.6); g.restore();
+  model(g, tag, cx, cy + s * 0.15, s, sel);
+}
+// a console card: rounded slate tile with the icon, its tag in the corner
+const SYSCOL = { GBA: '#6b5bd6', SFC: '#8e7fd0', PS: '#4e6a8c', MD: '#d04848', GB: '#8fa36a', FC: '#c0392b', GBC: '#2bb3c0' };
+function sysCard(g, x, y, w, h, tag, sel, variant, a, t) {
+  card(g, x, y, w, h, 12, { top: sel ? '#344257' : '#263140', bot: sel ? '#222c3a' : '#1b232e' });
+  if (sel) { g.save(); rr(g, x, y, w, h, 12); g.clip(); const gr = g.createRadialGradient(x + w / 2, y + h * 0.4, 0, x + w / 2, y + h * 0.4, w * 0.7); gr.addColorStop(0, rgba(SYSCOL[tag] || '#1a9fff', 0.35)); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x, y, w, h); g.restore(); }
+  sysIcon(g, tag, variant || 'B', x + w / 2, y + h * 0.46, w * 0.92, sel);
+  if (variant !== 'S') text(g, tag, x + 10, y + h - 10, sel ? P.soft : P.faint, Math.max(9, Math.round(w * 0.085)), { w: 700, ls: 0.8 });
+  if (sel) ring(g, x, y, w, h, 12, a == null ? 1 : a, t);
+}
+
+// ---------- screens ----------
+const S = {};
+const SYS = [['GBA', 'Game Boy Advance', 142], ['SFC', 'Super Nintendo', 308], ['PS', 'PlayStation', 214], ['MD', 'Mega Drive', 96], ['GB', 'Game Boy', 87], ['FC', 'Nintendo', 120], ['GBC', 'Game Boy Color', 64]];
+const LASTP = ['Crystal Vale', 'Pixel Kart', 'Star Hunt', 'Iron Comet', 'Tide Runner', 'Neon Alley', 'Mecha Dawn'];
+
+// shelf position: the row scrolls so the chosen card sits second from the left
+function shelf(c, n, keep) { return clamp(c - keep, 0, Math.max(0, n - 1 - keep - 1)); }
+function pingpong(t, n, per, dur) {
+  const k = Math.floor(t / per), m = 2 * n - 2;
+  const f = i => { const s = ((i % m) + m) % m; return s < n ? s : m - s; };
+  const p = eio(clamp((t - k * per) / (dur || 0.42)));
+  return { c: lerp(f(k - 1), f(k), p), p, cur: p > 0.5 ? f(k) : f(k - 1), fresh: clamp((t - k * per) / 0.5) };
+}
+
+S.home = function (g, t, bare, variant) {
+  variant = variant || 'B';
+  const n = SYS.length, pp = pingpong(t, n, 2.0), cur = pp.cur;
+  bg(g, SYSCOL[SYS[cur][0]], 0.9); topbar(g, null);
+  // hero: the chosen console, big
+  const ha = eo(pp.fresh);
+  g.save(); g.globalAlpha = ha;
+  text(g, SYS[cur][1], 24, 84 - (1 - ha) * 6, P.ink, 30, { w: 700 });
+  text(g, SYS[cur][2] + ' jogos  ·  último: ' + LASTP[cur], 24, 108 - (1 - ha) * 6, P.muted, 14);
+  g.restore();
+  // shelf of console cards
+  const cw = 128, gap = 14, sc0 = shelf(pp.c, n, 1), y = 132, grow = 22;
+  let x = 24 - sc0 * (cw + gap) - grow * clamp(sc0 - Math.floor(sc0) ? 0 : 0);
+  for (let j = 0; j < n; j++) {
+    const f = eo(clamp(1 - Math.abs(j - pp.c))), w = cw + grow * f;
+    if (x < W + 10 && x + w > -10) sysCard(g, x, y + (cw + grow - w) / 2, w, w, SYS[j][0], j === cur, variant, f, t);
+    x += w + gap;
+  }
+  // second shelf: pick up where you left off
+  text(g, 'Continuar jogando', 24, 334, P.soft, 15, { w: 600 });
+  text(g, 'ver tudo', 616, 334, P.faint, 12, { align: 'right' });
+  for (let i = 0; i < 4; i++) {
+    const x = 24 + i * 152, yy = 346;
+    picture(g, null, x, yy, 140, 72, 8, { scene: i, dim: 0.15 });
+    g.save(); rr(g, x, yy, 140, 72, 8); g.clip(); g.fillStyle = vgrad(g, yy + 30, yy + 72, 'rgba(0,0,0,0)', 'rgba(0,0,0,0.75)'); g.fillRect(x, yy, 140, 72); g.restore();
+    text(g, LASTP[(i * 2) % 7], x + 8, yy + 64, P.ink, 12, { w: 600 });
+  }
+  if (bare) return;
+  hints(g, [['SELECT', 'Recentes'], ['F', 'Menu'], ['A', 'Abrir']], nowPlaying(g, t));
+};
+S.homeA = (g, t) => S.home(g, t, false, 'A');
+S.homeS = (g, t) => S.home(g, t, false, 'S');
+
+S.homeList = function (g, t) {
+  const st = selState(t, SYS.length, 1.4), cur = curOf(st);
+  bg(g, SYSCOL[SYS[cur][0]], 0.7); topbar(g, null);
+  list(g, SYS.map(([tag, name, c]) => ({ t: name, d: c + ' jogos', ic: { tag } })), st, { x: 16, y: 48, w: 320, rh: 54, fs: 16 });
+  const pop = eob(clamp(st.p / 0.8)), s = 200 + 10 * pop;
+  sysCard(g, 480 - s / 2, 70 + (210 - s) / 2, s, s, SYS[cur][0], true, 'B', 1, t);
+  text(g, SYS[cur][1], 480, 320, P.ink, 20, { align: 'center', w: 700 });
+  text(g, 'último: ' + LASTP[cur], 480, 342, P.muted, 13, { align: 'center' });
+  hints(g, [['SELECT', 'Recentes'], ['F', 'Menu'], ['A', 'Abrir']], nowPlaying(g, t));
+};
+
+S.homeGrid = function (g, t) {
+  const n = SYS.length, cur = Math.floor(t / 1.2) % n, pp = eob(clamp((t % 1.2) / 0.4));
+  bg(g, SYSCOL[SYS[cur][0]], 0.6); topbar(g, null);
+  text(g, 'Todos os consoles', 24, 70, P.ink, 20, { w: 700 });
+  text(g, '7 consoles · 1.031 jogos', 616, 70, P.muted, 13, { align: 'right' });
+  SYS.forEach(([tag, name, cnt], j) => {
+    const col = j % 4, rowi = Math.floor(j / 4), sel = j === cur, w = 132, x = 24 + col * 152, y = 92 + rowi * 176;
+    const grow = sel ? 6 * pp : 0;
+    sysCard(g, x - grow / 2, y - grow / 2, w + grow, 120 + grow, tag, sel, 'B', sel ? pp : 0, t);
+    text(g, name, x + 2, y + 140, sel ? P.ink : P.muted, 13, { w: sel ? 600 : 400, max: w });
+    if (sel) text(g, cnt + ' jogos', x + 2, y + 157, P.blueHi, 11.5, { w: 500 });
+  });
+  hints(g, [['SELECT', 'Recentes'], ['F', 'Menu'], ['A', 'Abrir']], nowPlaying(g, t));
+};
+
+S.games = function (g, t) {
+  const n = GAMES.length, pp = pingpong(t, n, 1.9), cur = pp.cur;
+  bg(g, coverColor(cur), 1); topbar(g, 'PlayStation', (cur + 1) + ' de 214');
+  const cw = 108, ch = 144, gap = 14, sc0 = shelf(pp.c, n, 1), y = 62;
+  let x = 24 - sc0 * (cw + gap);
+  for (let j = 0; j < n; j++) {
+    const f = eo(clamp(1 - Math.abs(j - pp.c))), w = cw + 30 * f, h = ch + 40 * f, yy = y + (ch + 40 - h);
+    if (x < W + 10 && x + w > -10) {
+      picture(g, artImg('cv', j), x, yy, w, h, 10, { dim: 0.4 * (1 - f) });
+      if (j === cur) ring(g, x, yy, w, h, 10, f, t);
+    }
+    x += w + gap;
+  }
+  const ha = eo(pp.fresh);
+  g.save(); g.globalAlpha = ha;
+  text(g, GAMES[cur][0], 24, 296 - (1 - ha) * 6, P.ink, 26, { w: 700 });
+  text(g, GMETA[cur], 24, 320 - (1 - ha) * 6, P.muted, 14);
+  // little facts row
+  const chips = GAMES[cur][1] ? ['Com capa', 'Save no slot 2', 'Conquistas 3/6'] : ['Sem capa: a inicial vira a capa'];
+  let cx = 24;
+  chips.forEach(c => { const w = tw(g, c, 12, 500) + 20; box(g, cx, 336, w, 24, 12, 'rgba(255,255,255,0.07)'); text(g, c, cx + 10, 352, P.soft, 12, { w: 500 }); cx += w + 8; });
+  g.restore();
+  // scroll position
+  box(g, 24, 384, 592, 3, 1.5, 'rgba(255,255,255,0.08)');
+  box(g, 24 + (cur / (214 - 1)) * 592 * 30, 384, 30, 3, 1.5, P.blue);
+  hints(g, [['B', 'Voltar'], ['SELECT', 'Recentes'], ['Y', 'Favoritar'], ['A', 'Jogar']]);
+};
+
+S.gamesList = function (g, t) {
+  const st = selState(t, GAMES.length, 1.4), cur = curOf(st);
+  bg(g, coverColor(cur), 0.8); topbar(g, 'PlayStation', (cur + 1) + ' de 214');
+  list(g, GAMES.map(([nm], i) => ({ t: nm, d: GMETA[i] })), st, { x: 16, y: 46, w: 336, rh: 54, fs: 16 });
+  const pop = eob(clamp(st.p / 0.8)), w = 196 + 8 * pop, h = 262 + 10 * pop, x = 488 - w / 2, y = 60 + (272 - h) / 2;
+  picture(g, artImg('cv', cur), x, y, w, h, 12);
+  ring(g, x, y, w, h, 12, 1, t);
+  text(g, GAMES[cur][0], 488, 370, P.ink, 16, { align: 'center', w: 600 });
+  hints(g, [['B', 'Voltar'], ['SELECT', 'Recentes'], ['A', 'Jogar']]);
+};
+
+S.recent = function (g, t) {
+  const n = 3, per = 2.6, k = Math.floor(t / per), p = eio(clamp((t - k * per) / 0.5)), c = lerp(k - 1, k, p);
+  const cur = ((Math.round(c) % n) + n) % n;
+  bg(g, ['#3ad6e0', '#f2a33c', '#51e0a3'][cur], 0.8); topbar(g, 'Recentes', (cur + 1) + ' de 3');
+  const names = [['Star Hunt', 'PlayStation · slot 2 · há 2 horas'], ['Pixel Kart', 'Super Nintendo · slot 0 · ontem'], ['Crystal Vale', 'Game Boy Advance · retomada · há 3 dias']];
+  for (let j = -1; j <= 3; j++) {
+    const jj = ((j % n) + n) % n, o = j - (c - Math.floor(c / n) * n);
+    let oo = o; while (oo > 1.5) oo -= n; while (oo < -1.5) oo += n;
+    const ao = Math.abs(oo), sc = lerp(1, 0.78, clamp(ao)), w = 400 * sc, h = 225 * sc;
+    const x = 120 + oo * 430 + (400 - w) / 2, y = 62 + (225 - h) / 2;
+    if (x > W || x + w < 0) continue;
+    picture(g, null, x, y, w, h, 14, { scene: jj, dim: Math.min(0.6, ao * 0.6) });
+    if (ao < 0.5) ring(g, x, y, w, h, 14, 1 - ao * 2, t);
+  }
+  const ha = eo(clamp((t - k * per) / 0.6));
+  g.save(); g.globalAlpha = ha;
+  text(g, names[cur][0], 120, 330, P.ink, 24, { w: 700 });
+  text(g, names[cur][1], 120, 352, P.muted, 13);
+  card(g, 120, 368, 150, 40, 20, { fill: vgrad(g, 368, 408, '#2aa8ff', P.blueDeep), sh: 0.4 });
+  glyphIcon(g, 'play', 142, 388, 14, '#fff');
+  text(g, 'Continuar', 158, 393, '#fff', 15, { w: 600 });
+  g.restore();
+  hints(g, [['B', 'Voltar'], ['LR', 'Trocar'], ['A', 'Continuar']]);
+};
+
+// F menu: a panel that slides in from the left over the dimmed home
+const FM = [['Início', 'gear'], ['Ajustes', 'gear'], ['Loja de Paks', 'store'], ['Ferramentas', 'tools'], ['Música', 'music'], ['Recentes', 'recent'], ['Reiniciar', 'restart'], ['Desligar', 'power']];
+S.fmenu = function (g, t) {
+  S.home(g, 0.3, true);
+  const per = 9, lt = t % per, open = eo(clamp(lt / 0.45)), close = lt > per - 0.5 ? eo(clamp((lt - per + 0.5) / 0.4)) : 0, a = open * (1 - close);
+  g.fillStyle = 'rgba(4,6,10,' + 0.6 * a + ')'; g.fillRect(0, 0, W, H);
+  const pw = 250, px = -pw + pw * a;
+  g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 30; g.shadowOffsetX = 8;
+  g.fillStyle = vgrad(g, 0, H, '#1c2531', '#121820'); g.fillRect(px, 0, pw, H); g.restore();
+  g.fillStyle = P.line; g.fillRect(px + pw - 1, 0, 1, H);
+  mark(g, px + 22, 22, 22);
+  text(g, 'AnberNext', px + 54, 40, P.ink, 17, { w: 700 });
+  const items = FM.slice(1);
+  const st = selState(Math.max(0, lt - 0.5), items.length, 1.1);
+  g.save(); g.translate(px, 0);
+  const sy = lerp(68 + st.prev * 44, 68 + st.sel * 44, eio(st.p)), cur = curOf(st);
+  box(g, 12, sy, pw - 24, 38, 9, vgrad(g, sy, sy + 38, '#2aa8ff', P.blueDeep));
+  items.forEach(([lab, ic], i) => {
+    const y = 68 + i * 44, sel = i === cur;
+    if (i === 5) { g.fillStyle = P.line; g.fillRect(24, y - 4, pw - 48, 1); }
+    glyphIcon(g, ic, 36, y + 19, 18, sel ? '#fff' : P.muted);
+    text(g, lab, 58, y + 24, sel ? '#fff' : (i >= 5 ? P.muted : P.soft), 15, { w: sel ? 600 : 500 });
+  });
+  text(g, 'AnberNext v3.26', 24, 418, P.faint, 11.5);
+  g.restore();
+  hints(g, [['B', 'Fechar'], ['A', 'OK']]);
+};
+
+const TOOLS = [['Atualizar NeonDrive', 'update', '#1a6fb0'], ['Disc Organizer', 'disc', null], ['Pak Plaza', 'store', '#8a3d76'], ['AnberNext Rollback', 'undo', null], ['Battery', 'battery', '#2c7a52'], ['Clock', 'clock', null], ['Game Tracker', 'chart', null], ['Input Tester', 'pad', null]];
+const TOOLD = ['Baixa a versão mais nova do sistema.', 'Junta jogos de vários discos numa entrada só.', 'Instala e atualiza Paks.', 'Volta para a versão anterior do sistema.', 'Saúde e histórico da bateria.', 'Acerta data e hora.', 'Quanto tempo você jogou cada jogo.', 'Testa todos os botões e analógicos.'];
+S.tools = function (g, t) {
+  bg(g); topbar(g, 'Ferramentas', '8');
+  const cur = list(g, TOOLS.map(([a, k, c]) => ({ t: a, ic: { k, c } })), selState(t, TOOLS.length, 1.3), { x: 16, y: 46, w: 380, rh: 48, fs: 16 });
+  card(g, 412, 56, 212, 300, 14);
+  box(g, 476, 92, 84, 84, 22, TOOLS[cur][2] || P.card3);
+  glyphIcon(g, TOOLS[cur][1], 518, 134, 44, '#fff');
+  text(g, TOOLS[cur][0], 518, 212, P.ink, 15, { align: 'center', w: 700, max: 190 });
+  const words = TOOLD[cur].split(' '); let line = '', ly = 238;
+  words.forEach(wd => { if (tw(g, line + wd, 13) > 176) { text(g, line.trim(), 518, ly, P.muted, 13, { align: 'center' }); line = ''; ly += 18; } line += wd + ' '; });
+  text(g, line.trim(), 518, ly, P.muted, 13, { align: 'center' });
+  hints(g, [['B', 'Voltar'], ['A', 'Abrir']]);
+};
+
+S.loading = function (g, t) {
+  const per = 3.2, lt = t % per;
+  bg(g, '#3ad6e0', 0.6);
+  const a = eo(clamp(lt / 0.5));
+  g.save(); g.globalAlpha = a;
+  picture(g, artImg('cv', 0), 260, 92 - (1 - a) * 10, 120, 160, 12);
+  // spinner ring around nothing: a short blue arc chasing its tail under the cover
+  g.lineCap = 'round'; g.lineWidth = 3.5; g.strokeStyle = 'rgba(255,255,255,0.08)';
+  g.beginPath(); g.arc(320, 300, 14, 0, Math.PI * 2); g.stroke();
+  g.strokeStyle = P.blue; g.beginPath(); const s0 = t * 6; g.arc(320, 300, 14, s0, s0 + 1.2 + Math.sin(t * 3) * 0.8); g.stroke();
+  text(g, 'Star Hunt', 320, 352, P.ink, 24, { align: 'center', w: 700 });
+  text(g, 'Abrindo no PlayStation…', 320, 376, P.muted, 13, { align: 'center' });
+  const pr = clamp(lt / 2.8);
+  box(g, 220, 398, 200, 4, 2, 'rgba(255,255,255,0.08)');
+  box(g, 220, 398, 200 * eo(pr), 4, 2, P.blue);
+  g.restore();
+};
+
+// volume and brightness: the quick panel that slides in from the right
+S.osd = function (g, t) {
+  S.games(g, 0.2);
+  const per = 6, lt = t % per, a = eo(clamp(lt / 0.4)) * (1 - eo(clamp((lt - per + 0.6) / 0.4)));
+  g.fillStyle = 'rgba(4,6,10,' + 0.45 * a + ')'; g.fillRect(0, 0, W, H);
+  const pw = 230, px = W - pw * a;
+  g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 30; g.shadowOffsetX = -8;
+  g.fillStyle = vgrad(g, 0, H, '#1c2531', '#121820'); g.fillRect(px, 0, pw, H); g.restore();
+  g.save(); g.translate(px, 0);
+  text(g, 'Acesso rápido', 20, 38, P.ink, 16, { w: 700 });
+  const vol = 0.55 + Math.sin(t * 1.3) * 0.25, bri = 0.7;
+  const slider = (y, ic, lab, v, act) => {
+    card(g, 14, y, pw - 28, 72, 12, { top: act ? '#2c3848' : '#222b37', bot: act ? '#222c3a' : '#1b222c', sh: 0.25 });
+    glyphIcon(g, ic, 36, y + 24, 16, act ? P.blueHi : P.muted);
+    text(g, lab, 54, y + 29, act ? P.ink : P.soft, 13.5, { w: 600 });
+    text(g, Math.round(v * 100) + '%', pw - 30, y + 29, act ? P.blueHi : P.muted, 13, { align: 'right', w: 600 });
+    box(g, 28, y + 48, pw - 56, 6, 3, 'rgba(255,255,255,0.1)');
+    box(g, 28, y + 48, (pw - 56) * v, 6, 3, act ? P.blue : P.muted);
+    circle(g, 28 + (pw - 56) * v, y + 51, act ? 8 : 6, '#fff');
+    if (act) ring(g, 14, y, pw - 28, 72, 12, 1, t);
+  };
+  slider(58, 'speaker', 'Volume', vol, true);
+  slider(146, 'sun', 'Brilho', bri, false);
+  const tg = [['wifi', 'Wi-Fi', 1], ['bt', 'Bluetooth', 0], ['clock', 'Suspender', 0]];
+  tg.forEach(([ic, lab, on], i) => {
+    const x = 14 + i * 68, y = 236;
+    box(g, x, y, 62, 62, 12, on ? P.blue : '#222b37');
+    glyphIcon(g, ic, x + 31, y + 25, 18, on ? '#fff' : P.muted);
+    text(g, lab, x + 31, y + 50, on ? '#fff' : P.muted, 10, { align: 'center', w: 600 });
+  });
+  text(g, 'Bateria 82% · 3 h 40 min', 20, 330, P.muted, 12);
+  g.restore();
+};
+
+const ARTISTS = ['A Day To Remember', 'Arctic Lights', 'Bruma', 'Cidade Submersa', 'Faroeste Neon', 'Lumen', 'Midnight Pulse'];
+S.music = function (g, t) {
+  const st = selState(t, ARTISTS.length, 1.5), cur = curOf(st);
+  bg(g, ALBUMS[cur][1][0], 0.8); topbar(g, 'Música', '7 artistas');
+  list(g, ARTISTS.map((a, i) => ({ t: a, d: (2 + (i % 3)) + ' álbuns · ' + (14 + i * 3) + ' faixas' })), st, { x: 16, y: 46, w: 330, rh: 54, fs: 16 });
+  const pop = eob(clamp(st.p / 0.8)), s = 200 + 8 * pop, x = 488 - s / 2, y = 64 + (208 - s) / 2;
+  picture(g, artImg('al', cur), x, y, s, s, 12);
+  text(g, ALBUMS[cur][0], 488, 306, P.ink, 17, { align: 'center', w: 700 });
+  text(g, ARTISTS[cur], 488, 326, P.muted, 13, { align: 'center' });
+  // shuffle and play-all buttons
+  box(g, 400, 344, 112, 34, 17, P.blue); glyphIcon(g, 'play', 420, 361, 12, '#fff'); text(g, 'Tocar', 434, 366, '#fff', 13, { w: 600 });
+  box(g, 520, 344, 64, 34, 17, 'rgba(255,255,255,0.08)'); text(g, 'Mix', 552, 366, P.soft, 13, { align: 'center', w: 600 });
+  hints(g, [['B', 'Voltar'], ['Y', 'Pausar'], ['A', 'Abrir']], nowPlaying(g, t));
+};
+
+S.playing = function (g, t) {
+  bg(g, ALBUMS[6][1][0], 1.1); topbar(g, 'Tocando agora');
+  const bob = Math.sin(t * 1.2) * 2;
+  picture(g, artImg('al', 6), 32, 60 + bob, 236, 236, 16);
+  const x = 296;
+  text(g, 'FAIXA 3 DE 9', x, 92, P.blueHi, 11.5, { ls: 1.8, w: 700 });
+  text(g, 'Ondas de Vidro', x, 128, P.ink, 28, { w: 700 });
+  text(g, 'Midnight Pulse', x, 154, P.soft, 16, { w: 500 });
+  text(g, 'Noites Claras · 2024', x, 176, P.muted, 13);
+  const pos = (0.32 + t * 0.03) % 1, bw = 316;
+  box(g, x, 214, bw, 5, 2.5, 'rgba(255,255,255,0.1)');
+  box(g, x, 214, bw * pos, 5, 2.5, P.blue);
+  circle(g, x + bw * pos, 216.5, 7, '#fff');
+  const el = Math.floor(pos * 238);
+  text(g, Math.floor(el / 60) + ':' + String(el % 60).padStart(2, '0'), x, 242, P.muted, 12);
+  text(g, '3:58', x + bw, 242, P.muted, 12, { align: 'right' });
+  // transport: round buttons, the middle one bigger and blue
+  const cx = x + bw / 2, cy = 288;
+  const prevNext = (bx, dir) => { circle(g, bx, cy, 22, 'rgba(255,255,255,0.08)'); g.fillStyle = P.ink; g.beginPath(); g.moveTo(bx + dir * 6, cy - 7); g.lineTo(bx - dir * 4, cy); g.lineTo(bx + dir * 6, cy + 7); g.fill(); g.fillRect(bx - dir * 6 - (dir > 0 ? 2 : 0), cy - 7, 2, 14); };
+  prevNext(cx - 72, 1); prevNext(cx + 72, -1);
+  const pulse = 1 + Math.sin(t * 4) * 0.03;
+  g.save(); g.shadowColor = 'rgba(26,159,255,0.6)'; g.shadowBlur = 18; circle(g, cx, cy, 30 * pulse, P.blue); g.restore();
+  g.fillStyle = '#fff'; g.fillRect(cx - 8, cy - 10, 5, 20); g.fillRect(cx + 3, cy - 10, 5, 20);
+  text(g, 'Anterior', cx - 72, cy + 42, P.muted, 11.5, { align: 'center' });
+  text(g, 'Pausar (Y)', cx, cy + 50, P.soft, 11.5, { align: 'center', w: 600 });
+  text(g, 'Próxima', cx + 72, cy + 42, P.muted, 11.5, { align: 'center' });
+  // up next
+  text(g, 'A seguir: Arctic Lights · Maré Alta', 32, 330 + 0, P.faint, 12.5);
+  hints(g, [['B', 'Voltar'], ['LR', 'Faixa'], ['A', 'Lista']]);
+};
+
+// in-game menu: the game keeps running behind a dark panel on the left; save slots as a shelf on the right
+const GM = [['Continuar', 'play'], ['Salvar', 'save'], ['Carregar', 'download'], ['Opções', 'sliders'], ['Conquistas', 'trophy'], ['Música', 'music'], ['Sair', 'exit']];
+S.gamemenu = function (g, t) {
+  drawScene(g, 0, 0, W, H, 0);
+  g.fillStyle = 'rgba(6,9,13,0.45)'; g.fillRect(0, 0, W, H);
+  g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 30; g.shadowOffsetX = 8;
+  g.fillStyle = 'rgba(18,24,32,0.96)'; g.fillRect(0, 0, 240, H); g.restore();
+  g.fillStyle = P.line; g.fillRect(239, 0, 1, H);
+  picture(g, artImg('cv', 0), 20, 18, 36, 48, 6);
+  text(g, 'Star Hunt', 68, 38, P.ink, 17, { w: 700 });
+  text(g, 'PlayStation · 1 h 12 min', 68, 58, P.muted, 11.5);
+  const st = selState(t, GM.length, 1.4), cur = curOf(st);
+  const sy = lerp(84 + st.prev * 46, 84 + st.sel * 46, eio(st.p));
+  box(g, 12, sy, 216, 40, 9, vgrad(g, sy, sy + 40, '#2aa8ff', P.blueDeep));
+  GM.forEach(([lab, ic], i) => {
+    const y = 84 + i * 46, sel = i === cur;
+    glyphIcon(g, ic, 36, y + 20, 16, sel ? '#fff' : P.muted);
+    text(g, lab, 58, y + 25, sel ? '#fff' : P.soft, 15, { w: sel ? 600 : 500 });
+  });
+  // status pill top-right
+  box(g, 494, 12, 132, 28, 14, 'rgba(10,14,20,0.8)');
+  text(g, '20:47', 512, 31, P.ink, 13, { w: 600 }); battery(g, 560, 20, 0.82); text(g, '82%', 614, 31, P.soft, 12, { align: 'right' });
+  if (cur === 1 || cur === 2) {
+    const slot = 2, a = eo(clamp(st.p * 1.4));
+    g.save(); g.globalAlpha = a;
+    card(g, 250, 88, 378, 244, 14, { fill: 'rgba(18,24,32,0.94)' });
+    text(g, cur === 1 ? 'Salvar no slot' : 'Carregar do slot', 262, 112, P.ink, 16, { w: 700 });
+    text(g, 'LR troca o slot', 614, 112, P.faint, 12, { align: 'right' });
+    [[1, 264, 76], [2, 352, 184], [3, 548, 66]].forEach(([n, xx, w]) => {
+      const on = n === slot, y = 128;
+      picture(g, null, xx, y, w, 128, 10, { scene: n, dim: on ? 0 : 0.55 });
+      if (on) { ring(g, xx, y, w, 128, 10, 1, t); text(g, 'Slot 2 · hoje 20:31', xx, y + 150, P.soft, 12.5, { w: 600 }); }
+      else text(g, 'Slot ' + n, xx, y + 150, P.faint, 12);
+    });
+    text(g, cur === 1 ? 'O save atual do slot 2 será substituído.' : 'O jogo volta exatamente para este ponto.', 262, 316, P.muted, 12.5);
+    g.restore();
+  }
+  hints(g, [['B', 'Voltar'], ['A', 'OK']]);
+};
+
+const OPT = [['Escala da tela', 'Aspecto'], ['Filtro', 'Nítido'], ['Mostrar FPS', null, false], ['Pular quadros', 'Auto'], ['Avanço rápido', '2x'], ['Vibração', null, true], ['Controles', null], ['Atalhos', null], ['Salvar para este jogo', null]];
+const OPTD = ['Como a imagem do jogo ocupa a tela.', 'Suaviza ou deixa os pixels nítidos.', 'Mostra os quadros por segundo no canto.', 'Pula quadros quando o jogo pesa.', 'Velocidade do avanço rápido.', 'Treme o aparelho quando o jogo pede.', 'Mapa dos botões neste emulador.', 'Combinações para salvar, carregar e sair.', 'Grava estas opções só para este jogo.'];
+const OPT_TABS = ['Tela', 'Áudio', 'Controles', 'Emulador'];
+S.options = function (g, t) {
+  bg(g); topbar(g, 'Opções', 'Star Hunt');
+  // tabs: L1/R1 move between groups
+  let x = 20;
+  OPT_TABS.forEach((tb, i) => { const w = tw(g, tb, 13, 600) + 24; if (i === 0) box(g, x, 44, w, 26, 13, P.ink); text(g, tb, x + 12, 61.5, i === 0 ? '#0e141b' : P.muted, 13, { w: 600 }); x += w + 6; });
+  const st = selState(t, OPT.length, 1.2), cur = curOf(st);
+  list(g, OPT.map(([a, v, tg]) => (tg != null ? { t: a, tog: tg } : v ? { t: a, v } : { t: a, arrow: true })), st, { x: 16, y: 80, w: 608, rh: 38, fs: 15 });
+  box(g, 16, 418, 608, 1, 0, P.line);
+  text(g, OPTD[cur], 20, 436, P.muted, 13);
+  hints(g, [['B', 'Voltar'], ['L1', 'Abas'], ['LR', 'Mudar'], ['A', 'Abrir']]);
+};
+
+S.toasts = function (g, t) {
+  drawScene(g, 0, 0, W, H, 2);
+  const lt = t % 5.5;
+  const toast = (i, d, ic, icc, title, sub) => {
+    const a = eo(clamp((lt - d) / 0.4)) * (1 - eo(clamp((lt - 4.6 - d * 0.3) / 0.4)));
+    if (a <= 0) return;
+    const w = 268, x = W - 16 - w * a + (1 - a) * 20, y = 16 + i * 66;
+    g.save(); g.globalAlpha = a;
+    card(g, x, y, w, 56, 12, { fill: 'rgba(22,29,38,0.96)' });
+    box(g, x + 10, y + 10, 36, 36, 9, icc);
+    glyphIcon(g, ic, x + 28, y + 28, 18, '#fff');
+    text(g, title, x + 56, y + 26, P.ink, 13.5, { w: 600 });
+    text(g, sub, x + 56, y + 44, P.muted, 12);
+    g.restore();
+  };
+  toast(0, 0.1, 'save', '#2a4258', 'Estado salvo', 'Slot 2 · Star Hunt');
+  toast(1, 0.9, 'trophy', P.blue, 'Conquista: Primeira volta', 'Termine a primeira corrida · 10 pts');
+  // volume chip bottom-centre
+  const va = eo(clamp((lt - 1.8) / 0.3)) * (1 - eo(clamp((lt - 3.4) / 0.3)));
+  if (va > 0) {
+    g.save(); g.globalAlpha = va;
+    card(g, 220, 410 + (1 - va) * 12, 200, 40, 20, { fill: 'rgba(22,29,38,0.96)' });
+    glyphIcon(g, 'speaker', 244, 430 + (1 - va) * 12, 16, P.soft);
+    box(g, 262, 428 + (1 - va) * 12, 120, 5, 2.5, 'rgba(255,255,255,0.1)');
+    box(g, 262, 428 + (1 - va) * 12, 120 * 0.6, 5, 2.5, P.blue);
+    text(g, '60', 404, 435 + (1 - va) * 12, P.soft, 12, { align: 'right', w: 600 });
+    g.restore();
+  }
+};
+
+const ACH = [['Primeira volta', 'Termine a primeira corrida', 1, 10, '12/10/2026', 71], ['Sem arranhões', 'Vença sem bater nenhuma vez', 1, 25, '14/10/2026', 23], ['Colecionador', 'Pegue 100 moedas', 1, 10, '02/11/2026', 48], ['Atalho secreto', 'Ache o túnel escondido', 0, 25, null, 9], ['Recordista', 'Bata o tempo do fantasma', 0, 50, null, 4], ['Campeão', 'Vença a copa estrela', 0, 100, null, 2]];
+function badge(g, x, y, s, got, i) {
+  const cols = [['#2aa8ff', '#0c4f8c'], ['#f2c14e', '#8a5a12'], ['#59d28a', '#1f6e44'], ['#9b7cff', '#3a2a7a'], ['#ff8a5c', '#7a2a14'], ['#ff5ca8', '#7a1f4a']][i % 6];
+  if (got) { const gr = g.createLinearGradient(x, y, x + s, y + s); gr.addColorStop(0, cols[0]); gr.addColorStop(1, cols[1]); box(g, x, y, s, s, s * 0.24, gr); glyphIcon(g, 'trophy', x + s / 2, y + s / 2, s * 0.56, '#fff'); }
+  else { box(g, x, y, s, s, s * 0.24, '#232c38'); glyphIcon(g, 'lock', x + s / 2, y + s / 2 + s * 0.04, s * 0.42, P.faint); }
+}
+S.achievements = function (g, t) {
+  bg(g, '#1a9fff', 0.5); topbar(g, 'Conquistas', 'Star Hunt');
+  // progress header
+  card(g, 16, 46, 608, 52, 12, { sh: 0.25 });
+  text(g, '3 de 6 conquistas', 32, 69, P.ink, 15, { w: 700 });
+  text(g, '45 de 220 pontos', 32, 87, P.muted, 12);
+  box(g, 300, 68, 300, 6, 3, 'rgba(255,255,255,0.08)');
+  box(g, 300, 68, 300 * 0.5 * eo(clamp(t / 1.2)), 6, 3, P.blue);
+  text(g, '50%', 600, 90, P.blueHi, 12, { align: 'right', w: 700 });
+  const st = selState(t, ACH.length, 1.5), cur = curOf(st);
+  const rh = 54, y0 = 108, sy = lerp(y0 + st.prev * rh, y0 + st.sel * rh, eio(st.p));
+  g.save(); g.shadowColor = 'rgba(26,159,255,0.4)'; g.shadowBlur = 14;
+  box(g, 16, sy + 3, 608, rh - 6, 10, vgrad(g, sy, sy + rh, '#2aa8ff', P.blueDeep)); g.restore();
+  ACH.forEach(([nm, d, got, pts, date], i) => {
+    const y = y0 + i * rh, sel = i === cur, mid = y + rh / 2;
+    badge(g, 26, mid - 17, 34, got, i);
+    text(g, nm, 72, mid - 2, sel ? '#fff' : (got ? P.ink : P.soft), 15, { w: 600 });
+    text(g, d, 72, mid + 15, sel ? 'rgba(255,255,255,0.78)' : P.faint, 12);
+    text(g, pts + ' pts', 608, mid - 2, sel ? '#fff' : (got ? P.blueHi : P.muted), 13, { align: 'right', w: 700 });
+    text(g, got ? date : 'falta', 608, mid + 15, sel ? 'rgba(255,255,255,0.78)' : P.faint, 11.5, { align: 'right' });
+  });
+  hints(g, [['B', 'Voltar'], ['A', 'Detalhes']]);
+};
+S.achDetail = function (g, t) {
+  const per = 4, k = Math.floor(t / per) % 2, lt = t % per, i = k ? 3 : 1, [nm, d, got, pts, date, rare] = ACH[i];
+  bg(g, got ? '#f2c14e' : '#3a4555', 0.8); topbar(g, 'Conquistas', 'Star Hunt');
+  const a = eo(clamp(lt / 0.5)), pop = eob(clamp(lt / 0.6));
+  g.save(); g.globalAlpha = a;
+  card(g, 40, 58, 560, 340, 18);
+  const s = 112 * (0.85 + 0.15 * pop);
+  if (got) { g.save(); g.shadowColor = 'rgba(242,193,78,0.55)'; g.shadowBlur = 30; badge(g, 320 - s / 2, 84 + (112 - s) / 2, s, got, i); g.restore(); }
+  else badge(g, 320 - s / 2, 84 + (112 - s) / 2, s, got, i);
+  text(g, nm, 320, 236, P.ink, 24, { align: 'center', w: 700 });
+  text(g, d, 320, 260, P.muted, 14, { align: 'center' });
+  // facts: points, date, rarity
+  const facts = [[pts + '', 'pontos'], [got ? date : '—', got ? 'conseguida em' : 'ainda não'], [rare + '%', 'dos jogadores têm']];
+  facts.forEach(([v, l], j) => {
+    const x = 96 + j * 224 - (j === 1 ? 0 : 0), cx = 140 + j * 180;
+    box(g, cx - 76, 284, 152, 62, 12, 'rgba(255,255,255,0.05)');
+    text(g, v, cx, 312, j === 0 ? P.blueHi : P.ink, 18, { align: 'center', w: 700 });
+    text(g, l, cx, 332, P.faint, 11.5, { align: 'center' });
+    void x;
+  });
+  box(g, 64, 364, 512, 5, 2.5, 'rgba(255,255,255,0.08)');
+  box(g, 64, 364, 512 * rare / 100 * eo(clamp((lt - 0.3) / 0.8)), 5, 2.5, got ? P.gold : P.muted);
+  text(g, got ? 'Raridade: incomum' : 'Raridade: muito rara', 64, 388, P.faint, 11.5);
+  text(g, (i + 1) + ' de 6', 576, 388, P.faint, 11.5, { align: 'right' });
+  g.restore();
+  hints(g, [['B', 'Voltar'], ['LR', 'Anterior / próxima']]);
+};
+
+// Ajustes: categories on the left rail, the chosen one's contents on the right
+const SET = [['Aparência', 'palette', [['Tema', 'Grafite'], ['Tela inicial', 'Carrossel'], ['Idioma', 'Português']]], ['Tela', 'screen', [['Brilho', '70%'], ['Temperatura', 'Neutra'], ['Contraste', 'Normal']]], ['Som', 'speaker', [['Volume', '60%'], ['Sons do menu', 'Ligado'], ['Fones', 'Auto']]], ['Sistema', 'gear', [['Energia', '5 min'], ['Data e hora', '20:47'], ['Saves', '42']]], ['Rede', 'wifi', [['Wi-Fi', 'Casa_5G'], ['Conquistas online', 'Ligado'], ['Hora pela rede', 'Ligado']]], ['Bluetooth', 'bt', [['Bluetooth', 'Desligado'], ['Aparelhos', '2']]], ['Sobre', 'info', [['Versão', 'v3.26'], ['Armazenamento', '41 de 58 GB'], ['Aparelho', 'RG353V']]]];
+S.settings = function (g, t) {
+  bg(g); topbar(g, 'Ajustes');
+  g.fillStyle = 'rgba(8,11,16,0.5)'; g.fillRect(0, 40, 214, 404);
+  const st = selState(t, SET.length, 1.5), cur = curOf(st);
+  const sy = lerp(52 + st.prev * 52, 52 + st.sel * 52, eio(st.p));
+  box(g, 10, sy, 194, 44, 10, vgrad(g, sy, sy + 44, '#2aa8ff', P.blueDeep));
+  SET.forEach(([lab, ic], i) => {
+    const y = 52 + i * 52, sel = i === cur;
+    glyphIcon(g, ic, 34, y + 22, 18, sel ? '#fff' : P.muted);
+    text(g, lab, 56, y + 27, sel ? '#fff' : P.soft, 15, { w: sel ? 600 : 500 });
+  });
+  const a = eo(clamp(st.p * 1.2));
+  g.save(); g.globalAlpha = a; g.translate((1 - a) * 12, 0);
+  text(g, SET[cur][0], 236, 76, P.ink, 22, { w: 700 });
+  SET[cur][2].forEach(([k, v], j) => {
+    const y = 96 + j * 62;
+    card(g, 236, y, 388, 52, 12, { sh: 0.2, oy: 3 });
+    text(g, k, 254, y + 32, P.soft, 15, { w: 500 });
+    text(g, v, 606, y + 32, P.muted, 14, { align: 'right' });
+  });
+  g.restore();
+  hints(g, [['B', 'Sair'], ['A', 'Abrir']]);
+};
+
+// ---------- Aparência: the theme row now has four choices ----------
+let thumbs = null;
+function neonThumb() {
+  const c = off(W, H), x = c.getContext('2d');
+  x.fillStyle = vgrad(x, 0, H, '#140a2a', '#120a24'); x.fillRect(0, 0, W, H);
+  x.save(); x.beginPath(); x.rect(0, 0, W, 250); x.clip();
+  const sg = x.createLinearGradient(0, 120, 0, 250); sg.addColorStop(0, '#fbd270'); sg.addColorStop(0.5, '#f2a33c'); sg.addColorStop(1, '#ff5ca8');
+  x.fillStyle = sg; x.beginPath(); x.arc(430, 250, 120, 0, Math.PI * 2); x.fill(); x.restore();
+  x.strokeStyle = 'rgba(58,214,224,0.45)'; x.lineWidth = 2;
+  for (let i = -12; i <= 12; i++) { x.beginPath(); x.moveTo(430, 250); x.lineTo(430 + i * 70, H); x.stroke(); }
+  for (let k = 0; k < 7; k++) { const y = 250 + Math.pow(k / 6, 2) * 230; x.beginPath(); x.moveTo(0, y); x.lineTo(W, y); x.stroke(); }
+  x.fillStyle = 'rgba(11,7,24,0.55)'; x.fillRect(0, 0, 330, H);
+  ['GAME BOY ADVANCE', 'SUPER NINTENDO', 'PLAYSTATION', 'MEGA DRIVE', 'GAME BOY'].forEach((s, i) => {
+    const y = 150 + i * 52, sel = i === 2;
+    if (sel) { x.fillStyle = '#f9a62b'; x.fillRect(28, y - 26, 7, 34); }
+    text(x, s, sel ? 52 : 44, y, sel ? '#ffffff' : 'rgba(58,214,224,0.7)', 28, { w: 700 });
+  });
+  return c;
+}
+function blocoThumb() {
+  const c = off(W, H), x = c.getContext('2d');
+  const gr = x.createRadialGradient(320, 30, 0, 320, 30, 640); gr.addColorStop(0, '#1c2140'); gr.addColorStop(1, '#090b18');
+  x.fillStyle = gr; x.fillRect(0, 0, W, H);
+  const cube = (cx, cy, s, top, l, r) => { poly(x, [[cx - s, cy], [cx, cy + s / 2], [cx, cy + s / 2 + s * 1.1], [cx - s, cy + s * 1.1]], l); poly(x, [[cx, cy + s / 2], [cx + s, cy], [cx + s, cy + s * 1.1], [cx, cy + s / 2 + s * 1.1]], r); poly(x, [[cx, cy - s / 2], [cx + s, cy], [cx, cy + s / 2], [cx - s, cy]], top); };
+  cube(170, 200, 50, '#3a4064', '#1c2140', '#141833'); cube(470, 200, 50, '#3a4064', '#1c2140', '#141833');
+  cube(320, 160, 80, '#fde08a', '#c6771d', '#8a4e12');
+  text(x, 'PlayStation', 320, 380, '#eef2ff', 44, { align: 'center', w: 600 });
+  return c;
+}
+function fosforoThumb() {
+  const c = off(W, H), x = c.getContext('2d');
+  x.fillStyle = '#04140a'; x.fillRect(0, 0, W, H);
+  const gr = x.createRadialGradient(320, 240, 0, 320, 240, 420); gr.addColorStop(0, 'rgba(60,255,140,0.16)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = gr; x.fillRect(0, 0, W, H);
+  x.fillStyle = 'rgba(0,0,0,0.25)'; for (let y = 0; y < H; y += 4) x.fillRect(0, y, W, 2);
+  const G = '#5dff9a';
+  x.strokeStyle = G; x.lineWidth = 3; x.strokeRect(24, 24, 592, 432);
+  ['CONSOLES', 'JOGOS', 'MÚSICA', 'SISTEMA'].forEach((s, i) => text(x, s, 60 + i * 140, 74, i === 0 ? '#04140a' : G, 26, { w: 700 }));
+  x.fillStyle = G; x.fillRect(48, 46, 132, 38); text(x, 'CONSOLES', 60, 74, '#04140a', 26, { w: 700 });
+  ['> PLAYSTATION', '  SUPER NINTENDO', '  GAME BOY ADVANCE', '  MEGA DRIVE'].forEach((s, i) => text(x, s, 60, 160 + i * 56, G, 30, { w: 600 }));
+  return c;
+}
+const LOOK = [
+  { t: 'Tema', opts: ['Neon Drive', 'Bloco', 'Grafite', 'Fósforo'], def: 2, d: 'Muda o visual de tudo, inclusive o boot.' },
+  { t: 'Tela inicial', opts: ['Carrossel', 'Lista', 'Grade'], def: 0, d: 'Como os consoles aparecem na tela inicial.' },
+  { t: 'Ícone dos consoles', opts: ['Sigla', 'Controle', 'Console'], def: 2, d: 'O desenho dentro de cada cartão de console.' },
+  { t: 'Biblioteca de jogos', opts: ['Carrossel', 'Lista'], def: 0, d: 'Como os jogos aparecem dentro de cada console.' },
+  { t: 'Idioma', opts: ['Português (Brasil)', 'English (US)'], def: 0, d: 'Língua dos menus, dos avisos e do boot.' }
+];
+function thumbOf(fn, t) { const c = off(W, H); fn(c.getContext('2d'), t); return c; }
+function thumbGrid(g, imgs, labels, on, pt, cols, t) {
+  const n = imgs.length, gw = 232, cw = cols === 1 ? 200 : (gw - 12) / 2, chh = cw * 0.75, x0 = 388;
+  imgs.forEach((im, i) => {
+    const c = cols === 1 ? 0 : i % 2, r = cols === 1 ? i : Math.floor(i / 2), act = i === on;
+    const x = x0 + c * (cw + 12) + (cols === 1 ? 16 : 0), y = 56 + r * (chh + (cols === 1 ? 26 : 30));
+    picture(g, im, x, y, cw, chh, 8, { dim: act ? 0 : 0.5 });
+    if (act) ring(g, x, y, cw, chh, 8, eo(pt), t);
+    text(g, labels[i], x, y + chh + 17, act ? P.ink : P.muted, 12, { w: act ? 600 : 400 });
+    if (act) { box(g, x + cw - 52, y + 6, 46, 16, 8, P.blue); text(g, 'em uso', x + cw - 29, y + 17.5, '#fff', 9.5, { align: 'center', w: 700 }); }
+  });
+  void n;
+}
+S.appearance = function (g, t) {
+  if (!thumbs) thumbs = { neon: neonThumb(), bloco: blocoThumb(), grafite: thumbOf((x, tt) => S.home(x, tt, false), 4.4), fosforo: fosforoThumb(), hl: thumbOf(S.homeList, 3.3), hg: thumbOf(S.homeGrid, 2.5), carr: thumbOf(S.games, 2.3), lista: thumbOf(S.gamesList, 1.0) };
+  bg(g); topbar(g, 'Aparência');
+  const per = 4.6, nr = LOOK.length, r = Math.floor(t / per) % nr, lt = t % per, L = LOOK[r];
+  const step = 1.3, k = Math.floor(Math.max(0, lt - 0.5) / step), on = lt < 0.5 ? L.def : (L.def + k + 1) % L.opts.length;
+  const pt = lt < 0.5 ? 1 : clamp(((lt - 0.5) % step) / 0.34);
+  const rows = LOOK.map((o, i) => ({ t: o.t, v: o.opts[i === r ? on : o.def] }))
+    .concat([{ t: 'Cor de destaque', sw: P.blue, arrow: true }, { t: 'Fonte', v: 'Inter' }]);
+  list(g, rows, { sel: r, prev: (r + nr - 1) % nr, p: clamp(lt / 0.34) }, { x: 16, y: 46, w: 356, rh: 48, fs: 15, tmax: 150 });
+  if (r === 0) thumbGrid(g, [thumbs.neon, thumbs.bloco, thumbs.grafite, thumbs.fosforo], L.opts, on, pt, 2, t);
+  else if (r === 1) thumbGrid(g, [thumbs.grafite, thumbs.hl, thumbs.hg], L.opts, on, pt, 2, t);
+  else if (r === 3) thumbGrid(g, [thumbs.carr, thumbs.lista], L.opts, on, pt, 1, t);
+  else if (r === 2) {
+    ['S', 'A', 'B'].forEach((v, i) => {
+      const act = i === on, s = 96, x = 396 + i * 76 - (i ? 0 : 0), y = 120;
+      const xx = 388 + i * 80, ss = act ? 72 + 6 * eob(pt) : 68;
+      sysCard(g, xx + (72 - ss) / 2, y + (72 - ss) / 2, ss, ss, 'PS', act, v, act ? eo(pt) : 0, t);
+      text(g, L.opts[i], xx + 36, y + 100, act ? P.ink : P.muted, 12.5, { align: 'center', w: act ? 600 : 400 });
+      void s; void x;
+    });
+    text(g, 'Vale para a tela inicial e os Ajustes.', 388, 262, P.faint, 12);
+  } else {
+    // idioma: the same strings in each language
+    const ex = on === 0 ? [['Jogar', 'Voltar', 'Recentes'], 'Estado salvo no slot 2'] : [['Play', 'Back', 'Recent'], 'State saved to slot 2'];
+    card(g, 388, 64, 236, 168, 14);
+    text(g, on === 0 ? 'Português (Brasil)' : 'English (US)', 406, 92, P.ink, 15, { w: 700 });
+    ex[0].forEach((w, i) => { btnGlyph(g, 406, 120 + i * 30, ['A', 'B', 'SELECT'][i], i === 0); text(g, w, 406 + hintW(g, ['A', 'B', 'SELECT'][i]) + 8, 124.5 + i * 30, P.soft, 13, { w: 500 }); });
+    box(g, 406, 196, 200, 26, 8, 'rgba(255,255,255,0.06)'); text(g, ex[1], 416, 213, P.soft, 12);
+  }
+  text(g, L.d, 20, 432, P.muted, 13);
+  hints(g, [['B', 'Voltar'], ['LR', 'Trocar']]);
+};
+
+// colour picker: hue ring + two sliders and a row of ready colours
+S.color = function (g, t) {
+  bg(g); topbar(g, 'Cor de destaque');
+  const st = selState(t, 3, 1.6), cur = curOf(st);
+  const hue = 205 + Math.sin(t * 0.7) * 20, sat = 0.88, lig = 0.55;
+  const hsl = (h, s, l) => 'hsl(' + h + ',' + Math.round(s * 100) + '%,' + Math.round(l * 100) + '%)';
+  const col = hsl(hue, sat, lig);
+  const ch = [['Matiz', hue / 360, 'hue'], ['Saturação', sat, 'sat'], ['Luz', lig, 'lig']];
+  ch.forEach(([lab, v, kind], i) => {
+    const y = 60 + i * 84, sel = i === cur;
+    card(g, 16, y, 340, 70, 12, { top: sel ? '#2c3848' : '#222b37', bot: sel ? '#222c3a' : '#1b222c', sh: 0.2 });
+    text(g, lab, 34, y + 28, sel ? P.ink : P.soft, 15, { w: 600 });
+    text(g, kind === 'hue' ? Math.round(hue) + '°' : Math.round(v * 100) + '%', 338, y + 28, sel ? P.blueHi : P.muted, 13, { align: 'right', w: 600 });
+    const gr = g.createLinearGradient(34, 0, 338, 0);
+    for (let s = 0; s <= 6; s++) gr.addColorStop(s / 6, kind === 'hue' ? hsl(s * 60, 0.85, 0.55) : kind === 'sat' ? hsl(hue, s / 6, 0.55) : hsl(hue, 0.85, s / 6));
+    box(g, 34, y + 42, 304, 10, 5, gr);
+    circle(g, 34 + 304 * v, y + 47, sel ? 9 : 7, '#fff');
+    circle(g, 34 + 304 * v, y + 47, sel ? 6 : 4.5, kind === 'hue' ? hsl(hue, 0.85, 0.55) : col);
+    if (sel) ring(g, 16, y, 340, 70, 12, eo(st.p), t);
+  });
+  // live preview: a console card and a button in the new colour
+  card(g, 380, 60, 244, 240, 16);
+  g.save(); g.shadowColor = col; g.shadowBlur = 18;
+  rr(g, 432, 84, 140, 100, 12); g.strokeStyle = col; g.lineWidth = 3; g.stroke(); g.restore();
+  box(g, 434, 86, 136, 96, 10, '#263140');
+  sysIcon(g, 'PS', 'B', 502, 128, 120, true);
+  box(g, 432, 204, 140, 34, 17, col); text(g, 'Jogar', 502, 226, '#fff', 14, { align: 'center', w: 600 });
+  text(g, hsl(hue, sat, lig).toUpperCase().replace(/\.\d+/g, ''), 502, 272, P.muted, 11.5, { align: 'center' });
+  text(g, 'Prontas', 380, 330, P.soft, 13, { w: 600 });
+  ['#1a9fff', '#7c5cff', '#ff5ca8', '#f2a33c', '#59d28a', '#e8edf3'].forEach((c, i) => {
+    const x = 380 + i * 41;
+    circle(g, x + 16, 362, 15, c);
+    if (i === 0) { g.strokeStyle = '#fff'; g.lineWidth = 2; g.beginPath(); g.arc(x + 16, 362, 19, 0, Math.PI * 2); g.stroke(); }
+  });
+  hints(g, [['B', 'Voltar'], ['LR', 'Ajustar'], ['A', 'Aplicar']]);
+};
+
+const NETS = [['Casa_5G', 3, 1, 'Conectado'], ['Casa_2G', 3, 1], ['Café Central', 2, 0], ['Escritório', 2, 1], ['Vizinho_123', 1, 1], ['Convidados', 1, 0]];
+S.wifi = function (g, t) {
+  bg(g); topbar(g, 'Wi-Fi');
+  card(g, 16, 46, 608, 46, 12, { sh: 0.2 });
+  text(g, 'Wi-Fi', 32, 75, P.ink, 15, { w: 600 });
+  box(g, 572, 59, 38, 20, 10, P.blue); circle(g, 600, 69, 7, '#fff');
+  text(g, 'REDES', 22, 116, P.faint, 11, { ls: 1.6, w: 700 });
+  // scanning shimmer next to the header
+  const sc = (t * 0.8) % 1; box(g, 74, 110, 40, 2, 1, 'rgba(255,255,255,0.06)'); box(g, 74 + 30 * sc, 110, 10, 2, 1, P.blue);
+  list(g, NETS.map(([a, s, l, v]) => ({ t: a, sig: s, lock: !!l, v, vc: P.blueHi, cycle: false })), selState(t, NETS.length, 1.3), { x: 16, y: 124, w: 608, rh: 48, fs: 15 });
+  hints(g, [['B', 'Voltar'], ['Y', 'Buscar'], ['A', 'Conectar']]);
+};
+
+S.keyboard = function (g, t) {
+  bg(g); topbar(g, 'Senha de Casa_5G');
+  card(g, 16, 50, 608, 48, 12, { sh: 0.2 });
+  const typed = Math.floor(t / 0.7) % 12;
+  const dw = text(g, '•'.repeat(Math.max(4, typed)), 34, 82, P.ink, 20);
+  if (Math.floor(t * 2) % 2) box(g, 38 + dw, 62, 2, 24, 1, P.blue);
+  text(g, 'mostrar', 604, 80, P.faint, 12, { align: 'right' });
+  // keyboard slides up from the bottom like a sheet
+  g.fillStyle = 'rgba(12,16,22,0.96)'; g.fillRect(0, 118, W, 326);
+  g.fillStyle = P.line; g.fillRect(0, 118, W, 1);
+  const rows = ['1234567890', 'qwertyuiop', 'asdfghjkl@', 'zxcvbnm.-_'];
+  const path = [[1, 2], [1, 3], [2, 1], [2, 2], [1, 7], [3, 5], [3, 6], [2, 8], [4, 3]];
+  const st = path[Math.floor(t / 0.7) % path.length], pp = eob(clamp((t % 0.7) / 0.28));
+  rows.forEach((r, ri) => {
+    for (let ci = 0; ci < r.length; ci++) {
+      const x = 22 + ci * 60 + (ri === 2 ? 0 : 0), y = 132 + ri * 58, sel = st[0] === ri && st[1] === ci;
+      if (sel) { const gs = 3 * pp; box(g, x - gs, y - gs, 54 + gs * 2, 48 + gs * 2, 10, P.blue); text(g, r[ci], x + 27, y + 31, '#fff', 20, { align: 'center', w: 600 }); }
+      else { box(g, x, y, 54, 48, 10, '#252f3c'); text(g, r[ci], x + 27, y + 31, P.soft, 19, { align: 'center', w: 500 }); }
+    }
+  });
+  const sp = [['Maiúsc.', 116], ['Espaço', 238], ['Apagar', 116], ['OK', 98]];
+  let x = 22;
+  sp.forEach(([lab, w], i) => {
+    const sel = st[0] === 4 && st[1] === i, y = 364;
+    if (sel) { const gs = 3 * pp; box(g, x - gs, y - gs, w + gs * 2, 44 + gs * 2, 10, P.blue); text(g, lab, x + w / 2, y + 28, '#fff', 15, { align: 'center', w: 600 }); }
+    else { box(g, x, y, w, 44, 10, i === 3 ? '#1c4a72' : '#2e3947'); text(g, lab, x + w / 2, y + 28, i === 3 ? P.blueHi : P.soft, 15, { align: 'center', w: 500 }); }
+    x += w + 8;
+  });
+  hints(g, [['B', 'Apagar'], ['Y', 'Maiúsc.'], ['A', 'Digitar']]);
+};
+
+const PHRASES = ['aquecendo o motor…', 'soprando o cartucho…', 'carregando os pixels…', 'polindo o grafite…', 'afinando o som…', 'procurando os saves…'];
+S.boot = function (g, t) {
+  const per = 5.4, lt = t % per;
+  g.fillStyle = '#0b1017'; g.fillRect(0, 0, W, H);
+  const glow = eo(clamp((lt - 0.2) / 1.2));
+  const gr = g.createRadialGradient(320, 200, 0, 320, 200, 260); gr.addColorStop(0, 'rgba(26,159,255,' + 0.18 * glow + ')'); gr.addColorStop(1, 'rgba(26,159,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  // the mark: outline tile draws in, then the blue tile slides into place over it
+  const s = 92, mx = 320 - s * 0.5, my = 124;
+  const draw = clamp(lt / 0.8), slide = eob(clamp((lt - 0.7) / 0.6));
+  g.save(); g.lineWidth = 7; g.strokeStyle = P.soft; g.lineCap = 'round';
+  rr(g, mx, my, s * 0.72, s * 0.72, s * 0.18); g.setLineDash([s * 2.6 * draw, 999]); g.stroke(); g.restore();
+  if (lt > 0.7) {
+    const o = s * 0.28 * slide;
+    g.save(); g.globalAlpha = clamp((lt - 0.7) / 0.25); g.shadowColor = 'rgba(26,159,255,0.7)'; g.shadowBlur = 28;
+    box(g, mx + o, my + o, s * 0.72, s * 0.72, s * 0.18, P.blue); g.restore();
+  }
+  const wa = eo(clamp((lt - 1.3) / 0.6));
+  g.save(); g.globalAlpha = wa;
+  const w1 = tw(g, 'Anber', 40, 700), w2 = tw(g, 'Next', 40, 300);
+  text(g, 'Anber', 320 - (w1 + w2) / 2, 290 + (1 - wa) * 10, P.ink, 40, { w: 700 });
+  text(g, 'Next', 320 - (w1 + w2) / 2 + w1, 290 + (1 - wa) * 10, P.ink, 40, { w: 300 });
+  g.restore();
+  const ph = PHRASES[Math.floor(t / 1.7) % PHRASES.length];
+  g.save(); g.globalAlpha = clamp((lt - 1.8) / 0.4); text(g, ph, 320, 326, P.muted, 15, { align: 'center' }); g.restore();
+  const pr = clamp((lt - 1.6) / 3.4);
+  box(g, 240, 348, 160, 4, 2, 'rgba(255,255,255,0.08)');
+  if (pr > 0) box(g, 240, 348, 160 * eio(pr), 4, 2, P.blue);
+  text(g, 'AnberNext v3.26 · RG353V', 320, 446, P.faint, 12.5, { align: 'center' });
+  text(g, 'segure F ao ligar para ir ao Android', 320, 466, '#3e4958', 11.5, { align: 'center' });
+};
+
+// every console at once, in each icon style
+function iconSheet(g, t, variant) {
+  bg(g);
+  const L = ANX_ICONS.SYSTEMS, n = L.length, cur = Math.floor(t / 0.9) % n, pp = eob(clamp((t % 0.9) / 0.35));
+  topbar(g, 'Todos os consoles', variant === 'A' ? 'Controle' : variant === 'S' ? 'Sigla' : 'Console');
+  L.forEach(([tag], j) => {
+    const r = Math.floor(j / 8), c = j % 8, sel = j === cur, s = 66, x = 14 + c * 77, y = 46 + r * 76, gs = sel ? 6 * pp : 0;
+    sysCard(g, x - gs / 2, y - gs / 2, s + gs, s + gs, tag, sel, variant, sel ? pp : 0, t);
+  });
+  box(g, 0, 444, W, 36, 0, 'rgba(7,10,15,0.82)');
+  text(g, L[cur][1], 20, 467, P.ink, 15, { w: 600 });
+  text(g, L[cur][0], 620, 467, P.blueHi, 13, { align: 'right', w: 700, ls: 1 });
+}
+S.iconsA = (g, t) => iconSheet(g, t, 'A');
+S.iconsB = (g, t) => iconSheet(g, t, 'B');
+S.iconsS = (g, t) => iconSheet(g, t, 'S');
+
+// ---------- runtime ----------
+// the sprite generator (device assets) reuses these drawings
+if (typeof window !== 'undefined') window.__GRAFITE = { controller, model, sysIcon, sysCard, mark, bg, P, S };
+if (typeof module !== 'undefined' && module.exports) { module.exports = S; return; }
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cvs = Array.from(document.querySelectorAll('canvas[data-screen]'));
+const vis = new Set();
+function setup(c) {
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  c.width = W * dpr; c.height = H * dpr; c._s = dpr;
+}
+function paint(c, t) {
+  const g = c.getContext('2d'); g.setTransform(c._s, 0, 0, c._s, 0, 0);
+  g.clearRect(0, 0, W, H);
+  try { S[c.dataset.screen](g, t + (+c.dataset.offset || 0)); } catch (e) { console.error(c.dataset.screen, e); }
+}
+function start() {
+  cvs.forEach(c => { setup(c); paint(c, 1.3); });
+  if (reduce) return;
+  const io = new IntersectionObserver(es => es.forEach(e => (e.isIntersecting ? vis.add(e.target) : vis.delete(e.target))), { rootMargin: '80px' });
+  cvs.forEach(c => io.observe(c));
+  const t0 = performance.now(); let last = 0;
+  (function loop(now) {
+    if (now - last > 32) { last = now; const t = (now - t0) / 1000; vis.forEach(c => paint(c, t)); }
+    requestAnimationFrame(loop);
+  })(t0);
+}
+const ready = document.fonts ? Promise.race([Promise.all([document.fonts.load('300 20px "Inter"'), document.fonts.load('400 20px "Inter"'), document.fonts.load('500 20px "Inter"'), document.fonts.load('600 20px "Inter"'), document.fonts.load('700 20px "Inter"'), document.fonts.load('800 20px "Inter"')]), new Promise(r => setTimeout(r, 2500))]) : Promise.resolve();
+ready.then(start, start);
+})();
+
+</script>
+
+</body></html>

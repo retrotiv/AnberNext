@@ -1,0 +1,647 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Direções do BrickNext</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  /* Layout: a dark showcase. Four UI "worlds" for BrickNext + AnberNext, each shown across
+     four device screens (home, inside a console, in-game, boot), plus a theming layer that
+     everything is built to swap. Single committed dark look by design. */
+  :root{
+    --bg:#070812; --panel:#0e1122; --panel2:#141833; --panel3:#1b2140;
+    --ink:#eef2ff; --muted:#8d96bd; --faint:#5a648a;
+    --amber:#f2a33c; --amber-hi:#fbd270; --amber-deep:#c6771d;
+    --cyan:#3ad6e0; --cyan-deep:#1a8fa0; --magenta:#ff5ca8; --green:#51e0a3;
+    --line:rgba(141,150,189,.16); --line-soft:rgba(141,150,189,.09);
+    --display:'Chakra Petch',system-ui,sans-serif;
+    --body:'Outfit',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      radial-gradient(1200px 700px at 85% -10%, rgba(58,214,224,.07), transparent 60%),
+      radial-gradient(1000px 600px at -5% 2%, rgba(242,163,60,.07), transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:var(--body); -webkit-font-smoothing:antialiased;
+    padding-left:max(16px,env(safe-area-inset-left,0px));
+    padding-right:max(16px,env(safe-area-inset-right,0px));
+    padding-block:0;
+  }
+  .wrap{max-width:1160px;margin:0 auto}
+  a{color:var(--cyan)}
+
+  /* ---------- page header ---------- */
+  header.top{padding:52px 0 20px}
+  .brandrow{display:flex;align-items:center;gap:13px;margin-bottom:22px}
+  .glyph{width:38px;height:38px;filter:drop-shadow(0 4px 10px rgba(242,163,60,.3))}
+  .brandrow b{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.5px}
+  .brandrow b i{font-style:normal;color:var(--cyan)}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--amber);margin:0 0 14px}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,5.4vw,50px);line-height:1.04;margin:0 0 18px;text-wrap:balance;letter-spacing:-.5px}
+  h1 span{color:var(--cyan)}
+  .lead{max-width:64ch;color:var(--muted);font-size:17px;line-height:1.62;margin:0}
+  .lead strong{color:var(--ink);font-weight:600}
+
+  .sechead{font-family:var(--mono);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+  h2.big{font-family:var(--display);font-weight:700;font-size:clamp(23px,3.6vw,32px);margin:0 0 10px;letter-spacing:.2px}
+
+  /* ================= THEMING BAND ================= */
+  .theming{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:30px;padding:40px 0}
+  .theming>p.intro{color:var(--muted);line-height:1.6;max-width:60ch;margin:0 0 26px;font-size:15.5px}
+  .theming>p.intro b{color:var(--ink);font-weight:600}
+  .layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+  .layer{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px}
+  .layer h4{margin:0 0 3px;font-family:var(--display);font-weight:600;font-size:15px}
+  .layer .d{color:var(--muted);font-size:12.5px;line-height:1.45;margin:0 0 13px}
+  /* swatches */
+  .themeset{display:flex;flex-direction:column;gap:9px}
+  .trow{display:flex;align-items:center;gap:9px}
+  .sw{display:flex;border-radius:6px;overflow:hidden;border:1px solid var(--line);width:62px;height:20px;flex:none}
+  .sw i{flex:1}
+  .trow .tn{font-size:11.5px;color:var(--muted)}
+  .trow .tn b{color:var(--ink);font-weight:600}
+  /* icon packs */
+  .packs{display:flex;flex-direction:column;gap:11px}
+  .pack{display:flex;align-items:center;gap:12px}
+  .pack .pl{font-size:10.5px;color:var(--faint);width:40px;text-transform:uppercase;letter-spacing:.1em}
+  .pack .ic{display:flex;gap:9px}
+  .pack svg{width:22px;height:22px;color:var(--amber)}
+  /* wallpapers */
+  .walls{display:flex;gap:9px}
+  .wall{width:100%;height:46px;border-radius:7px;border:1px solid var(--line)}
+  .w-neon{background:linear-gradient(180deg,#140a2a,#2a0f3d)}
+  .w-grid{background:radial-gradient(120% 90% at 50% 10%,#1c2140,#090b18)}
+  .w-void{background:radial-gradient(100% 100% at 50% 0,#0a1420,#04060c)}
+  /* covers */
+  .coverslots{display:flex;gap:9px}
+  .cslot{flex:1;aspect-ratio:3/4;border-radius:7px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;
+    text-align:center;color:var(--faint);font-size:10px;line-height:1.3;padding:6px;background:rgba(141,150,189,.04)}
+
+  /* ================= DIRECTION BLOCK ================= */
+  .dir{padding:48px 0;border-top:1px solid var(--line)}
+  .dir .dhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-bottom:6px}
+  .dir .dhead .no{font-family:var(--mono);font-size:14px;color:var(--faint)}
+  .dir .dhead h3{font-family:var(--display);font-weight:700;font-size:28px;margin:0;letter-spacing:.3px}
+  .dir .dhead .tg{font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--cyan)}
+  .dir .dsub{color:var(--muted);line-height:1.6;font-size:15.5px;margin:0 0 22px;max-width:70ch}
+  .dir .dsub b{color:var(--ink);font-weight:600}
+
+  .stage{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:26px;align-items:start}
+  @media(max-width:860px){.stage{grid-template-columns:1fr}}
+  .film{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+  .film.hero{gap:0}
+  .moves{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+  .moves li{position:relative;padding-left:22px;color:var(--ink);font-size:14.5px;line-height:1.45}
+  .moves li::before{content:"";position:absolute;left:0;top:6px;width:9px;height:9px;background:var(--amber);transform:rotate(45deg);box-shadow:0 0 9px rgba(242,163,60,.55)}
+  .moves li b{color:var(--amber-hi);font-weight:600}
+  .feas{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 13px;margin-top:18px}
+  .feas b{color:var(--amber-hi);font-weight:600}
+  .feas .dot{width:7px;height:7px;border-radius:50%}
+  .dot.mid{background:var(--amber)}.dot.hi{background:var(--magenta)}.dot.low{background:var(--cyan)}.dot.deck{background:var(--green)}
+
+  /* ---------- device frames ---------- */
+  .dev{flex:none}
+  .dev .bz{background:linear-gradient(145deg,#20233a,#0c0e1b);border-radius:20px;padding:11px;
+    box-shadow:0 20px 44px -20px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.05)}
+  .dev .cap{text-align:center;margin-top:8px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .hero .dev{width:min(100%,380px)}
+  .film:not(.hero) .dev{width:216px}
+  .screen{position:relative;aspect-ratio:4/3;border-radius:8px;overflow:hidden;background:#05060f;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),inset 0 0 36px rgba(0,0,0,.55)}
+  .hero .screen{font-size:15px}
+  .film:not(.hero) .screen{font-size:9px}
+  .sc{position:absolute;inset:0;display:flex;flex-direction:column;padding:1.05em 1.05em .95em}
+  .statusbar{display:flex;justify-content:space-between;align-items:center;font-size:.72em;z-index:4}
+  .batt{display:inline-block;width:1.5em;height:.75em;border:1px solid currentColor;border-radius:1px;position:relative;vertical-align:middle;opacity:.9}
+  .batt::after{content:"";position:absolute;right:-.18em;top:.2em;bottom:.2em;width:.12em;background:currentColor}
+  .batt::before{content:"";position:absolute;left:1px;top:1px;bottom:1px;width:68%;background:currentColor;border-radius:1px}
+  .scan{position:absolute;inset:0;pointer-events:none;z-index:6;background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.16) 2px 3px);mix-blend-mode:multiply;opacity:.45}
+  .vig{position:absolute;inset:0;pointer-events:none;z-index:7;box-shadow:inset 0 0 50px 8px rgba(0,0,0,.55);border-radius:8px}
+  .eq{display:inline-flex;align-items:flex-end;gap:.13em;height:1em}
+  .eq i{width:.2em;background:var(--amber);border-radius:1px;animation:eq 900ms ease-in-out infinite}
+  .eq i:nth-child(2){animation-delay:140ms;background:var(--cyan)}
+  .eq i:nth-child(3){animation-delay:300ms}
+  .eq i:nth-child(4){animation-delay:90ms;background:var(--cyan)}
+  .eq i:nth-child(5){animation-delay:420ms}
+  @keyframes eq{0%,100%{height:.25em}50%{height:1em}}
+
+  /* generic cover tile */
+  .cover{border-radius:.3em;position:relative;overflow:hidden;aspect-ratio:3/4;
+    display:flex;align-items:flex-end;padding:.4em;color:#fff;font-weight:600;font-size:.72em;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .cover span{position:relative;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.7);line-height:1.05}
+  .cover::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.65),transparent 60%)}
+  .cv1{background:linear-gradient(135deg,#ff5ca8,#7a1f5a)}
+  .cv2{background:linear-gradient(135deg,#3ad6e0,#143f6b)}
+  .cv3{background:linear-gradient(135deg,#f2a33c,#7a3d12)}
+  .cv4{background:linear-gradient(135deg,#51e0a3,#145741)}
+  .cv5{background:linear-gradient(135deg,#9b7cff,#2a1f5a)}
+  .cv6{background:linear-gradient(135deg,#ff8a5c,#6b2814)}
+
+  /* ============ D1 NEON DRIVE ============ */
+  .d1{background:linear-gradient(180deg,#140a2a,#1a0c33 42%,#2a0f3d 60%,#120a24)}
+  .d1 .sun{position:absolute;left:50%;top:40%;width:52%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;z-index:1;
+    background:radial-gradient(circle at 50% 42%,var(--amber-hi),var(--amber) 42%,var(--magenta) 78%,transparent 80%);filter:blur(1px);
+    -webkit-mask:linear-gradient(180deg,#000 55%,transparent 56%);mask:linear-gradient(180deg,#000 55%,transparent 56%)}
+  .d1 .floor{position:absolute;left:-30%;right:-30%;bottom:-6%;height:46%;z-index:2;overflow:hidden;perspective:120px}
+  .d1 .floor::before{content:"";position:absolute;inset:-40% 0 0;
+    background:repeating-linear-gradient(90deg,transparent 0 2em,rgba(58,214,224,.5) 2em 2.07em),repeating-linear-gradient(0deg,transparent 0 1.5em,rgba(58,214,224,.36) 1.5em 1.57em);
+    transform:rotateX(74deg);transform-origin:bottom center;-webkit-mask:linear-gradient(180deg,transparent,#000 40%);mask:linear-gradient(180deg,transparent,#000 40%)}
+  .d1 .sc{z-index:4}
+  .d1 .statusbar{color:var(--cyan)}
+  .d1 .wm{font-family:var(--display);font-weight:700;letter-spacing:.05em;text-shadow:0 0 8px rgba(58,214,224,.8)}
+  .d1 .wm b{color:#fff}.d1 .wm i{font-style:normal;color:var(--amber);text-shadow:0 0 10px rgba(242,163,60,.9)}
+  .d1 .list{margin-top:auto;margin-bottom:.5em;display:flex;flex-direction:column;gap:.12em}
+  .d1 .row{font-family:var(--display);font-weight:600;font-size:1em;letter-spacing:.1em;text-transform:uppercase;color:rgba(58,214,224,.6);padding:.12em 0;text-shadow:0 0 6px rgba(58,214,224,.22)}
+  .d1 .row.sel{color:#fff;font-size:1.12em;padding-left:.7em;position:relative;text-shadow:1px 0 var(--magenta),-1px 0 var(--cyan),0 0 12px rgba(255,255,255,.5)}
+  .d1 .row.sel::before{content:"";position:absolute;left:0;top:.2em;bottom:.2em;width:.25em;background:var(--amber);box-shadow:0 0 10px var(--amber)}
+  .d1 .np{display:flex;align-items:center;gap:.6em;padding:.5em .7em;border-radius:.55em;background:linear-gradient(90deg,rgba(255,92,168,.14),rgba(58,214,224,.1));border:1px solid rgba(58,214,224,.3)}
+  .d1 .np .cass{font-size:1em;filter:drop-shadow(0 0 5px rgba(242,163,60,.7))}
+  .d1 .np .meta{min-width:0;flex:1}
+  .d1 .np .t{font-size:.8em;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .d1 .np .s{font-size:.66em;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase}
+  .d1 .grid{margin-top:.5em;display:grid;grid-template-columns:repeat(4,1fr);gap:.5em;z-index:4}
+  .d1 .cover{box-shadow:inset 0 0 0 1px rgba(58,214,224,.3),0 0 10px rgba(255,92,168,.12)}
+  .d1 .cover.pick{outline:2px solid var(--amber);outline-offset:1px}
+  .d1 .scene{position:absolute;inset:0;z-index:2;background:linear-gradient(160deg,#2a0f3d,#120a24);opacity:.9}
+  .d1 .scene::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 55%,rgba(242,163,60,.25),transparent)}
+  .d1 .quick{z-index:4;margin-top:auto;display:flex;gap:.4em}
+  .d1 .quick .q{flex:1;text-align:center;font-family:var(--display);font-size:.72em;text-transform:uppercase;letter-spacing:.08em;color:var(--cyan);border:1px solid rgba(58,214,224,.3);border-radius:.4em;padding:.4em 0}
+  .d1 .quick .q.on{color:#111;background:var(--amber);border-color:var(--amber);box-shadow:0 0 12px rgba(242,163,60,.6)}
+  .d1 .boot{z-index:4;margin:auto;text-align:center}
+  .d1 .boot .big{font-family:var(--display);font-weight:700;font-size:1.7em;letter-spacing:.06em;text-shadow:1.4px 0 var(--magenta),-1.4px 0 var(--cyan),0 0 18px rgba(255,255,255,.4)}
+  .d1 .boot .big i{font-style:normal;color:var(--amber)}
+  .d1 .boot .bar{height:.3em;margin-top:.8em;border-radius:1em;background:rgba(255,255,255,.12);overflow:hidden}
+  .d1 .boot .bar i{display:block;height:100%;width:62%;background:linear-gradient(90deg,var(--amber),var(--magenta));box-shadow:0 0 10px var(--amber)}
+
+  /* ============ D2 BLOCO ============ */
+  .d2{background:radial-gradient(130% 90% at 50% 8%,#1c2140,#0f1328 55%,#090b18)}
+  .d2 .isofloor{position:absolute;inset:0;z-index:1;opacity:.5;
+    background:repeating-linear-gradient(60deg,transparent 0 1.7em,var(--line-soft) 1.7em 1.77em),repeating-linear-gradient(-60deg,transparent 0 1.7em,var(--line-soft) 1.7em 1.77em);
+    -webkit-mask:radial-gradient(90% 72% at 50% 58%,#000,transparent);mask:radial-gradient(90% 72% at 50% 58%,#000,transparent)}
+  .d2 .sc{z-index:3}
+  .d2 .statusbar{color:var(--muted)}
+  .d2 .hd{font-family:var(--display);font-weight:600;letter-spacing:.03em;color:var(--ink)}
+  .d2 .hd i{font-style:normal;color:var(--cyan)}
+  .d2 .arena{flex:1;display:flex;align-items:center;justify-content:center;gap:1em}
+  .d2 .shelf{display:flex;align-items:flex-end;gap:1em;transform:rotateX(8deg)}
+  .cube{position:relative;width:3.4em;height:3.4em;transform-style:preserve-3d;transform:rotateX(55deg) rotateZ(45deg);
+    --ct1:#3a4064;--ct2:#262c4a;--cl:#1c2140;--cr:#141833}
+  .cube .f{position:absolute;inset:0}
+  .cube .top{background:linear-gradient(135deg,var(--ct1),var(--ct2));transform:translateZ(.85em)}
+  .cube .top::after{content:"";position:absolute;inset:.45em;border-radius:.2em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.08),transparent 60%)}
+  .cube .l{width:3.4em;height:.85em;top:3.4em;background:var(--cl);transform-origin:top;transform:rotateX(-90deg)}
+  .cube .r{width:.85em;height:3.4em;left:3.4em;background:var(--cr);transform-origin:left;transform:rotateY(90deg)}
+  .cube.sel{--ct1:var(--amber-hi);--ct2:var(--amber);--cl:var(--amber-deep);--cr:#8a4e12;transform:rotateX(55deg) rotateZ(45deg) translateZ(.9em);filter:drop-shadow(0 .5em .5em rgba(242,163,60,.45))}
+  .d2 .label{text-align:center;margin-top:1em}
+  .d2 .label .b{font-family:var(--display);font-weight:700;font-size:1.3em;color:#fff;letter-spacing:.03em}
+  .d2 .label .s{font-size:.78em;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:.15em}
+  .d2 .pager{display:flex;gap:.35em;justify-content:center;margin-top:.6em}
+  .d2 .pager i{width:.35em;height:.35em;border-radius:50%;background:var(--line)}
+  .d2 .pager i.on{background:var(--amber);box-shadow:0 0 6px var(--amber)}
+  .d2 .np{position:absolute;right:1em;bottom:.95em;z-index:4;display:flex;align-items:center;gap:.55em;padding:.45em .65em;border-radius:.5em;background:rgba(14,17,34,.82);border:1px solid var(--line)}
+  .d2 .np .t{font-size:.72em;color:var(--muted);max-width:7em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* bloco inside-console: covers standing as slabs */
+  .d2 .slabs{flex:1;display:flex;align-items:center;justify-content:center;gap:.7em;perspective:400px}
+  .d2 .slab{width:2.6em;aspect-ratio:3/4;border-radius:.3em;transform:rotateY(22deg);box-shadow:-.3em .3em .6em rgba(0,0,0,.5)}
+  .d2 .slab.mid{transform:rotateY(0) scale(1.18);z-index:2;box-shadow:0 .4em .7em rgba(242,163,60,.3)}
+  .d2 .scene{position:absolute;inset:0;z-index:2;background:linear-gradient(160deg,#1c2140,#0b0e1c)}
+  .d2 .scene::after{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(60deg,transparent 0 1.3em,rgba(242,163,60,.08) 1.3em 1.37em),repeating-linear-gradient(-60deg,transparent 0 1.3em,rgba(58,214,224,.08) 1.3em 1.37em)}
+  .d2 .qmenu{z-index:4;margin-top:auto;align-self:flex-end;width:62%;background:rgba(10,12,22,.86);border:1px solid var(--line);border-radius:.55em;padding:.5em .6em;display:flex;flex-direction:column;gap:.4em}
+  .d2 .qmenu .qi{display:flex;justify-content:space-between;font-size:.74em;color:var(--muted)}
+  .d2 .qmenu .qi.on{color:var(--amber-hi)}
+  .d2 .boot{z-index:4;margin:auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.7em}
+  .d2 .boot .cube{transform:rotateX(55deg) rotateZ(45deg);animation:spin 3.4s linear infinite}
+  @keyframes spin{to{transform:rotateX(55deg) rotateZ(405deg)}}
+  .d2 .boot .t{font-family:var(--display);font-weight:700;font-size:1.2em;letter-spacing:.04em}
+  .d2 .boot .t i{font-style:normal;color:var(--cyan)}
+
+  /* ============ D3 BRICK OS ============ */
+  .d3{background:radial-gradient(100% 100% at 50% 0,#0a1420,#060a12 70%,#04060c)}
+  .d3 .dots{position:absolute;inset:0;z-index:1;opacity:.5;background-image:radial-gradient(rgba(58,214,224,.22) 1px,transparent 1px);background-size:1.1em 1.1em}
+  .d3 .bk{position:absolute;inset:.8em;z-index:2;pointer-events:none}
+  .d3 .bk span{position:absolute;width:1.1em;height:1.1em;border:1px solid var(--cyan);opacity:.55}
+  .d3 .bk span:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
+  .d3 .bk span:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+  .d3 .bk span:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
+  .d3 .bk span:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+  .d3 .sc{z-index:3;font-family:var(--mono)}
+  .d3 .osbar{font-size:.68em;color:var(--amber);letter-spacing:.04em;display:flex;gap:.5em;flex-wrap:wrap;border-bottom:1px solid rgba(242,163,60,.25);padding-bottom:.55em}
+  .d3 .osbar .s{color:var(--faint)}.d3 .osbar .b{color:#fff;font-weight:700}
+  .d3 .grid2{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:.5em;margin:.7em 0;align-content:start}
+  .d3 .tile{border:1px solid var(--line);border-radius:.35em;padding:.55em .6em;background:rgba(58,214,224,.03)}
+  .d3 .tile .n{font-size:.82em;color:var(--ink);font-weight:500}
+  .d3 .tile .c{font-size:.64em;color:var(--faint);margin-top:.25em}
+  .d3 .tile.sel{border-color:var(--amber);background:rgba(242,163,60,.1);box-shadow:inset 0 0 0 1px var(--amber)}
+  .d3 .tile.sel .n{color:var(--amber-hi)}
+  .d3 .tile.sel .n::after{content:"_";color:var(--amber);animation:blink 1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  .d3 .np{font-size:.68em;color:var(--cyan);display:flex;align-items:center;gap:.6em;border-top:1px solid rgba(58,214,224,.22);padding-top:.55em}
+  .d3 .np .wave{display:inline-flex;align-items:center;gap:.1em;height:.9em}
+  .d3 .np .wave i{width:.14em;background:var(--cyan);border-radius:1px;animation:eq 800ms ease-in-out infinite}
+  .d3 .np .wave i:nth-child(odd){animation-delay:200ms}
+  .d3 .np .tk{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+  .d3 .np .tk b{color:var(--amber)}
+  /* os inside-console: file listing with covers */
+  .d3 .flist{flex:1;display:flex;flex-direction:column;gap:.3em;margin:.6em 0;overflow:hidden}
+  .d3 .fr{display:flex;align-items:center;gap:.5em;font-size:.76em;color:var(--muted);padding:.2em .3em;border-radius:.25em}
+  .d3 .fr .cv{width:1.3em;aspect-ratio:3/4;border-radius:.15em;flex:none}
+  .d3 .fr.sel{background:rgba(242,163,60,.12);color:var(--amber-hi);box-shadow:inset 0 0 0 1px rgba(242,163,60,.5)}
+  .d3 .fr .meta{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .d3 .fr .sz{color:var(--faint);font-size:.9em}
+  .d3 .scene{position:absolute;inset:0;z-index:2;background:linear-gradient(160deg,#0a1420,#04060c)}
+  .d3 .scene::after{content:"";position:absolute;inset:0;background:radial-gradient(50% 45% at 50% 50%,rgba(58,214,224,.14),transparent)}
+  .d3 .panel{z-index:4;margin-top:auto;border:1px solid rgba(58,214,224,.25);border-radius:.4em;background:rgba(4,8,14,.85);padding:.5em .6em;display:flex;flex-direction:column;gap:.35em}
+  .d3 .panel .pr{display:flex;justify-content:space-between;font-size:.72em;color:var(--muted)}
+  .d3 .panel .pr.on{color:var(--amber-hi)}
+  .d3 .panel .pr b{font-family:var(--mono)}
+  .d3 .boot{z-index:4;margin:auto 0;font-size:.74em;color:var(--green);line-height:1.5}
+  .d3 .boot .ok{color:var(--ink)}.d3 .boot .am{color:var(--amber)}
+  .d3 .boot .cur{color:var(--amber);animation:blink 1s step-end infinite}
+
+  /* ============ D4 DECK ============ */
+  .d4{background:linear-gradient(180deg,#12141f,#0a0b12)}
+  .d4 .glow{position:absolute;left:0;right:0;top:0;height:46%;z-index:1;background:radial-gradient(80% 100% at 30% 0,rgba(242,163,60,.16),transparent 70%)}
+  .d4 .sc{z-index:3;padding:0}
+  .d4 .tabs{display:flex;gap:1.1em;padding:.9em 1.1em .7em;font-family:var(--display);font-size:.8em;font-weight:500}
+  .d4 .tabs .tb{color:var(--faint);letter-spacing:.02em}
+  .d4 .tabs .tb.on{color:#fff;position:relative}
+  .d4 .tabs .tb.on::after{content:"";position:absolute;left:0;right:0;bottom:-.5em;height:.18em;background:var(--amber);border-radius:2px;box-shadow:0 0 8px rgba(242,163,60,.6)}
+  .d4 .tabs .sp{flex:1}
+  .d4 .tabs .meta{color:var(--muted);font-family:var(--body);font-size:.92em;font-weight:400}
+  .d4 .featured{flex:1;margin:0 1.1em;border-radius:.7em;overflow:hidden;position:relative;display:flex;align-items:flex-end;
+    background:linear-gradient(120deg,#7a1f5a,#2a1140 60%,#101018);min-height:0}
+  .d4 .featured::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,11,18,.85),transparent 60%)}
+  .d4 .featured .fin{position:relative;z-index:2;padding:1em 1.1em}
+  .d4 .featured .ft{font-size:.66em;color:var(--amber-hi);letter-spacing:.14em;text-transform:uppercase;font-family:var(--mono)}
+  .d4 .featured .fn{font-family:var(--display);font-weight:700;font-size:1.5em;margin:.15em 0 .5em;color:#fff;line-height:1}
+  .d4 .featured .play{display:inline-flex;align-items:center;gap:.4em;background:var(--amber);color:#1a1205;font-weight:700;
+    font-size:.78em;padding:.4em .8em;border-radius:.4em;font-family:var(--display)}
+  .d4 .rail{display:flex;gap:.6em;padding:.8em 1.1em 1em;overflow:hidden}
+  .d4 .rail .cover{width:3.1em;flex:none}
+  .d4 .rail .cover.pick{outline:2px solid var(--amber);outline-offset:2px}
+  .d4 .legend{display:flex;gap:1em;padding:0 1.1em .9em;font-size:.68em;color:var(--muted);font-family:var(--mono)}
+  .d4 .legend b{color:var(--ink)}
+  .d4 .legend .k{display:inline-flex;width:1.2em;height:1.2em;border-radius:50%;align-items:center;justify-content:center;font-weight:700;margin-right:.3em;color:#1a1205}
+  .d4 .legend .a{background:var(--amber)}.d4 .legend .y{background:var(--cyan)}
+  /* deck inside-console: big cover grid */
+  .d4 .cgrid{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:.6em;padding:.9em 1.1em;align-content:center}
+  .d4 .cgrid .cover.pick{outline:2px solid var(--amber);outline-offset:2px;transform:scale(1.04)}
+  .d4 .chead{padding:.9em 1.1em .2em;font-family:var(--display);font-weight:700;font-size:1em}
+  .d4 .chead span{color:var(--muted);font-weight:400;font-size:.8em}
+  /* deck in-game quick menu */
+  .d4 .scene{position:absolute;inset:0;z-index:2;background:linear-gradient(120deg,#143f6b,#101018)}
+  .d4 .side{position:absolute;right:0;top:0;bottom:0;width:58%;z-index:4;background:rgba(10,11,18,.9);
+    border-left:1px solid var(--line);padding:.9em;display:flex;flex-direction:column;gap:.55em;backdrop-filter:blur(3px)}
+  .d4 .side .sh{font-family:var(--display);font-weight:600;font-size:.82em;color:#fff;margin-bottom:.2em}
+  .d4 .side .si{display:flex;align-items:center;justify-content:space-between;font-size:.74em;color:var(--muted)}
+  .d4 .side .si.on{color:var(--amber-hi)}
+  .d4 .side .slider{width:45%;height:.3em;border-radius:1em;background:rgba(255,255,255,.12);position:relative}
+  .d4 .side .slider i{position:absolute;left:0;top:0;bottom:0;border-radius:1em;background:var(--amber)}
+  .d4 .side .np{display:flex;align-items:center;gap:.5em;margin-top:auto;padding-top:.5em;border-top:1px solid var(--line);font-size:.72em;color:var(--cyan)}
+  .d4 .boot{z-index:4;margin:auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.9em}
+  .d4 .boot .t{font-family:var(--display);font-weight:700;font-size:1.3em}
+  .d4 .boot .t i{font-style:normal;color:var(--cyan)}
+  .d4 .boot .ring{width:1.8em;height:1.8em;border-radius:50%;border:2px solid rgba(255,255,255,.15);border-top-color:var(--amber);animation:spin2 .9s linear infinite}
+  @keyframes spin2{to{transform:rotate(360deg)}}
+
+  footer{border-top:1px solid var(--line);margin-top:8px;padding:34px 0 76px;color:var(--muted);font-size:15px;line-height:1.62}
+  footer b{color:var(--ink)}
+  footer .nx{display:flex;flex-direction:column;gap:7px;margin:14px 0 0;padding:0;list-style:none}
+  footer .nx li{padding-left:20px;position:relative}
+  footer .nx li::before{content:"→";position:absolute;left:0;color:var(--amber)}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brandrow">
+      <svg class="glyph" viewBox="0 0 100 100" aria-hidden="true">
+        <polygon points="50,14 88,34 50,54 12,34" fill="#fbd270"/>
+        <polygon points="12,34 50,54 50,86 12,66" fill="#e8902a"/>
+        <polygon points="88,34 50,54 50,86 88,66" fill="#c6771d"/>
+      </svg>
+      <b>Brick<i>Next</i></b>
+    </div>
+    <p class="kicker">Quatro direções · Brick + RG353V</p>
+    <h1>Quatro mundos visuais,<br>uma marca <span>só nossa</span>.</h1>
+    <p class="lead">Cada direção abaixo aparece nas quatro telas que importam: a <strong>home</strong> (escolher console), <strong>dentro do console</strong> (com as capas), o <strong>menu dentro do jogo</strong> e o <strong>boot</strong>. Todas rodam igual nos dois aparelhos, o <strong>BrickNext</strong> (Brick) e o <strong>AnberNext</strong> (RG353V), e todas são montadas sobre a mesma base trocável.</p>
+  </header>
+
+  <!-- THEMING -->
+  <section class="theming">
+    <p class="sechead">A base de tudo</p>
+    <h2 class="big">Nada é fixo. Tudo é tema.</h2>
+    <p class="intro">Antes das direções, o mais importante: cada uma é só uma <b>pele</b> por cima de uma mesma engrenagem. Troca-se a paleta, o plano de fundo, o pacote de ícones dos consoles, o fundo de cada console e as capas dos jogos, sem tocar no resto. O usuário monta a cara do aparelho dele; a gente entrega os presets de fábrica.</p>
+    <div class="layers">
+      <div class="layer">
+        <h4>Cores</h4>
+        <p class="d">Paletas prontas, e o usuário pode criar a dele. A marca muda de humor sem perder a identidade.</p>
+        <div class="themeset">
+          <div class="trow"><span class="sw"><i style="background:#0b0d1c"></i><i style="background:#f2a33c"></i><i style="background:#3ad6e0"></i></span><span class="tn"><b>Âmbar</b> (padrão)</span></div>
+          <div class="trow"><span class="sw"><i style="background:#041008"></i><i style="background:#51e0a3"></i><i style="background:#b8ff5c"></i></span><span class="tn">CRT Verde</span></div>
+          <div class="trow"><span class="sw"><i style="background:#12060f"></i><i style="background:#ff5ca8"></i><i style="background:#9b7cff"></i></span><span class="tn">VHS Rosa</span></div>
+        </div>
+      </div>
+      <div class="layer">
+        <h4>Pacotes de ícone</h4>
+        <p class="d">O ícone de cada console vem em estilos trocáveis: linha, cheio, pixel. O usuário baixa packs na loja.</p>
+        <div class="packs">
+          <div class="pack"><span class="pl">Linha</span><span class="ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="8" width="18" height="10" rx="3"/><circle cx="7.5" cy="13" r="1.3"/><path d="M15 12v2M14 13h2"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="3" width="12" height="18" rx="2.5"/><rect x="8.5" y="6" width="7" height="5" rx="1"/></svg>
+          </span></div>
+          <div class="pack"><span class="pl">Cheio</span><span class="ic">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="8" width="18" height="10" rx="3"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4" fill="#0b0d1c"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="3" width="12" height="18" rx="2.5"/></svg>
+          </span></div>
+          <div class="pack"><span class="pl">Pixel</span><span class="ic">
+            <svg viewBox="0 0 24 24" fill="currentColor" shape-rendering="crispEdges"><path d="M4 9h16v3h-2v3H6v-3H4z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" shape-rendering="crispEdges"><path d="M9 5h6v2h2v10h-2v2H9v-2H7V7h2zM11 11v2h2v-2z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" shape-rendering="crispEdges"><path d="M7 4h10v16H7zM9 7h6v5H9z"/></svg>
+          </span></div>
+        </div>
+      </div>
+      <div class="layer">
+        <h4>Planos de fundo</h4>
+        <p class="d">Fundo geral e fundo por console (uma arte diferente atrás do SNES, do PS1...). Estáticos ou animados.</p>
+        <div class="walls"><div class="wall w-neon"></div><div class="wall w-grid"></div><div class="wall w-void"></div></div>
+      </div>
+      <div class="layer">
+        <h4>Capas dos jogos</h4>
+        <p class="d">Cada jogo puxa a capa de uma pasta. O usuário troca por scraper, pack pronto, ou arte própria.</p>
+        <div class="coverslots">
+          <div class="cslot">sua<br>arte</div>
+          <div class="cover cv2"><span>Star Hunt</span></div>
+          <div class="cover cv1"><span>Neon Alley</span></div>
+          <div class="cslot">sua<br>arte</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIRECTION 1 -->
+  <section class="dir">
+    <div class="dhead"><span class="no">01</span><h3>Neon Drive</h3><span class="tg">Synthwave · CRT · noturno</span></div>
+    <p class="dsub">Puxa o lado synthwave que a marca já insinua: <b>sol nascendo, grade em fuga, neon âmbar e ciano</b> sobre índigo, com scanlines e brilho de tubo. Tudo é letreiro luminoso; o que está selecionado acende com leve descolamento de cor, feito fliperama.</p>
+    <div class="stage">
+      <div class="film hero">
+        <div class="dev"><div class="bz"><div class="screen d1">
+          <div class="sun"></div><div class="floor"></div>
+          <div class="sc">
+            <div class="statusbar"><span class="wm"><b>BRICK</b><i>NEXT</i></span><span>20:47 <span class="batt"></span></span></div>
+            <div class="list">
+              <div class="row">Game Boy Advance</div><div class="row">Super Nintendo</div>
+              <div class="row sel">PlayStation</div><div class="row">Nintendo 64</div><div class="row">Dreamcast</div>
+            </div>
+            <div class="np"><span class="cass">◉</span><div class="meta"><div class="t">Midnight Pulse</div><div class="s">AnberTunes</div></div><div class="eq"><i></i><i></i><i></i><i></i><i></i></div></div>
+          </div>
+          <div class="scan"></div><div class="vig"></div>
+        </div><div class="cap">Home</div></div></div>
+      </div>
+      <div>
+        <div class="film">
+          <div class="dev"><div class="bz"><div class="screen d1">
+            <div class="sun" style="top:30%"></div>
+            <div class="sc"><div class="statusbar"><span class="wm"><b>PLAY</b><i>STATION</i></span><span><span class="batt"></span></span></div>
+              <div class="grid">
+                <div class="cover cv1"><span>Neon Alley</span></div><div class="cover cv2 pick"><span>Star Hunt</span></div>
+                <div class="cover cv3"><span>Pixel Kart</span></div><div class="cover cv5"><span>Mecha Dawn</span></div>
+              </div>
+              <div class="np" style="margin-top:.5em"><span class="cass">◉</span><div class="meta"><div class="t">Midnight Pulse</div></div><div class="eq"><i></i><i></i><i></i><i></i><i></i></div></div>
+            </div><div class="scan"></div><div class="vig"></div>
+          </div><div class="cap">Dentro do console</div></div></div>
+
+          <div class="dev"><div class="bz"><div class="screen d1">
+            <div class="scene"></div>
+            <div class="sc"><div class="statusbar" style="color:#fff"><span>❚❚ Star Hunt</span><span>20:47</span></div>
+              <div class="np" style="margin-top:.6em"><span class="cass">◉</span><div class="meta"><div class="t">Midnight Pulse</div><div class="s">tocando</div></div><div class="eq"><i></i><i></i><i></i><i></i><i></i></div></div>
+              <div class="quick"><span class="q on">Música</span><span class="q">Salvar</span><span class="q">Sair</span></div>
+            </div><div class="scan"></div><div class="vig"></div>
+          </div><div class="cap">No jogo</div></div></div>
+
+          <div class="dev"><div class="bz"><div class="screen d1">
+            <div class="sun"></div><div class="floor"></div>
+            <div class="sc"><div class="boot"><div class="big"><span>BRICK</span><i>NEXT</i></div><div class="bar"><i></i></div></div></div>
+            <div class="scan"></div><div class="vig"></div>
+          </div><div class="cap">Boot</div></div></div>
+        </div>
+        <ul class="moves">
+          <li><b>Fundo vivo:</b> sol e grade sintética respirando atrás de tudo.</li>
+          <li><b>Seleção que brilha</b> com aberração cromática, não um retângulo.</li>
+          <li>O card do AnberTunes vira <b>fita cassete neon</b>, a cara do projeto.</li>
+        </ul>
+        <span class="feas"><span class="dot mid"></span>Esforço <b>médio</b> · o fundo e os brilhos são o grosso</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIRECTION 2 -->
+  <section class="dir">
+    <div class="dhead"><span class="no">02</span><h3>Bloco</h3><span class="tg">Isométrico · 3D · a logo virou o app</span></div>
+    <p class="dsub">A mais <b>só nossa</b>: o tijolo da marca deixa de ser logo e vira a interface inteira. Consoles são blocos numa prateleira 3D; o escolhido se levanta, inclina e acende. Dentro do console, as capas ficam de pé como pecinhas. É um mundo com profundidade, não uma lista plana.</p>
+    <div class="stage">
+      <div class="film hero">
+        <div class="dev"><div class="bz"><div class="screen d2">
+          <div class="isofloor"></div>
+          <div class="sc">
+            <div class="statusbar"><span class="hd">Brick<i>·</i>Next</span><span>20:47 <span class="batt"></span></span></div>
+            <div class="arena"><div class="shelf">
+              <div class="cube"><div class="f top"></div><div class="f l"></div><div class="f r"></div></div>
+              <div class="cube sel"><div class="f top"></div><div class="f l"></div><div class="f r"></div></div>
+              <div class="cube"><div class="f top"></div><div class="f l"></div><div class="f r"></div></div>
+            </div></div>
+            <div class="label"><div class="b">PlayStation</div><div class="s">214 jogos</div></div>
+            <div class="pager"><i></i><i class="on"></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="np"><div class="eq"><i></i><i></i><i></i></div><span class="t">Midnight Pulse</span></div>
+          <div class="vig"></div>
+        </div><div class="cap">Home</div></div></div>
+      </div>
+      <div>
+        <div class="film">
+          <div class="dev"><div class="bz"><div class="screen d2">
+            <div class="isofloor"></div>
+            <div class="sc"><div class="statusbar"><span class="hd">PlayStation</span><span><span class="batt"></span></span></div>
+              <div class="slabs">
+                <div class="slab cover cv5"></div><div class="slab cover cv2 mid"><span></span></div><div class="slab cover cv1"></div>
+              </div>
+              <div class="label"><div class="b" style="font-size:1em">Star Hunt</div></div>
+            </div><div class="vig"></div>
+          </div><div class="cap">Dentro do console</div></div></div>
+
+          <div class="dev"><div class="bz"><div class="screen d2">
+            <div class="scene"></div>
+            <div class="sc"><div class="statusbar" style="color:#fff"><span>Star Hunt</span><span>20:47</span></div>
+              <div class="qmenu">
+                <div class="qi on"><span>Música</span><span>Midnight Pulse</span></div>
+                <div class="qi"><span>Estado</span><span>Salvar</span></div>
+                <div class="qi"><span>Sair</span><span>▸</span></div>
+              </div>
+            </div><div class="vig"></div>
+          </div><div class="cap">No jogo</div></div></div>
+
+          <div class="dev"><div class="bz"><div class="screen d2">
+            <div class="isofloor"></div>
+            <div class="sc"><div class="boot">
+              <div class="cube"><div class="f top"></div><div class="f l"></div><div class="f r"></div></div>
+              <div class="t">Brick<i>Next</i></div>
+            </div></div><div class="vig"></div>
+          </div><div class="cap">Boot</div></div></div>
+        </div>
+        <ul class="moves">
+          <li>Consoles como <b>blocos físicos</b>; a capa mora na face do bloco.</li>
+          <li>O selecionado <b>sobe, inclina e ilumina</b> o chão isométrico.</li>
+          <li>No boot, o tijolo <b>gira sozinho</b> montando a marca.</li>
+        </ul>
+        <span class="feas"><span class="dot hi"></span>Esforço <b>alto</b> · layout do zero, a mais ousada</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIRECTION 3 -->
+  <section class="dir">
+    <div class="dhead"><span class="no">03</span><h3>Brick OS</h3><span class="tg">Terminal · HUD · o aparelho é um computador</span></div>
+    <p class="dsub">Troca o "menu de jogos" por um <b>sistema operacional retrô-futurista</b>: monoespaçada, cantos em colchete, linha de status com versão e bateria, consoles em grade com contagem de ROMs. Dentro do console, uma listagem tipo gerenciador de arquivos com capinha. Techy, limpo, cara de produto sério.</p>
+    <div class="stage">
+      <div class="film hero">
+        <div class="dev"><div class="bz"><div class="screen d3">
+          <div class="dots"></div><div class="bk"><span></span><span></span><span></span><span></span></div>
+          <div class="sc">
+            <div class="osbar"><span class="b">BRICKNEXT&nbsp;OS&nbsp;1.0</span><span class="s">//</span><span>20:47</span><span class="s">//</span><span>BAT&nbsp;82%</span><span class="s">//</span><span>WIFI</span></div>
+            <div class="grid2">
+              <div class="tile"><div class="n">GBA</div><div class="c">142 roms · ok</div></div>
+              <div class="tile sel"><div class="n">PLAYSTATION</div><div class="c">214 roms · ok</div></div>
+              <div class="tile"><div class="n">SNES</div><div class="c">308 roms · ok</div></div>
+              <div class="tile"><div class="n">N64</div><div class="c">· card</div></div>
+              <div class="tile"><div class="n">DREAMCAST</div><div class="c">· card</div></div>
+              <div class="tile"><div class="n">PSP</div><div class="c">· card</div></div>
+            </div>
+            <div class="np"><span class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="tk">♪ NOW PLAYING <b>&gt;</b> Midnight Pulse</span></div>
+          </div>
+        </div><div class="cap">Home</div></div></div>
+      </div>
+      <div>
+        <div class="film">
+          <div class="dev"><div class="bz"><div class="screen d3">
+            <div class="dots"></div><div class="bk"><span></span><span></span><span></span><span></span></div>
+            <div class="sc"><div class="osbar"><span class="b">/PLAYSTATION</span><span class="s">//</span><span>214</span></div>
+              <div class="flist">
+                <div class="fr sel"><span class="cv cover cv2"></span><span class="meta">Star Hunt</span><span class="sz">612M</span></div>
+                <div class="fr"><span class="cv cover cv1"></span><span class="meta">Neon Alley</span><span class="sz">540M</span></div>
+                <div class="fr"><span class="cv cover cv3"></span><span class="meta">Pixel Kart</span><span class="sz">388M</span></div>
+                <div class="fr"><span class="cv cover cv5"></span><span class="meta">Mecha Dawn</span><span class="sz">701M</span></div>
+              </div>
+              <div class="np"><span class="wave"><i></i><i></i><i></i><i></i><i></i></span><span class="tk">Midnight Pulse</span></div>
+            </div>
+          </div><div class="cap">Dentro do console</div></div></div>
+
+          <div class="dev"><div class="bz"><div class="screen d3">
+            <div class="scene"></div>
+            <div class="sc"><div class="osbar" style="border:0"><span class="b">RUN</span><span class="s">//</span><span>Star Hunt</span></div>
+              <div class="panel">
+                <div class="pr on"><span>MÚSICA</span><b>Midnight Pulse</b></div>
+                <div class="pr"><span>CPU</span><b>1608 MHz</b></div>
+                <div class="pr"><span>ESTADO</span><b>Salvar / Sair</b></div>
+              </div>
+            </div>
+          </div><div class="cap">No jogo</div></div></div>
+
+          <div class="dev"><div class="bz"><div class="screen d3">
+            <div class="dots"></div>
+            <div class="sc"><div class="boot">
+              <div class="am">BRICKNEXT OS 1.0</div>
+              <div class="ok">mount SDCARD .... <span style="color:var(--green)">ok</span></div>
+              <div class="ok">load .system ..... <span style="color:var(--green)">ok</span></div>
+              <div class="ok">AnberTunes ....... <span style="color:var(--green)">ok</span></div>
+              <div>start ui <span class="cur">_</span></div>
+            </div></div>
+          </div><div class="cap">Boot</div></div></div>
+        </div>
+        <ul class="moves">
+          <li>Linha de status <b>"BRICKNEXT OS"</b>, âmbar sobre preto.</li>
+          <li>Grade de módulos com <b>leitura de dados</b> (roms, card, CPU).</li>
+          <li>Boot com <b>log subindo</b>, feito máquina ligando.</li>
+        </ul>
+        <span class="feas"><span class="dot low"></span>Esforço <b>menor</b> · mais tipografia e cor que efeito</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIRECTION 4 -->
+  <section class="dir">
+    <div class="dhead"><span class="no">04</span><h3>Deck</h3><span class="tg">Estilo Steam Deck · console moderno</span></div>
+    <p class="dsub">A cara de <b>dashboard de console atual</b>: abas no topo (Biblioteca, Coleções, Mídia), um jogo em destaque com arte grande e botão <b>Jogar</b>, e uma trilha de capas recentes embaixo. Dentro do console, uma vitrine de capas graúdas. No jogo, um painel lateral de acesso rápido igual ao do Steam Deck, com a música ali junto do brilho e do desempenho.</p>
+    <div class="stage">
+      <div class="film hero">
+        <div class="dev"><div class="bz"><div class="screen d4">
+          <div class="glow"></div>
+          <div class="sc">
+            <div class="tabs"><span class="tb on">Biblioteca</span><span class="tb">Coleções</span><span class="tb">Mídia</span><span class="sp"></span><span class="meta">20:47 · 82%</span></div>
+            <div class="featured"><div class="fin"><div class="ft">Continue jogando</div><div class="fn">Star Hunt</div><span class="play">▶ Jogar</span></div></div>
+            <div class="rail">
+              <div class="cover cv1"></div><div class="cover cv2 pick"></div><div class="cover cv3"></div><div class="cover cv5"></div><div class="cover cv4"></div>
+            </div>
+            <div class="legend"><span><span class="k a">A</span><b>Jogar</b></span><span><span class="k y">Y</span>Favoritar</span></div>
+          </div>
+        </div><div class="cap">Home</div></div></div>
+      </div>
+      <div>
+        <div class="film">
+          <div class="dev"><div class="bz"><div class="screen d4">
+            <div class="glow"></div>
+            <div class="sc"><div class="chead">PlayStation <span>· 214</span></div>
+              <div class="cgrid">
+                <div class="cover cv1"><span></span></div><div class="cover cv2 pick"><span></span></div><div class="cover cv3"><span></span></div>
+                <div class="cover cv5"><span></span></div><div class="cover cv4"><span></span></div><div class="cover cv6"><span></span></div>
+              </div>
+            </div>
+          </div><div class="cap">Dentro do console</div></div></div>
+
+          <div class="dev"><div class="bz"><div class="screen d4">
+            <div class="scene"></div>
+            <div class="sc"><div class="side">
+              <div class="sh">Acesso rápido</div>
+              <div class="si"><span>Brilho</span><span class="slider"><i style="width:70%"></i></span></div>
+              <div class="si"><span>Desempenho</span><span>Equilíbrio</span></div>
+              <div class="si on"><span>Música</span><span class="slider"><i style="width:55%"></i></span></div>
+              <div class="np"><div class="eq"><i></i><i></i><i></i><i></i></div><span>Midnight Pulse</span></div>
+            </div></div>
+          </div><div class="cap">No jogo</div></div></div>
+
+          <div class="dev"><div class="bz"><div class="screen d4">
+            <div class="glow"></div>
+            <div class="sc"><div class="boot">
+              <svg class="glyph" style="width:2.4em;height:2.4em" viewBox="0 0 100 100"><polygon points="50,14 88,34 50,54 12,34" fill="#fbd270"/><polygon points="12,34 50,54 50,86 12,66" fill="#e8902a"/><polygon points="88,34 50,54 50,86 88,66" fill="#c6771d"/></svg>
+              <div class="t">Brick<i>Next</i></div>
+              <div class="ring"></div>
+            </div></div>
+          </div><div class="cap">Boot</div></div></div>
+        </div>
+        <ul class="moves">
+          <li>Jogo em <b>destaque com arte grande</b> e botão Jogar.</li>
+          <li>Abas no topo e <b>trilha de recentes</b>, feito console de hoje.</li>
+          <li>Menu lateral no jogo com <b>música junto do brilho</b> e desempenho.</li>
+        </ul>
+        <span class="feas"><span class="dot deck"></span>Esforço <b>alto</b> · depende de capas; mais "premium"</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>As quatro nascem da <b>mesma base trocável</b> e do mesmo tijolo, então valem igual para o Brick e o RG353V e seguem coesas com o AnberTunes e a loja. Dá pra cruzar ideias: <b>Bloco com fundo Neon</b>, ou <b>Deck com a grade do Brick OS</b> nas Coleções.</p>
+    <ul class="nx">
+      <li>Me diz qual (ou qual mistura) você quer ver virar protótipo de verdade.</li>
+      <li>Aí eu fecho o <b>sistema de tema</b> (as camadas lá de cima) e desenho cada tela em tamanho real antes de tocar no código.</li>
+      <li>As capas e os ícones são placeholders aqui; no aparelho vêm de pasta, trocáveis pelo usuário.</li>
+    </ul>
+  </footer>
+</div>
+
+</body></html>

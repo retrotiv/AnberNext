@@ -1,0 +1,66 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Player AnberTunes</title>
+<style>
+  :root {
+    --bg: #171514;
+    --panel: #22201e;
+    --ink: #f3f2f2;
+    --ink3: #bab6b6;
+    --amber: #f2a53a;
+    --line: rgba(243,242,242,0.10);
+  }
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    padding: 28px 16px 56px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--ink3); margin: 0 0 28px; font-size: 15px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin: 0 0 24px; }
+  .card h2 { font-size: 16px; margin: 0 0 4px; }
+  .card p { color: var(--ink3); font-size: 14px; margin: 0 0 14px; }
+  .shot { width: 100%; height: auto; display: block; border-radius: 12px; background: #000; }
+  .tag { color: var(--amber); font-weight: 600; }
+  footer { color: var(--ink3); font-size: 13px; text-align: center; margin-top: 8px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Player do AnberTunes dentro do jogo</h1>
+    <p class="sub">Prévia renderizada no PC (sem o console). A cor de destaque sai da capa, como no app.</p>
+
+    <div class="card">
+      <h2><span class="tag">Expandido</span> — a tela do player</h2>
+      <p>Igual ao Now Playing do app: capa grande, título/artista/álbum, barra com a bolinha e os tempos, e os cinco controles (aleatório, anterior, tocar/pausar, próxima, repetir).</p>
+      <img class="shot" src="overlay-expanded.png" alt="Player expandido">
+    </div>
+
+    <div class="card">
+      <h2><span class="tag">Biblioteca</span> — navegar e escolher o que ouvir</h2>
+      <p>Abas (Álbuns, Artistas, Músicas, Gêneros), lista com capas, e a seleção em destaque âmbar. Direcional pra mover, A pra tocar/entrar, B pra voltar, L2/R2 troca aba.</p>
+      <img class="shot" src="overlay-browse.png" alt="Biblioteca navegável">
+    </div>
+
+    <div class="card">
+      <h2><span class="tag">Reduzido</span> — a barra embaixo</h2>
+      <p>Compacto, pra deixar no cantinho enquanto joga. O ciclo do atalho L1+R1+X: reduzido → expandido → fecha.</p>
+      <img class="shot" src="overlay-reduced.png" alt="Player reduzido">
+    </div>
+
+    <footer>Prévia do design — nada disso foi ao console ainda.</footer>
+  </div>
+</body>
+</html>
+
+</body></html>

@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bootscreen AnberNext</title>
+<style>
+  :root {
+    --bg: #0e1014;
+    --panel: #16181d;
+    --text: #e9eaef;
+    --dim: #8a8f9c;
+    --line: #2a2d34;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f3f4f6; --panel: #ffffff; --text: #1a1c20; --dim: #5a5f6a; --line: #e2e4e9;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1014; --panel: #16181d; --text: #e9eaef; --dim: #8a8f9c; --line: #2a2d34;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Outfit", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 28px 16px;
+  }
+  .wrap { width: 100%; max-width: 680px; text-align: center; }
+  h1 { font-size: 1.2rem; font-weight: 600; margin: 0 0 6px; letter-spacing: .2px; }
+  .sub { color: var(--dim); font-size: .95rem; margin: 0 auto 22px; max-width: 520px; line-height: 1.4; }
+  .screen {
+    margin: 0 auto; max-width: 640px; border: 1px solid var(--line); border-radius: 14px;
+    overflow: hidden; box-shadow: 0 16px 50px rgba(0,0,0,.45); background: #000;
+  }
+  .screen img { display: block; width: 100%; height: auto; }
+  .notes {
+    margin: 20px auto 0; max-width: 560px; text-align: left; color: var(--dim);
+    font-size: .88rem; line-height: 1.5; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  }
+  .notes b { color: var(--text); font-weight: 600; }
+  .notes ul { margin: 8px 0 0; padding-left: 18px; }
+  .notes li { margin: 3px 0; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Bootscreen AnberNext</h1>
+    <p class="sub">Mockup para aprovar o visual: barra com o gradiente laranja/âmbar da logo (com brilho e o ponto-guia na ponta), uma frase de carregamento e a versão do sistema.</p>
+    <div class="screen">
+      <img src="bootscreen-anbernext.png" alt="Bootscreen AnberNext: logo centralizada, barra de progresso laranja, frase de carregamento e versão embaixo">
+    </div>
+    <div class="notes">
+      <b>Para fechar, preciso de 3 respostas:</b>
+      <ul>
+        <li><b>Visual</b> — está bom assim ou mudo algo (cor, brilho, posição)?</li>
+        <li><b>Frases</b> — quais ficam: aquecendo o motor · soprando o cartucho · carregando os pixels · acordando o processador · afinando o som · inserindo a fichinha · rebobinando a fita · procurando os saves · polindo a tela · ligando os controles.</li>
+        <li><b>Versão</b> — mostro "v3.24" (das releases) ou o build interno ("etapa 3.X")?</li>
+      </ul>
+      Entrega: entra numa regravação do cartão (não por OTA), e eu instalo com um caminho de recuperação à mão.
+    </div>
+  </div>
+</body>
+</html>
+
+</body></html>

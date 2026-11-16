@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>O Livro do AnberNext</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  /* Layout: an art book in the project's own night palette. A sticky table of contents on the left,
+     one reading column, and the screens set wider than the text, each in a handheld-bezel frame. */
+  :root {
+    --night: #0d0b1a;        /* page */
+    --night-2: #15122a;      /* panels, bezels */
+    --rule: #2a2546;
+    --ink: #efeaff;
+    --ink-2: #a9a1cc;        /* secondary text */
+    --amber: #f9a62b;        /* the project's accent */
+    --cyan: #3ad6e0;         /* second accent, used sparingly */
+    --pink: #ff5ca8;
+    --display: 'Chakra Petch', 'Segoe UI', system-ui, sans-serif;
+    --body: 'Literata', Georgia, 'Times New Roman', serif;
+    --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { background: var(--night); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.7; }
+  a { color: var(--amber); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
+
+  .book { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 56px; max-width: 1320px; margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 96px; }
+  @media (max-width: 980px) { .book { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+
+  /* table of contents */
+  nav.toc { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; max-height: 100vh; overflow-y: auto; padding-block: 40px 24px; }
+  .toc h2 { font-family: var(--display); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 14px; }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .toc a { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 6px; padding: 6px 8px; border-radius: 6px; color: var(--ink-2); text-decoration: none; font-family: var(--display); font-size: 14.5px; line-height: 1.35; }
+  .toc a span { font-family: var(--mono); font-size: 11.5px; color: var(--amber); padding-top: 2px; }
+  .toc a:hover, .toc a[aria-current="true"] { background: var(--night-2); color: var(--ink); }
+  @media (max-width: 980px) {
+    nav.toc { position: static; max-height: none; border-bottom: 1px solid var(--rule); padding-block: 24px; }
+    .toc ol { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  }
+
+  main { min-width: 0; }
+  .col { max-width: 680px; }
+  .wide { max-width: 1000px; }
+
+  /* cover */
+  .cover { padding-block: 56px 40px; border-bottom: 1px solid var(--rule); }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
+  .cover h1 { font-family: var(--display); font-weight: 700; font-size: clamp(44px, 7vw, 88px); line-height: .98; letter-spacing: -.01em; margin: 14px 0 18px; text-wrap: balance; }
+  .cover h1 em { font-style: normal; color: var(--amber); }
+  .cover .lede { font-size: 20px; color: var(--ink-2); max-width: 620px; margin: 0; }
+  .devices { display: flex; align-items: flex-end; gap: clamp(12px, 4vw, 48px); margin-top: 40px; flex-wrap: wrap; }
+  .devices figure { margin: 0; display: grid; justify-items: center; gap: 10px; }
+  .devices img { display: block; height: clamp(150px, 24vw, 300px); width: auto; max-width: 100%; filter: drop-shadow(0 24px 30px rgba(0,0,0,.55)); }
+  .devices figcaption { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+  .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 40px; border-top: 1px solid var(--rule); }
+  .facts div { padding: 16px 16px 0 0; }
+  .facts b { display: block; font-family: var(--display); font-size: 30px; color: var(--ink); line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .facts span { font-size: 14px; color: var(--ink-2); line-height: 1.4; display: block; margin-top: 4px; }
+  @media (max-width: 640px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 16px; } }
+
+  /* chapters */
+  section.ch { padding-block: 72px 8px; border-bottom: 1px solid var(--rule); scroll-margin-top: 8px; }
+  .ch-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 22px; align-items: end; margin-bottom: 28px; }
+  .ch-no { grid-row: span 2; font-family: var(--display); font-weight: 700; font-size: clamp(64px, 9vw, 112px); line-height: .8; color: transparent; -webkit-text-stroke: 1.5px var(--amber); }
+  .ch-head .eyebrow { align-self: end; }
+  .ch-head h2 { font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.6vw, 42px); line-height: 1.08; margin: 0; text-wrap: balance; }
+  h3 { font-family: var(--display); font-weight: 600; font-size: 22px; line-height: 1.2; margin: 44px 0 10px; text-wrap: balance; }
+  p { margin: 0 0 16px; }
+  .col > p:first-of-type::first-letter { font-family: var(--display); font-weight: 700; color: var(--amber); float: left; font-size: 62px; line-height: .82; padding: 6px 10px 0 0; }
+  .note { font-size: 15px; color: var(--ink-2); }
+  code, .path { font-family: var(--mono); font-size: .84em; background: var(--night-2); border: 1px solid var(--rule); border-radius: 5px; padding: 1px 6px; overflow-wrap: anywhere; }
+
+  /* figures: the screens */
+  figure.shot { margin: 28px 0 36px; }
+  .bezel { background: linear-gradient(150deg, #23203a, #120f22); border: 1px solid var(--rule); border-radius: 16px; padding: 10px; }
+  .bezel button { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: 8px; overflow: hidden; }
+  .bezel img { display: block; width: 100%; height: auto; }
+  .bezel.tall button { max-height: 620px; overflow-y: auto; cursor: zoom-in; }
+  figure.shot figcaption { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; margin-top: 12px; font-size: 15px; color: var(--ink-2); line-height: 1.5; }
+  figure.shot figcaption b { font-family: var(--display); font-weight: 600; font-size: 16px; color: var(--ink); }
+  figure.shot figcaption .meta { font-family: var(--mono); font-size: 12px; color: var(--amber); text-align: right; white-space: nowrap; }
+  figure.shot figcaption .meta a { color: inherit; }
+  @media (max-width: 560px) { figure.shot figcaption { grid-template-columns: minmax(0, 1fr); } figure.shot figcaption .meta { text-align: left; } }
+
+  .row { display: grid; gap: 18px; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); margin: 28px 0 36px; }
+  .row figure { margin: 0; }
+  .row img { display: block; width: 100%; height: auto; border-radius: 10px; }
+  .row figcaption { font-size: 14px; color: var(--ink-2); margin-top: 8px; line-height: 1.4; }
+  .row figcaption b { display: block; font-family: var(--display); font-weight: 600; color: var(--ink); font-size: 15px; }
+  @media (max-width: 720px) { .row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  /* pull quote: Vitor's own words */
+  blockquote { margin: 28px 0; padding: 0 0 0 20px; border-left: 3px solid var(--pink); font-family: var(--display); font-size: 21px; line-height: 1.4; color: var(--ink); }
+  blockquote cite { display: block; font-family: var(--mono); font-style: normal; font-size: 12px; color: var(--ink-2); margin-top: 8px; }
+
+  /* the four themes */
+  .themes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 28px 0 36px; }
+  @media (max-width: 860px) { .themes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .theme { border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; background: var(--night-2); min-width: 0; }
+  .theme .bg { aspect-ratio: 4 / 3; background-size: cover; background-position: center; display: grid; place-items: center; }
+  .theme .bg img { width: 46%; height: auto; }
+  .theme .txt { padding: 12px 14px 14px; }
+  .theme h4 { margin: 0 0 4px; font-family: var(--display); font-size: 17px; font-weight: 600; }
+  .theme p { font-size: 14px; color: var(--ink-2); line-height: 1.45; margin: 0 0 10px; }
+  .sw { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sw i { display: inline-flex; align-items: center; gap: 5px; font-style: normal; font-family: var(--mono); font-size: 10.5px; color: var(--ink-2); }
+  .sw i::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--c); border: 1px solid rgba(255,255,255,.15); }
+
+  /* tables */
+  .tbl { overflow-x: auto; margin: 20px 0 32px; border: 1px solid var(--rule); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; line-height: 1.45; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); background: var(--night-2); }
+  tr:last-child td { border-bottom: 0; }
+  td.d { font-family: var(--mono); font-size: 13px; color: var(--amber); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  ul.list { padding-left: 20px; margin: 0 0 18px; }
+  ul.list li { margin-bottom: 6px; }
+  ul.list li::marker { color: var(--amber); }
+
+  .diagram { overflow-x: auto; margin: 28px 0 36px; }
+  .diagram svg { display: block; width: 100%; min-width: 560px; height: auto; }
+
+  .end { padding-block: 56px 0; color: var(--ink-2); font-size: 15px; }
+
+  dialog#lb { padding: 0; border: 0; background: transparent; max-width: 96vw; max-height: 94vh; }
+  dialog#lb::backdrop { background: rgba(6, 5, 14, .9); }
+  dialog#lb .in { max-height: 94vh; overflow: auto; border-radius: 10px; }
+  dialog#lb img { display: block; max-width: 96vw; height: auto; }
+  dialog#lb button.x { position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); font-family: var(--display); font-size: 15px; color: var(--night); background: var(--amber); border: 0; border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+
+<div class="book">
+  <nav class="toc" aria-label="Sumário">
+    <h2>Sumário</h2>
+    <ol>
+      <li><a href="#cap1"><span>01</span>O ponto de partida</a></li>
+      <li><a href="#cap2"><span>02</span>A música entra no jogo</a></li>
+      <li><a href="#cap3"><span>03</span>Neon Drive, a primeira cara</a></li>
+      <li><a href="#cap4"><span>04</span>O jeito de aprovar uma tela</a></li>
+      <li><a href="#cap5"><span>05</span>Quatro temas</a></li>
+      <li><a href="#cap6"><span>06</span>Do PC para o aparelho</a></li>
+      <li><a href="#cap7"><span>07</span>A linha H700</a></li>
+      <li><a href="#cap8"><span>08</span>BrickNext</a></li>
+      <li><a href="#cap9"><span>09</span>As páginas do projeto</a></li>
+      <li><a href="#cap10"><span>10</span>MiniNext</a></li>
+      <li><a href="#cap11"><span>11</span>Um cartão para todos</a></li>
+      <li><a href="#cap12"><span>12</span>O que aprendemos</a></li>
+      <li><a href="#apendice"><span>A</span>Todas as prévias</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="cover">
+      <div class="eyebrow">retrotiv · 28 de outubro a 13 de novembro de 2026</div>
+      <h1>O livro do <em>AnberNext</em></h1>
+      <p class="lede">Como uma interface de portátil virou uma família de sistemas: três marcas, quatro temas, quatro tipos de aparelho e um cartão de jogos que serve todos eles. Contado pelas prévias que o Vitor aprovou, na ordem em que aconteceram.</p>
+      <div class="devices">
+        <figure><img src="img/foto-353v.png" alt="Anbernic RG353V"><figcaption>RG353V · AnberNext</figcaption></figure>
+        <figure><img src="img/foto-35xxplus.png" alt="Anbernic RG35XX Plus" style="height:clamp(110px,17vw,210px)"><figcaption>RG35XX Plus · H700</figcaption></figure>
+        <figure><img src="img/foto-brick.png" alt="TrimUI Brick"><figcaption>TrimUI Brick · BrickNext</figcaption></figure>
+      </div>
+      <div class="facts">
+        <div><b>4</b><span>sistemas: AnberNext, AnberNext H700, BrickNext e MiniNext</span></div>
+        <div><b>4</b><span>temas: Neon Drive, Bloco, Grafite e Fósforo</span></div>
+        <div><b>9</b><span>modelos de aparelho com imagem própria</span></div>
+        <div><b>14</b><span>prévias aprovadas antes de virar código</span></div>
+      </div>
+    </header>
+
+    <!-- 1 -->
+    <section class="ch" id="cap1">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">01</div><div class="eyebrow">28 de outubro</div><h2>O ponto de partida</h2></div>
+      <div class="col">
+        <p>Tudo começou no Anbernic RG353V. A ideia era levar o NextUI, a interface limpa e rápida do TrimUI Brick, para um portátil da Anbernic, com um visual próprio. O AnberNext roda de um cartão micro SD só dele, ao lado do Android: segurando <code>F</code> ao ligar, o aparelho volta para o Android.</p>
+        <p>No primeiro dia o projeto ganhou repositório público, guia de instalação e um atualizador que roda no próprio aparelho, pelo Wi-Fi. O atualizador se recusa a gravar em qualquer lugar fora do cartão do AnberNext, e o cartão de jogos fica de fora por projeto.</p>
+        <h3>Energia e bateria</h3>
+        <p>As primeiras versões resolveram problemas de quem usa o aparelho todo dia. A v3.15 acabou com os reinícios sob carga: em bateria não cheia, abrir algo pesado derrubava a tensão e o RG353V reiniciava. A v3.16 fez todas as telas mostrarem a mesma porcentagem de bateria, conferida pela tensão real da célula.</p>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="ch" id="cap2">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">02</div><div class="eyebrow">28 de outubro a 3 de novembro</div><h2>A música entra no jogo</h2></div>
+      <div class="col">
+        <p>A v3.17 trouxe o AnberTunes, um player de música para o RG353V. Ele é um fork do <a href="https://github.com/ujjwal313/boombrick">Boombrick</a>, de <a href="https://github.com/ujjwal313">ujjwal313</a>: o app e o trabalho por trás dele são do autor do Boombrick. O AnberTunes acrescenta o visual do projeto e o cartão "tocando agora".</p>
+        <p>A primeira prévia do projeto mostrou o player por cima do jogo, em três tamanhos: expandido, biblioteca e reduzido. O atalho L1+R1+X passa de um para o outro.</p>
+      </div>
+      <div class="row wide" style="--n:2">
+        <figure><img src="img/overlay-expanded.png" alt="Player AnberTunes expandido" loading="lazy"><figcaption><b>Expandido</b>capa grande, tempos e os cinco controles</figcaption></figure>
+        <figure><img src="img/overlay-browse.png" alt="Biblioteca do AnberTunes" loading="lazy"><figcaption><b>Biblioteca</b>álbuns, artistas, músicas e gêneros</figcaption></figure>
+      </div>
+      <div class="col">
+        <p>Depois vieram as versões que colocaram o player na tela de cada emulador pesado. Cada um desenha a imagem de um jeito, então cada um pediu uma solução própria.</p>
+        <div class="tbl"><table>
+          <thead><tr><th>Versão</th><th>O que mudou</th></tr></thead>
+          <tbody>
+            <tr><td class="d">v3.25 · 03/11</td><td>player no menu dos emuladores internos; direcional responde no primeiro toque</td></tr>
+            <tr><td class="d">v3.24 · 30/10</td><td>player também em Vulkan, no PSP e no Dreamcast</td></tr>
+            <tr><td class="d">v3.23 · 30/10</td><td>player na tela do Dreamcast</td></tr>
+            <tr><td class="d">v3.22 · 30/10</td><td>player na tela do N64, com os controles certos</td></tr>
+            <tr><td class="d">v3.17 · 28/10</td><td>AnberTunes chega pelo atualizador</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel tall"><button type="button" data-full="img/player.webp" aria-label="Ampliar a prévia do player"><img src="img/player.webp" alt="Prévia do player AnberTunes dentro do jogo" loading="lazy"></button></div>
+        <figcaption><b>Player AnberTunes</b><span class="meta"><a href="previas/player-anbertunes/index.html">abrir a prévia · 29/10</a></span><span>A prévia inteira, renderizada no PC antes de ir ao console.</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- 3 -->
+    <section class="ch" id="cap3">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">03</div><div class="eyebrow">3 a 9 de novembro</div><h2>Neon Drive, a primeira cara</h2></div>
+      <div class="col">
+        <p>Com o sistema estável, a pergunta virou outra: que cara ele tem. A primeira resposta foi a tela de boot. Uma barra no gradiente âmbar da logo, uma frase de carregamento e a versão do sistema. As frases viraram marca do projeto: "soprando o cartucho", "inserindo a fichinha", "rebobinando a fita".</p>
+      </div>
+      <figure class="shot col">
+        <div class="bezel"><button type="button" data-full="img/bootscreen-v1.png" aria-label="Ampliar a primeira tela de boot"><img src="img/bootscreen-v1.png" alt="Primeira tela de boot do AnberNext" loading="lazy"></button></div>
+        <figcaption><b>A primeira tela de boot</b><span class="meta"><a href="previas/bootscreen-v1/index.html">abrir a prévia · 03/11</a></span><span>Logo ao centro, barra âmbar com o ponto-guia na ponta.</span></figcaption>
+      </figure>
+      <div class="col">
+        <h3>Uma marca para o Brick</h3>
+        <p>No mesmo dia nasceu a identidade do BrickNext: um tijolinho âmbar em 2.5D, acento ciano, base índigo. Entre três ícones, ficou o combinado, com os pinos em cima e as juntas de alvenaria na frente.</p>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/logo.webp" aria-label="Ampliar a prévia do logo"><img src="img/logo.webp" alt="Prévia da identidade do BrickNext" loading="lazy"></button></div>
+        <figcaption><b>BrickNext Logo</b><span class="meta"><a href="previas/bricknext-logo/index.html">abrir a prévia · 03/11</a></span><span>Marca principal, as três variações do ícone, uso no claro e no escuro, e a paleta.</span></figcaption>
+      </figure>
+      <div class="col">
+        <h3>Quatro direções</h3>
+        <p>Antes de desenhar as telas, uma prévia mostrou quatro caminhos possíveis, cada um nas quatro telas que importam: escolher o console, dentro do console, o menu do jogo e o boot. Neon Drive (synthwave), Bloco (isométrico), Brick OS e Deck. A regra que veio dali ficou para sempre: nada é fixo, tudo é tema.</p>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel tall"><button type="button" data-full="img/direcoes.webp" aria-label="Ampliar a prévia das direções"><img src="img/direcoes.webp" alt="Prévia das quatro direções do BrickNext" loading="lazy"></button></div>
+        <figcaption><b>Direções do BrickNext</b><span class="meta"><a href="previas/direcoes-bricknext/index.html">abrir a prévia · 04/11</a></span><span>"Quatro mundos visuais, uma marca só nossa." Role dentro da moldura para ver as quatro.</span></figcaption>
+      </figure>
+      <div class="col">
+        <h3>Neon Drive no aparelho</h3>
+        <p>O Neon Drive saiu na frente. As prévias seguintes já não eram maquete: eram capturas do programa de verdade, rodando no PC com as fontes e imagens do cartão do Vitor. Primeiro a tela inicial, depois uma leva de ajustes (capa sem corte, cartão do AnberTunes animado, MÚSICA no menu), depois o menu do jogo, as Opções e os Ajustes.</p>
+      </div>
+      <div class="row wide" style="--n:2">
+        <figure><button type="button" class="bezel" data-full="img/previewneon.webp" style="padding:8px;cursor:zoom-in;width:100%"><img src="img/previewneon.webp" alt="Preview Neon Drive" loading="lazy"></button><figcaption><b>Preview Neon Drive · 04/11</b>a tela inicial, capturada do launcher real · <a href="previas/preview-neon-drive/index.html">abrir</a></figcaption></figure>
+        <figure><button type="button" class="bezel" data-full="img/neondrive.webp" style="padding:8px;cursor:zoom-in;width:100%"><img src="img/neondrive.webp" alt="NeonDrive, leva de ajustes" loading="lazy"></button><figcaption><b>NeonDrive · 05/11</b>capa inteira, cartão de música animado, MÚSICA no menu · <a href="previas/neondrive/index.html">abrir</a></figcaption></figure>
+      </div>
+      <div class="row wide" style="--n:2">
+        <figure><button type="button" class="bezel" data-full="img/menu.webp" style="padding:8px;cursor:zoom-in;width:100%;max-height:520px;overflow:hidden"><img src="img/menu.webp" alt="Menu Preview" loading="lazy"></button><figcaption><b>Menu Preview · 06/11</b>menu do jogo, opções e ajustes, com a bateria âmbar · <a href="previas/menu-preview/index.html">abrir</a></figcaption></figure>
+        <figure><button type="button" class="bezel" data-full="img/opcoes.webp" style="padding:8px;cursor:zoom-in;width:100%;max-height:520px;overflow:hidden"><img src="img/opcoes.webp" alt="Opções e Ajustes" loading="lazy"></button><figcaption><b>Opções e Ajustes · 09/11</b>o programa de Ajustes real, inteiro no neon · <a href="previas/opcoes-e-ajustes/index.html">abrir</a></figcaption></figure>
+      </div>
+      <div class="col">
+        <p>A tela de boot também ganhou a versão definitiva: o grid e o sol sobem do escuro, o hexágono se desenha em âmbar, o letreiro entra letra por letra e a barra acompanha o boot de verdade.</p>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel tall"><button type="button" data-full="img/bootlab.webp" aria-label="Ampliar a prévia do boot"><img src="img/bootlab.webp" alt="Prévia da tela de boot animada" loading="lazy"></button></div>
+        <figcaption><b>AnberNext Bootscreen</b><span class="meta"><a href="previas/bootscreen/index.html">abrir a prévia · 09/11</a></span><span>A animação em tamanho real, o seletor de cor dos Ajustes e o nome na tela inicial.</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- 4 -->
+    <section class="ch" id="cap4">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">04</div><div class="eyebrow">10 de novembro</div><h2>O jeito de aprovar uma tela</h2></div>
+      <div class="col">
+        <p>Em 10 de novembro o projeto ganhou um método. Toda tela nova ou melhoria aparece primeiro numa prévia: cada tela no tamanho real do aparelho (640×480), animada, dentro de uma moldura, agrupada por onde vive e com um número fixo. O Vitor aprova pelo visual e pede ajuste citando o número. Só depois a tela vai para o código.</p>
+        <blockquote>Será o nosso padrão pra criação e melhorias a partir daqui.<cite>Vitor, 10/11</cite></blockquote>
+        <p>A primeira prévia nesse formato foi a do Neon Drive, mostrando como cada tela estava e o que ganharia. Nela foram decididas as linhas da Aparência que valem até hoje: Tema, Tela inicial (carrossel, lista ou grade), Ícone dos consoles e Biblioteca de jogos.</p>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/neon-1.webp" aria-label="Ampliar a prévia do Neon Drive"><img src="img/neon-1.webp" alt="Prévia do Neon Drive, abertura" loading="lazy"></button></div>
+        <figcaption><b>AnberNext Neon Drive</b><span class="meta"><a href="previas/neon-drive/index.html">abrir a prévia · 10/11</a></span><span>"Neon Drive, como está hoje e o que ganha." A tela inicial em lista e em carrossel.</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/neon-2.webp" aria-label="Ampliar música e menu do jogo do Neon Drive"><img src="img/neon-2.webp" alt="Neon Drive: música e dentro do jogo" loading="lazy"></button></div>
+        <figcaption><b>Música e dentro do jogo</b><span class="meta">Neon Drive</span><span>Biblioteca de música, tocando agora, menu do jogo, opções, avisos e conquistas.</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- 5 -->
+    <section class="ch" id="cap5">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">05</div><div class="eyebrow">10 e 11 de novembro</div><h2>Quatro temas</h2></div>
+      <div class="col">
+        <p>O Neon Drive ganhou três irmãos. O Bloco veio da direção isométrica: o tijolo da marca deixa de ser logo e vira o próprio aparelho. Depois o Grafite, com cara de portátil de PC, e o Fósforo, um terminal antigo de uma cor só. Os quatro são originais de propósito, sem nomes ou logos de outras marcas.</p>
+        <p>Trocar o tema em Ajustes muda tudo de uma vez: tela inicial, biblioteca, menu do jogo, Ajustes e boot. Cada tema guarda as próprias escolhas de layout.</p>
+      </div>
+      <div class="themes wide">
+        <div class="theme"><div class="bg" style="background-image:url(img/mini-bg-neon.webp)"><img src="img/mini-icon-neon.png" alt=""></div><div class="txt"><h4>Neon Drive</h4><p>Synthwave: horizonte, grade em fuga e tubos de neon. Escreve em maiúsculas.</p><div class="sw"><i style="--c:#f9a62b">F9A62B</i><i style="--c:#3ad6e0">3AD6E0</i><i style="--c:#ff5ca8">FF5CA8</i></div></div></div>
+        <div class="theme"><div class="bg" style="background-image:url(img/mini-bg-bloco.webp)"><img src="img/mini-icon-bloco.png" alt=""></div><div class="txt"><h4>Bloco</h4><p>Blocos isométricos que giram. Os consoles viram cubos; as capas, lajes.</p><div class="sw"><i style="--c:#f2a33c">F2A33C</i><i style="--c:#3ad6e0">3AD6E0</i><i style="--c:#1c2140">1C2140</i></div></div></div>
+        <div class="theme"><div class="bg" style="background-image:url(img/mini-bg-grafite.webp)"><img src="img/mini-icon-grafite.png" alt=""></div><div class="txt"><h4>Grafite</h4><p>Cartões limpos, cara de portátil de PC, com um azul só.</p><div class="sw"><i style="--c:#2e8bff">2E8BFF</i><i style="--c:#8ec3ff">8EC3FF</i><i style="--c:#18212d">18212D</i></div></div></div>
+        <div class="theme"><div class="bg" style="background-image:url(img/mini-bg-fosforo.webp)"><img src="img/mini-icon-fosforo.png" alt=""></div><div class="txt"><h4>Fósforo</h4><p>Terminal de tubo: tudo é traço, com cursor piscando. Verde, âmbar ou branco.</p><div class="sw"><i style="--c:#48ff8c">48FF8C</i><i style="--c:#ff9000">FF9000</i><i style="--c:#ffffff">FFFFFF</i></div></div></div>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/bloco-1.webp" aria-label="Ampliar a prévia do Bloco"><img src="img/bloco-1.webp" alt="Prévia do tema Bloco" loading="lazy"></button></div>
+        <figcaption><b>AnberNext Bloco</b><span class="meta"><a href="previas/bloco/index.html">abrir a prévia · 10/11</a></span><span>"Bloco: o aparelho todo vira peça." 19 telas redesenhadas.</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/bloco-2.webp" aria-label="Ampliar música e jogo no Bloco"><img src="img/bloco-2.webp" alt="Bloco: música e dentro do jogo" loading="lazy"></button></div>
+        <figcaption><b>Música e dentro do jogo, no Bloco</b><span class="meta">Bloco</span><span>As mesmas telas do Neon Drive, nos mesmos lugares, com outra pele.</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/grafite-1.webp" aria-label="Ampliar a prévia do Grafite"><img src="img/grafite-1.webp" alt="Prévia do tema Grafite" loading="lazy"></button></div>
+        <figcaption><b>AnberNext Grafite</b><span class="meta"><a href="previas/grafite/index.html">abrir a prévia · 10/11</a></span><span>"Grafite: cara de portátil de PC, no RG353V."</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/grafite-2.webp" aria-label="Ampliar música e jogo no Grafite"><img src="img/grafite-2.webp" alt="Grafite: música e dentro do jogo" loading="lazy"></button></div>
+        <figcaption><b>Música e dentro do jogo, no Grafite</b><span class="meta">Grafite</span><span>Painéis que deslizam e conquistas com selo.</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/fosforo-1.webp" aria-label="Ampliar a prévia do Fósforo"><img src="img/fosforo-1.webp" alt="Prévia do tema Fósforo" loading="lazy"></button></div>
+        <figcaption><b>AnberNext Fósforo</b><span class="meta"><a href="previas/fosforo/index.html">abrir a prévia · 10/11</a></span><span>"Fósforo: o aparelho vira um terminal de tubo."</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/fosforo-2.webp" aria-label="Ampliar música e jogo no Fósforo"><img src="img/fosforo-2.webp" alt="Fósforo: música e dentro do jogo" loading="lazy"></button></div>
+        <figcaption><b>Música e dentro do jogo, no Fósforo</b><span class="meta">Fósforo</span><span>O equalizador vira colunas de blocos; a seleção, vídeo reverso.</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- 6 -->
+    <section class="ch" id="cap6">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">06</div><div class="eyebrow">10 e 11 de novembro</div><h2>Do PC para o aparelho</h2></div>
+      <div class="col">
+        <p>Aprovadas as prévias, os quatro temas foram para o cartão principal do RG353V em levas, testadas pelo Vitor uma a uma. Entraram o idioma (português ou inglês), a bateria real na tela inicial, títulos longos rolando, capas sempre inteiras e as conquistas no Bloco.</p>
+        <p>O aparelho cobrou o que o PC esconde. No Grafite, a tela inicial fazia mil pedidos de desenho por quadro; no Fósforo, os Ajustes levavam 155 milissegundos por quadro. A regra virou: medir cada parte da tela antes de chutar. Depois do corte, o Fósforo caiu para cerca de 20 milissegundos.</p>
+        <p>Estas são as telas reais, tiradas do próprio sistema:</p>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/anx-themes.png" aria-label="Ampliar os quatro temas na tela inicial"><img src="img/anx-themes.png" alt="Neon Drive, Bloco, Grafite e Fósforo na tela inicial do RG353V" loading="lazy"></button></div>
+        <figcaption><b>Os quatro temas na tela inicial</b><span class="meta">RG353V</span><span>Neon Drive, Bloco, Grafite e Fósforo, como aparecem no aparelho.</span></figcaption>
+      </figure>
+      <div class="row wide" style="--n:3">
+        <figure><img src="img/anx-library.png" alt="Biblioteca" loading="lazy"><figcaption><b>Biblioteca</b>capas, último save, tempo de jogo</figcaption></figure>
+        <figure><img src="img/anx-music.png" alt="Música" loading="lazy"><figcaption><b>Música</b>a sua música, também durante os jogos</figcaption></figure>
+        <figure><img src="img/anx-recents.png" alt="Continuar jogando" loading="lazy"><figcaption><b>Continuar jogando</b>de volta ao save exato</figcaption></figure>
+        <figure><img src="img/anx-menu.png" alt="Menu rápido" loading="lazy"><figcaption><b>Menu rápido</b>música, ajustes, ferramentas, desligar</figcaption></figure>
+        <figure><img src="img/anx-settings.png" alt="Ajustes" loading="lazy"><figcaption><b>Ajustes</b>cada opção de visual com a sua prévia</figcaption></figure>
+        <figure><img src="img/anx-ingame.png" alt="Menu do jogo" loading="lazy"><figcaption><b>Menu do jogo</b>salvar, carregar, opções, música</figcaption></figure>
+      </div>
+      <div class="row wide" style="--n:2">
+        <figure><img src="img/anx-hero.webp" alt="A tela inicial passando pelos quatro temas" loading="lazy"><figcaption><b>A tela inicial</b>animada, passando pelos quatro temas</figcaption></figure>
+        <figure><img src="img/anx-boot.webp" alt="A animação de boot de cada tema" loading="lazy"><figcaption><b>O boot</b>a animação de cada tema</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="ch" id="cap7">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">07</div><div class="eyebrow">11 a 13 de novembro</div><h2>A linha H700</h2></div>
+      <div class="col">
+        <p>O segundo aparelho foi o RG35XX Plus, da linha H700 da Anbernic. O plano aprovado foi o mesmo do RG353V: um cartão de boot só do AnberNext, com o sistema de fábrica intacto. Uma imagem única para os dois chips seria impossível, porque os carregadores de cada um ocupam o mesmo trecho do cartão.</p>
+        <p>Na noite de 11 de novembro o RG35XX Plus ligou pela primeira vez com o AnberNext. Dois dias depois saiu o AnberNext H700 v1.0, com imagem para sete modelos.</p>
+      </div>
+      <figure class="shot col">
+        <div class="bezel" style="background:var(--night-2)"><button type="button" data-full="img/anx-devices.png" aria-label="Ampliar os aparelhos"><img src="img/anx-devices.png" alt="O AnberNext num RG353V e num RG35XX Plus" loading="lazy"></button></div>
+        <figcaption><b>Onde roda</b><span class="meta">RG353V e RG35XX Plus</span><span>As fotos reais dos aparelhos, com o sistema na tela.</span></figcaption>
+      </figure>
+      <div class="col">
+        <div class="tbl"><table>
+          <thead><tr><th>Modelo</th><th>Situação em 13/11</th></tr></thead>
+          <tbody>
+            <tr><td>RG35XX Plus</td><td>testado de ponta a ponta no aparelho</td></tr>
+            <tr><td>RG35XX H, RG35XX SP, RG40XX H, RG40XX V, RG CubeXX, RG28XX</td><td>imagem própria, com a inicialização e o kernel de cada modelo; aguardando relatos</td></tr>
+          </tbody>
+        </table></div>
+        <h3>O que ele faz</h3>
+        <ul class="list">
+          <li>Os quatro temas, como no RG353V.</li>
+          <li>N64, Dreamcast, PSP e Nintendo DS. O DS usa o DraStic, com os saves em <code>Saves/NDS/drastic</code>.</li>
+          <li>Saída HDMI, com o som indo junto para a TV.</li>
+          <li>Atualização pelo Wi-Fi: cada modelo recebe só os seus arquivos e recusa os de outro.</li>
+          <li>Um relatório no cartão, <code>relatorio-h700.txt</code>, para quem quiser ajudar com outros modelos.</li>
+        </ul>
+        <h3>Dois tropeços</h3>
+        <p>No PSP, só um botão de ombro respondia. Cada modelo numera os botões de um jeito, então o sistema passou a ler um mapa de botões por modelo.</p>
+        <blockquote>Agora deu certo parceiro! O que falta?<cite>Vitor, depois da correção do PSP</cite></blockquote>
+        <p>Nos Ajustes do RG35XX Plus, o B não saía da tela, porque cada aperto era lido duas vezes. Depois da correção, o Vitor confirmou: "deu certo, funcionou".</p>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section class="ch" id="cap8">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">08</div><div class="eyebrow">3 a 13 de novembro</div><h2>BrickNext</h2></div>
+      <div class="col">
+        <p>O BrickNext é o NextUI do TrimUI Brick com o visual do AnberNext. O repositório nasceu em 3 de novembro, ganhou o logo aprovado e o atualizador pelo aparelho no dia 4, e em 13 de novembro recebeu a v1.1.0, com os quatro temas, a marca BrickNext em tudo e os LEDs no tema.</p>
+      </div>
+      <figure class="shot col">
+        <div class="bezel" style="display:grid;place-items:center;padding:36px 24px"><img src="img/bricknext-logo.svg" alt="Logo do BrickNext" style="width:min(420px,100%);height:auto"></div>
+        <figcaption><b>O logo final</b><span class="meta">BrickNext</span><span>O tijolinho combinado com o letreiro BRICK / NEXT.</span></figcaption>
+      </figure>
+      <div class="col">
+        <h3>A tela de abertura no cartão de uma partição só</h3>
+        <p>O Vitor avisou que o cartão do Brick tinha uma partição só, e que talvez a animação não coubesse. Ela coube, mas não aparecia: a tela do Brick só mostra o que passa pelo mesmo caminho do menu. A animação foi refeita por esse caminho.</p>
+        <blockquote>Agora apareceu a bootscreen, ficou dahora.<cite>Vitor, 13/11</cite></blockquote>
+        <h3>LEDs que seguem o tema</h3>
+        <p>Depois do logo da TrimUI entra a animação do tema, e os LEDs acendem nas cores dele, com ou sem a chave de mute. Em Ajustes > Aparência > LEDs dá para escolher Seguir o tema ou Personalizado, que traz todos os controles do LED Studio. As cores começaram pastéis e foram trocadas pelas cores vivas de cada tema.</p>
+        <div class="tbl"><table>
+          <thead><tr><th>Tema</th><th>Centro</th><th>Laterais</th><th>Teclas</th></tr></thead>
+          <tbody>
+            <tr><td>Neon Drive</td><td><span class="sw"><i style="--c:#ff8c00">FF8C00</i></span></td><td><span class="sw"><i style="--c:#ff0080">FF0080</i></span></td><td><span class="sw"><i style="--c:#00e0ff">00E0FF</i></span></td></tr>
+            <tr><td>Bloco</td><td><span class="sw"><i style="--c:#ff8c00">FF8C00</i></span></td><td colspan="2"><span class="sw"><i style="--c:#00e0ff">00E0FF</i></span></td></tr>
+            <tr><td>Grafite</td><td><span class="sw"><i style="--c:#0050ff">0050FF</i></span></td><td colspan="2"><span class="sw"><i style="--c:#00a0ff">00A0FF</i></span></td></tr>
+            <tr><td>Fósforo</td><td><span class="sw"><i style="--c:#00ff30">00FF30</i></span></td><td><span class="sw"><i style="--c:#ff9000">FF9000</i></span></td><td><span class="sw"><i style="--c:#ffffff">FFFFFF</i></span></td></tr>
+          </tbody>
+        </table></div>
+        <blockquote>Agora ficou show demais parceiro!<cite>Vitor, sobre a v1.1.0</cite></blockquote>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/brick-themes.png" aria-label="Ampliar os temas no Brick"><img src="img/brick-themes.png" alt="Os quatro temas no TrimUI Brick" loading="lazy"></button></div>
+        <figcaption><b>Os quatro temas no Brick</b><span class="meta">TrimUI Brick</span><span>A tela quadrada do Brick pede outro arranjo, com os mesmos lugares.</span></figcaption>
+      </figure>
+      <div class="row wide" style="--n:3">
+        <figure><img src="img/brick-library.png" alt="Biblioteca no Brick" loading="lazy"><figcaption><b>Biblioteca</b>capas, último save, tempo de jogo</figcaption></figure>
+        <figure><img src="img/brick-music.png" alt="Música no Brick" loading="lazy"><figcaption><b>Música</b>também durante os jogos</figcaption></figure>
+        <figure><img src="img/brick-settings.png" alt="Ajustes no Brick" loading="lazy"><figcaption><b>Ajustes</b>tudo no visual do tema</figcaption></figure>
+      </div>
+      <div class="row wide" style="--n:2">
+        <figure><img src="img/brick-hero.webp" alt="A tela inicial do BrickNext passando pelos temas" loading="lazy"><figcaption><b>A tela inicial</b>passando pelos quatro temas</figcaption></figure>
+        <figure><img src="img/brick-boot.webp" alt="A animação de boot no Brick" loading="lazy"><figcaption><b>O boot</b>a animação de cada tema, com o emblema de tijolo</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section class="ch" id="cap9">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">09</div><div class="eyebrow">13 de novembro</div><h2>As páginas do projeto</h2></div>
+      <div class="col">
+        <p>Os repositórios <a href="https://github.com/retrotiv/AnberNext">retrotiv/AnberNext</a> e <a href="https://github.com/retrotiv/BrickNEXT">retrotiv/BrickNEXT</a> ganharam páginas de produto: uma tabela de qual arquivo baixar, o aparelho com um tema animado na tela e uma vitrine das funções em telas reais.</p>
+        <p>A primeira versão usou desenhos dos aparelhos. O Vitor achou estranho e pediu as fotos reais. Os sites dos fabricantes bloqueiam acesso automático, então ele mesmo salvou as fotos, e elas viraram a moldura das telas. Depois vieram a versão em português do Brasil, como primeira língua, e o crédito ao Boombrick e a ujjwal313 em todo lugar que fala de música.</p>
+        <blockquote>Preciso das imagens reais dos consoles em PNG, desse jeito ficou meio estranho.<cite>Vitor, 13/11</cite></blockquote>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="ch" id="cap10">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">10</div><div class="eyebrow">13 de novembro</div><h2>MiniNext</h2></div>
+      <div class="col">
+        <p>O último da família é o Miyoo Mini, com 128 MB de memória. A versão leve mantém os quatro temas, mas troca o que pesa por imagens prontas: fundos e desenhos de console foram recortados da própria prévia aprovada, e só texto e formas lisas são desenhados na hora.</p>
+        <p>A prévia teve 28 telas e um Mini que funciona na própria página. Ela também mostra as quatro versões de cada tela lado a lado.</p>
+        <blockquote>Gostei demais! Bora fazer virar realidade e já taca no cartão.<cite>Vitor, 13/11</cite></blockquote>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/mini-1.webp" aria-label="Ampliar a abertura da prévia do MiniNext"><img src="img/mini-1.webp" alt="Prévia do MiniNext, abertura" loading="lazy"></button></div>
+        <figcaption><b>MiniNext no Miyoo Mini</b><span class="meta"><a href="previas/mininext/index.html">abrir a prévia · 13/11</a></span><span>"O visual do AnberNext no Miyoo Mini, no mesmo cartão do Brick."</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/mini-2.webp" aria-label="Ampliar o simulador e as telas de ligar"><img src="img/mini-2.webp" alt="O Mini simulado e as telas de ligar nos quatro temas" loading="lazy"></button></div>
+        <figcaption><b>O Mini simulado e as telas de ligar</b><span class="meta">MiniNext</span><span>Instalando, boot, bateria fraca e carregando, nos quatro temas.</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/mini-3.webp" aria-label="Ampliar a tela inicial nos quatro temas"><img src="img/mini-3.webp" alt="A tela inicial do MiniNext em lista, carrossel e grade" loading="lazy"></button></div>
+        <figcaption><b>A tela inicial</b><span class="meta">MiniNext</span><span>Lista, carrossel e grade, cada uma nos quatro temas.</span></figcaption>
+      </figure>
+      <div class="col">
+        <h3>No cartão</h3>
+        <p>No cartão do Brick já havia um sistema para o Mini, feito antes num outro computador, que rodava bem na tela do Mini do Vitor. O MiniNext foi montado em cima dele. A primeira versão traz a tela inicial nos três jeitos, a biblioteca com capas, o menu do botão MENU, a Aparência, os recentes no SELECT e a barra de volume e brilho no tema.</p>
+        <p>Se o menu novo cair, o Mini abre sozinho o menu antigo e tenta o novo de novo no próximo boot. Ainda falta o teste no aparelho, e depois vêm o menu do jogo no tema, a tela de abertura e a música.</p>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section class="ch" id="cap11">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">11</div><div class="eyebrow">a ideia que une tudo</div><h2>Um cartão para todos</h2></div>
+      <div class="col">
+        <p>Os quatro sistemas leem os jogos do mesmo micro SD. O Brick e o Mini ligam direto dele. Os Anbernic ligam do próprio cartão de boot, no slot 1, e leem este no slot 2 só como biblioteca. Os saves de bateria são os mesmos em todos: dá para parar no Mini e continuar no Brick. Os estados salvos ficam separados, porque cada aparelho roda versões diferentes dos emuladores.</p>
+      </div>
+      <div class="diagram wide">
+        <svg viewBox="0 0 1000 330" role="img" aria-label="Um cartão de biblioteca serve os quatro sistemas" font-family="Chakra Petch, sans-serif">
+          <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#a9a1cc"/></marker></defs>
+          <g fill="#15122a" stroke="#2a2546" stroke-width="1.5">
+            <rect x="30" y="20" width="280" height="96" rx="12"/><rect x="360" y="20" width="280" height="96" rx="12"/><rect x="690" y="20" width="280" height="96" rx="12"/>
+          </g>
+          <g text-anchor="middle">
+            <text x="170" y="56" font-size="22" font-weight="600" fill="#efeaff">TrimUI Brick</text><text x="170" y="84" font-size="15" fill="#a9a1cc">liga deste cartão · BrickNext</text>
+            <text x="500" y="56" font-size="22" font-weight="600" fill="#efeaff">Miyoo Mini</text><text x="500" y="84" font-size="15" fill="#a9a1cc">liga deste cartão · MiniNext</text>
+            <text x="830" y="56" font-size="22" font-weight="600" fill="#efeaff">RG353V e linha H700</text><text x="830" y="84" font-size="15" fill="#a9a1cc">liga do cartão de boot (slot 1)</text>
+          </g>
+          <g stroke="#a9a1cc" stroke-width="1.5" fill="none">
+            <path d="M170 116V206" marker-end="url(#ar)"/><path d="M500 116V206" marker-end="url(#ar)"/><path d="M830 116V206" stroke-dasharray="5 5" marker-end="url(#ar)"/>
+          </g>
+          <g font-size="14" fill="#a9a1cc"><text x="182" y="166">sistema e jogos</text><text x="512" y="166">sistema e jogos</text><text x="842" y="166">só a biblioteca, no slot 2</text></g>
+          <rect x="30" y="210" width="940" height="100" rx="14" fill="rgba(249,166,43,.1)" stroke="#f9a62b" stroke-width="2"/>
+          <g text-anchor="middle">
+            <text x="500" y="244" font-size="22" font-weight="600" fill="#efeaff">O cartão da biblioteca</text>
+            <text x="500" y="272" font-size="16" fill="#efeaff">Comum a todos: Roms, Bios, Saves, Music e Collections</text>
+            <text x="500" y="296" font-size="14" fill="#a9a1cc" font-family="JetBrains Mono, monospace">só de cada um: .system/tg5040 · .system/miyoomini · .userdata/&lt;aparelho&gt;</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section class="ch" id="cap12">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">12</div><div class="eyebrow">para não pagar de novo</div><h2>O que aprendemos</h2></div>
+      <div class="col">
+        <p>Cada lição abaixo custou horas para descobrir. Elas ficam guardadas para o próximo aparelho não tropeçar no mesmo lugar.</p>
+        <div class="tbl"><table>
+          <thead><tr><th>Lição</th><th>O que acontecia</th></tr></thead>
+          <tbody>
+            <tr><td>Atualizar só para versão mais nova</td><td>cartões com sistema mais novo eram rebaixados ao ligar com Wi-Fi</td></tr>
+            <tr><td>Cada modelo H700 numera os botões do seu jeito</td><td>no PSP quase nenhum botão respondia</td></tr>
+            <tr><td>O controle não pode ser lido duas vezes</td><td>o B não saía dos Ajustes no RG35XX Plus</td></tr>
+            <tr><td>A tela do Brick só mostra o que passa pelo caminho do menu</td><td>a animação de boot ficava invisível</td></tr>
+            <tr><td>O NextUI apaga os LEDs ao abrir</td><td>as cores do tema apareciam e sumiam</td></tr>
+            <tr><td>Medir antes de chutar</td><td>Grafite e Fósforo pesavam no aparelho e não no PC</td></tr>
+            <tr><td>Trabalhar numa pasta fixa, com cópia de cada cartão</td><td>a pasta temporária sumiu com o disco cheio</td></tr>
+            <tr><td>Dizer "ficou faltando" quando ficou faltando</td><td>uma tela da prévia foi chamada de limite, quando só não tinha sido portada</td></tr>
+            <tr><td>Dar crédito a quem fez o original</td><td>o player vem do Boombrick, de ujjwal313</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- appendix -->
+    <section class="ch" id="apendice">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">A</div><div class="eyebrow">apêndice</div><h2>Todas as prévias</h2></div>
+      <div class="col">
+        <p>As prévias vão junto com este livro, abertas e animadas, e qualquer pessoa abre sem conta. Cada uma é a fonte das imagens dos capítulos.</p>
+        <div class="tbl"><table>
+          <thead><tr><th>Data</th><th>Prévia</th><th>O que mostra</th></tr></thead>
+          <tbody>
+            <tr><td class="d">13/11</td><td><a href="previas/mininext/index.html">MiniNext no Miyoo Mini</a></td><td>28 telas nos quatro temas e um Mini simulado</td></tr>
+            <tr><td class="d">10/11</td><td><a href="previas/neon-drive/index.html">AnberNext Neon Drive</a></td><td>o Neon Drive como está e o que ganha</td></tr>
+            <tr><td class="d">10/11</td><td><a href="previas/bloco/index.html">AnberNext Bloco</a></td><td>o tema Bloco, tela por tela</td></tr>
+            <tr><td class="d">10/11</td><td><a href="previas/grafite/index.html">AnberNext Grafite</a></td><td>o tema Grafite, tela por tela</td></tr>
+            <tr><td class="d">10/11</td><td><a href="previas/fosforo/index.html">AnberNext Fósforo</a></td><td>o tema Fósforo, tela por tela</td></tr>
+            <tr><td class="d">09/11</td><td><a href="previas/bootscreen/index.html">AnberNext Bootscreen</a></td><td>a animação de boot e o seletor de cor</td></tr>
+            <tr><td class="d">09/11</td><td><a href="previas/opcoes-e-ajustes/index.html">Opções e Ajustes</a></td><td>o programa de Ajustes real, no neon</td></tr>
+            <tr><td class="d">06/11</td><td><a href="previas/menu-preview/index.html">Menu Preview</a></td><td>menu do jogo com a bateria nova</td></tr>
+            <tr><td class="d">05/11</td><td><a href="previas/neondrive/index.html">NeonDrive</a></td><td>leva de ajustes do launcher</td></tr>
+            <tr><td class="d">04/11</td><td><a href="previas/preview-neon-drive/index.html">Preview Neon Drive</a></td><td>a tela inicial capturada do launcher</td></tr>
+            <tr><td class="d">04/11</td><td><a href="previas/direcoes-bricknext/index.html">Direções do BrickNext</a></td><td>as quatro direções visuais</td></tr>
+            <tr><td class="d">03/11</td><td><a href="previas/bricknext-logo/index.html">BrickNext Logo</a></td><td>a identidade do BrickNext</td></tr>
+            <tr><td class="d">03/11</td><td><a href="previas/bootscreen-v1/index.html">Bootscreen AnberNext</a></td><td>a primeira tela de boot</td></tr>
+            <tr><td class="d">29/10</td><td><a href="previas/player-anbertunes/index.html">Player AnberTunes</a></td><td>o player por cima do jogo</td></tr>
+          </tbody>
+        </table></div>
+        <p class="note">As datas são da última atualização de cada prévia.</p>
+      </div>
+      <div class="end col">
+        <p>Construído sobre o trabalho dos autores do NextUI e do MinUI, do dArkOS, do Knulli e do Batocera, do DraStic e do Boombrick. Fotos dos aparelhos: Anbernic e TrimUI. Um projeto da comunidade, sem ligação com os fabricantes.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="lb" aria-label="Imagem ampliada"><button type="button" class="x" id="lbx">Fechar</button><div class="in"><img id="lbimg" alt=""></div></dialog>
+
+<script>
+  (() => {
+    const lb = document.getElementById('lb'), img = document.getElementById('lbimg');
+    document.querySelectorAll('[data-full]').forEach(b => b.addEventListener('click', () => {
+      img.src = b.dataset.full; img.alt = (b.querySelector('img') || {}).alt || '';
+      try { lb.showModal(); } catch (e) {}
+    }));
+    document.getElementById('lbx').addEventListener('click', () => lb.close());
+    lb.addEventListener('click', e => { if (e.target === lb) lb.close(); });
+    // the chapter being read, marked in the table of contents
+    const links = [...document.querySelectorAll('.toc a')];
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + e.target.id)));
+    }), { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section.ch').forEach(s => io.observe(s));
+  })();
+</script>
+
+</body>
+</html>

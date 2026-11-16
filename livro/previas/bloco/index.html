@@ -1,0 +1,1220 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AnberNext Bloco</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: a dark showroom. Every Bloco screen at the RG353V's own 640x480, animated,
+     grouped by where it lives on the device; the page is only the shelf they stand on. */
+  :root{
+    --bg:#080a16; --panel:#0f1328; --panel2:#151a35;
+    --ink:#eef2ff; --muted:#8d96bd; --faint:#5a648a;
+    --amber:#f2a33c; --amber-hi:#fbd270; --amber-deep:#c6771d; --amber-dark:#8a4e12; --cyan:#3ad6e0;
+    --line:rgba(141,150,189,.16);
+    --display:'Chakra Petch',system-ui,sans-serif;
+    --body:'Outfit',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1100px 600px at 80% -10%,rgba(58,214,224,.06),transparent 60%),radial-gradient(900px 600px at 0% 0%,rgba(242,163,60,.07),transparent 55%),var(--bg);
+    color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;
+    padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  header.top{padding:48px 0 28px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:end}
+  @media(max-width:860px){header.top{grid-template-columns:1fr}}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .brand svg{width:34px;height:34px}
+  .brand b{font-family:var(--display);font-weight:600;font-size:19px}
+  .brand b i{font-style:normal;color:var(--cyan)}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin:0 0 12px}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,5.4vw,54px);line-height:1.02;margin:0 0 16px;letter-spacing:-.5px;text-wrap:balance}
+  h1 span{color:var(--amber)}
+  .lead{color:var(--muted);font-size:17px;line-height:1.6;max-width:62ch;margin:0}
+  .lead b{color:var(--ink);font-weight:600}
+
+  /* how the switch works: three keycaps in a row */
+  .path{display:flex;flex-wrap:wrap;align-items:center;gap:10px 8px}
+  .cap{font-family:var(--display);font-weight:600;font-size:15px;color:#2a1804;background:linear-gradient(#fcd57a,#f2a33c);padding:9px 14px;
+    box-shadow:3px 6px 0 var(--amber-dark),0 6px 0 var(--amber-deep)}
+  .cap.n{background:#262c4a;color:var(--ink);box-shadow:3px 6px 0 #10132a,0 6px 0 #171b33}
+  .path .sep{color:var(--faint);font-family:var(--mono)}
+  .switch p{color:var(--muted);font-size:14.5px;line-height:1.55;margin:18px 0 0;max-width:46ch}
+  .switch p b{color:var(--ink);font-weight:600}
+
+  .motifs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:12px}
+  .motif h3{font-family:var(--display);font-weight:600;font-size:16px;margin:0 0 4px;color:var(--amber-hi)}
+  .motif p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+
+  section.group{padding:34px 0 8px}
+  .ghead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:6px}
+  .ghead h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,3.2vw,30px);margin:0}
+  .ghead .who{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
+  .gsub{color:var(--muted);font-size:15px;line-height:1.55;margin:0 0 20px;max-width:72ch}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 26px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  figure{margin:0;min-width:0}
+  .bz{background:linear-gradient(145deg,#20233a,#0c0e1b);border-radius:18px;padding:10px;border:1px solid rgba(255,255,255,.05);
+    box-shadow:0 22px 44px -22px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.05)}
+  canvas{display:block;width:100%;max-width:100%;aspect-ratio:4/3;border-radius:6px;background:#090b18}
+  figcaption{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;margin-top:12px}
+  figcaption .no{grid-row:span 2;font-family:var(--mono);font-size:13px;color:var(--amber);padding-top:3px}
+  figcaption b{font-family:var(--display);font-weight:600;font-size:17px}
+  figcaption span{color:var(--muted);font-size:14px;line-height:1.5}
+
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:32px 0 80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+  footer h3{font-family:var(--display);font-weight:600;font-size:18px;margin:0 0 8px}
+  footer p,footer li{color:var(--muted);font-size:14.5px;line-height:1.6}
+  footer p{margin:0}
+  footer ul{margin:0;padding-left:18px}
+  footer b{color:var(--ink);font-weight:600}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,12 90,32 50,52 10,32" fill="#fbd270"/><polygon points="10,32 50,52 50,90 10,70" fill="#c6771d"/><polygon points="90,32 50,52 50,90 90,70" fill="#8a4e12"/></svg>
+        <b>Anber<i>Next</i></b>
+      </div>
+      <p class="kicker">Tema 2 · RG353V · 640×480</p>
+      <h1>Bloco: o aparelho todo <span>vira peça</span>.</h1>
+      <p class="lead">As <b>19 telas</b> do sistema redesenhadas no tema Bloco, no tamanho real da tela do RG353V e com a animação que vão ter. O Neon Drive continua existindo: o dono escolhe o tema nos Ajustes e <b>tudo troca junto</b>.</p>
+    </div>
+    <div class="switch">
+      <div class="path" aria-label="Caminho no aparelho">
+        <span class="cap n">Ajustes</span><span class="sep">›</span><span class="cap n">Aparência</span><span class="sep">›</span><span class="cap">Tema: Bloco</span>
+      </div>
+      <p>Troca a tela inicial, o menu dentro dos jogos, a música, os Ajustes e a tela de boot. Os emuladores com menu próprio (Dreamcast, N64, NDS e PSP) ficam como estão, igual no Neon Drive.</p>
+    </div>
+  </header>
+
+  <div class="motifs">
+    <div class="motif"><h3>A seleção é uma tecla</h3><p>O item escolhido vira um bloco âmbar que sobe quando você chega nele. Sem brilho de neon nem tremido de cor.</p></div>
+    <div class="motif"><h3>Tudo fica de pé</h3><p>Consoles são cubos numa prateleira, capas e saves são placas com espessura e sombra no chão.</p></div>
+    <div class="motif"><h3>Uma luz só</h3><p>Todo bloco tem a espessura para baixo e para a direita. Botões, bateria, volume e barras seguem a mesma regra.</p></div>
+    <div class="motif"><h3>Mesma fonte, mesmas cores</h3><p>Chakra Petch, âmbar e ciano da marca sobre azul-noite, com o chão isométrico sumindo nas bordas.</p></div>
+  </div>
+
+  <section class="group">
+    <div class="ghead"><h2>Tela inicial: três jeitos</h2><span class="who">novo · escolha nos Ajustes</span></div>
+    <p class="gsub">Em Ajustes › Aparência › Tela inicial você escolhe como os consoles aparecem: Carrossel (o padrão do Bloco), Lista ou Grade. As três usam o ícone que estiver escolhido.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="home" aria-label="Tela inicial em carrossel"></canvas></div><figcaption><span class="no">01</span><b>Carrossel</b><span>Os cubos deslizam numa prateleira e o escolhido sobe no meio.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeList" aria-label="Tela inicial em lista"></canvas></div><figcaption><span class="no">01b</span><b>Lista</b><span>Os nomes à esquerda, mais rápido de percorrer, e o cubo grande do escolhido à direita com o número de jogos.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeGrid" aria-label="Tela inicial em grade"></canvas></div><figcaption><span class="no">01c</span><b>Grade</b><span>Todos os consoles de uma vez, como na vitrine de ícones. O direcional anda em quatro direções; o escolhido sobe e mostra quantos jogos tem.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Ícones nos cubos dos consoles</h2><span class="who">as duas viram opção nos Ajustes</span></div>
+    <p class="gsub">Você escolhe em Ajustes › Aparência › Ícone dos consoles: Sigla, Controle ou Console (o padrão). Nas duas com desenho a sigla desce para a lateral do cubo. Tudo é desenhado no próprio aparelho com as cores do tema, sem imagem de fora.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="iconsA" aria-label="Proposta A: controles"></canvas></div><figcaption><span class="no">A</span><b>Os 39 consoles: controle</b><span>Todos os consoles compatíveis, cada um com o seu controle deitado no cubo. O escolhido sobe e o nome aparece embaixo.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="iconsB" aria-label="Proposta B: consoles"></canvas></div><figcaption><span class="no">B</span><b>Os 39 consoles: console</b><span>Os mesmos 39 com a miniatura do console: cartuchos, tampa do CD, teclados dos computadores, o gabinete do Arcade e o visor do Virtual Boy.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeA" data-offset="0.6" aria-label="Início com a proposta A"></canvas></div><figcaption><span class="no">A</span><b>Início com a proposta A</b><span>Como fica a prateleira com os controles.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="homeB" data-offset="0.6" aria-label="Início com a proposta B"></canvas></div><figcaption><span class="no">B</span><b>Início com a proposta B</b><span>Como fica a prateleira com os consoles.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Tela inicial</h2><span class="who">launcher</span></div>
+    <p class="gsub">Onde se escolhe o console e o jogo. É a parte que mais muda: a lista de texto vira uma prateleira.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="home" aria-label="Início com cubos de console"></canvas></div><figcaption><span class="no">01</span><b>Início</b><span>Cada console é um cubo com a miniatura dele em cima (o padrão; dá para trocar pelo controle ou pela sigla). O escolhido sobe e acende; nome e número de jogos embaixo. A música tocando fica no canto.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="games" aria-label="Capas em pé"></canvas></div><figcaption><span class="no">02</span><b>Dentro do console: carrossel</b><span>As capas ficam de pé como placas e deslizam. Jogo sem capa ganha a inicial do nome no lugar. É o padrão.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="gamesList" aria-label="Jogos em lista"></canvas></div><figcaption><span class="no">02b</span><b>Dentro do console: lista</b><span>A outra opção da biblioteca: nomes em lista à esquerda, mais jogos por tela, e a capa do escolhido de pé à direita.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="recent" aria-label="Recentes"></canvas></div><figcaption><span class="no">03</span><b>Recentes (SELECT)</b><span>O último save de cada jogo vira uma tela de pé; esquerda e direita trocam, A continua de onde parou.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="fmenu" aria-label="Menu do botão F"></canvas></div><figcaption><span class="no">04</span><b>Menu do F</b><span>Uma pilha de blocos. O item escolhido sai da pilha para a direita, como uma gaveta.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="tools" aria-label="Ferramentas"></canvas></div><figcaption><span class="no">05</span><b>Ferramentas</b><span>Lista larga com um cubinho por ferramenta; as que mais usamos têm cor própria.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="loading" aria-label="Carregando"></canvas></div><figcaption><span class="no">06</span><b>Carregando</b><span>O cubo se monta e a barra enche bloco a bloco enquanto o jogo abre.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="osd" aria-label="Volume"></canvas></div><figcaption><span class="no">07</span><b>Volume e brilho</b><span>Os dois indicadores viram uma escada de blocos que sobe com o nível.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Música</h2><span class="who">launcher e menu do jogo</span></div>
+    <p class="gsub">O mesmo player abre pelo menu do F e pelo menu dentro do jogo, então é desenhado uma vez só.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="music" aria-label="Biblioteca de música"></canvas></div><figcaption><span class="no">08</span><b>Biblioteca</b><span>Artistas e álbuns à esquerda, a capa do álbum de pé à direita. A barra de rolagem é um bloco que desliza.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="playing" aria-label="Tocando agora"></canvas></div><figcaption><span class="no">09</span><b>Tocando agora</b><span>O progresso da faixa anda bloco a bloco, com o bloco atual mais alto. Anterior, pausar e próxima viram teclas.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Dentro do jogo</h2><span class="who">motor dos emuladores</span></div>
+    <p class="gsub">O menu do botão F durante o jogo e tudo que aparece por cima dele.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="gamemenu" aria-label="Menu do jogo"></canvas></div><figcaption><span class="no">10</span><b>Menu do jogo</b><span>A lista mora num painel com espessura, e o jogo pausado aparece ao lado. Em Salvar e Carregar surge a imagem do slot com os 9 slots em blocos.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="options" aria-label="Opções do emulador"></canvas></div><figcaption><span class="no">11</span><b>Opções</b><span>Valor à direita; no item escolhido aparecem as setas para trocar. A explicação da opção fica embaixo.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="toasts" aria-label="Avisos"></canvas></div><figcaption><span class="no">12</span><b>Avisos</b><span>Save, conquista e volume aparecem como placas que entram pela esquerda, sem tampar o jogo.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="achievements" aria-label="Conquistas"></canvas></div><figcaption><span class="no">13</span><b>Conquistas</b><span>Conquista feita ganha cubo âmbar; a que falta fica com cubo apagado.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Ajustes</h2><span class="who">app de ajustes</span></div>
+    <p class="gsub">Inclui a tela nova de onde se troca o tema.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="settings" aria-label="Ajustes"></canvas></div><figcaption><span class="no">14</span><b>Ajustes</b><span>O cubo grande à direita mostra o símbolo da seção escolhida e o que tem dentro dela.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="appearance" aria-label="Aparência e troca de tema"></canvas></div><figcaption><span class="no">15</span><b>Aparência: tema e disposição</b><span>Quatro escolhas no topo: Tema (Neon Drive ou Bloco), Tela inicial (Carrossel, Lista ou Grade), Ícone dos consoles (Sigla, Controle ou Console) e Biblioteca de jogos (Carrossel ou Lista). Esquerda e direita trocam, com prévia ao lado. Vale na hora; a tela de boot muda no próximo boot.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="color" aria-label="Seletor de cor"></canvas></div><figcaption><span class="no">16</span><b>Seletor de cor</b><span>Cada canal é uma fila de blocos. O cubo grande mostra a cor nas três faces, e as cores prontas são cubinhos.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="wifi" aria-label="Wi-Fi"></canvas></div><figcaption><span class="no">17</span><b>Wi-Fi</b><span>Sinal em quatro barras, cadeado nas redes com senha e a rede conectada marcada em ciano.</span></figcaption></figure>
+      <figure><div class="bz"><canvas data-screen="keyboard" aria-label="Teclado"></canvas></div><figcaption><span class="no">18</span><b>Teclado</b><span>Um teclado de verdade: cada letra é uma tecla com espessura, e a escolhida sobe.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><h2>Boot</h2><span class="who">tela de boot</span></div>
+    <p class="gsub">A versão Bloco da bootscreen animada que já está no cartão. Mesma frase divertida e o mesmo rodapé.</p>
+    <div class="grid">
+      <figure><div class="bz"><canvas data-screen="boot" aria-label="Tela de boot"></canvas></div><figcaption><span class="no">19</span><b>Tela de boot</b><span>As três faces do cubo chegam voando e se encaixam, o nome entra letra a letra e a barra enche em blocos.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <h3>O que preciso de você</h3>
+      <p>Aprovar, ou pedir ajuste citando o <b>número da tela</b>. Depois da aprovação eu monto no código, conferindo cada tela na prévia do PC antes de ir para o aparelho.</p>
+    </div>
+    <div>
+      <h3>O que é ilustrativo</h3>
+      <ul>
+        <li>Capas, saves, álbuns, redes e conquistas são exemplos. No aparelho vêm dos seus arquivos.</li>
+        <li>Os nomes dos jogos são inventados para a prévia.</li>
+      </ul>
+    </div>
+  </footer>
+</div>
+<script>
+// Console icons shared by both themes: each system's controller (flat, in units u) and its console
+// (a model of boxes in the cube-top world, -1..1). Themes pass a painter that decides the look:
+// Bloco fills and extrudes, Neon draws tubes and wireframes. The 39 systems match anbernext-storage.
+(function () {
+'use strict';
+const SYSTEMS = [
+  ['GBA', 'Game Boy Advance'], ['GB', 'Game Boy'], ['GBC', 'Game Boy Color'], ['SGB', 'Super Game Boy'],
+  ['FC', 'Nintendo'], ['FDS', 'Famicom Disk System'], ['SFC', 'Super Nintendo'], ['N64', 'Nintendo 64'],
+  ['NDS', 'Nintendo DS'], ['VB', 'Virtual Boy'], ['PKM', 'Pokémon mini'], ['MD', 'Mega Drive'],
+  ['SMS', 'Master System'], ['GG', 'Game Gear'], ['SG1000', 'SG-1000'], ['SEGACD', 'Sega CD'],
+  ['32X', 'Sega 32X'], ['DC', 'Dreamcast'], ['PS', 'PlayStation'], ['PSP', 'PSP'],
+  ['PCE', 'PC Engine'], ['NGP', 'Neo Geo Pocket'], ['NGPC', 'Neo Geo Pocket Color'], ['FBN', 'Arcade'],
+  ['A2600', 'Atari 2600'], ['A5200', 'Atari 5200'], ['A7800', 'Atari 7800'], ['LYNX', 'Atari Lynx'],
+  ['COLECO', 'ColecoVision'], ['MSX', 'MSX'], ['CPC', 'Amstrad CPC'], ['C64', 'Commodore 64'],
+  ['C128', 'Commodore 128'], ['VIC', 'VIC-20'], ['PET', 'Commodore PET'], ['PLUS4', 'Commodore Plus/4'],
+  ['PUAE', 'Amiga'], ['P8', 'PICO-8'], ['PRBOOM', 'Doom']
+];
+// alternative cores share their console's drawing
+const ALIAS = { MGBA: 'GBA', SUPA: 'SFC' };
+
+function rr(g, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+
+// ---------- controllers ----------
+function ctrl(tag, P, u) {
+  const g = P.g, k = ALIAS[tag] || tag;
+  const R = (x, y, w, h, r) => () => { g.beginPath(); rr(g, x * u, y * u, w * u, h * u, r * u); };
+  const E = (x, y, rx, ry) => () => { g.beginPath(); g.ellipse(x * u, y * u, rx * u, ry * u, 0, 0, Math.PI * 2); };
+  const cross = (x, y, z) => P.cross(x * u, y * u, z * u);
+  const dot = (x, y, r, a) => P.dot(x * u, y * u, r * u, a);
+  const pill = (x, y, w) => P.pill(x * u, y * u, w * u);
+  const scr = (x, y, w, h) => P.scr(x * u, y * u, w * u, h * u);
+  const ring = (x, y, r) => P.line(() => { g.beginPath(); g.arc(x * u, y * u, r * u, 0, Math.PI * 2); });
+  const stick = (x, y, r) => { ring(x, y, r); dot(x, y, r * 0.48, true); };
+  const keys = (x, y, cols, rows, s) => { for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) P.shape(() => { g.beginPath(); g.rect((x + i * s) * u, (y + j * s) * u, s * 0.72 * u, s * 0.72 * u); }, 'ink'); };
+  const joystick = btns => { P.body(R(-0.62, -0.62, 1.24, 1.24, 0.14)); stick(0.05, 0.08, 0.32); dot(-0.38, -0.38, 0.11, true); if (btns > 1) dot(0.4, -0.38, 0.11, true); };
+  const mouse = () => { P.body(R(-0.55, -0.88, 1.1, 1.76, 0.52)); P.line(() => { g.beginPath(); g.moveTo(-0.55 * u, -0.3 * u); g.lineTo(0.55 * u, -0.3 * u); g.moveTo(0, -0.88 * u); g.lineTo(0, -0.3 * u); }); };
+  const sega = six => { P.body(E(0, 0.02, 1.12, 0.56)); cross(-0.62, 0.04, 0.25); pill(0, -0.26, 0.2); dot(0.34, 0.2, 0.12); dot(0.62, 0.06, 0.12); dot(0.9, -0.08, 0.12); if (six) { dot(0.3, -0.06, 0.08); dot(0.56, -0.2, 0.08); dot(0.82, -0.32, 0.08); } };
+  const snes = () => { P.body(() => { g.beginPath(); g.arc(-0.62 * u, 0, 0.52 * u, Math.PI * 0.5, Math.PI * 1.5); g.lineTo(0.62 * u, -0.52 * u); g.arc(0.62 * u, 0, 0.52 * u, -Math.PI * 0.5, Math.PI * 0.5); g.closePath(); }); cross(-0.62, 0, 0.26); pill(-0.1, 0.06, 0.16); pill(0.12, 0.06, 0.16); dot(0.62, -0.2, 0.1); dot(0.62, 0.2, 0.1); dot(0.42, 0, 0.1); dot(0.82, 0, 0.1, true); };
+  const nes = () => { P.body(R(-1.15, -0.48, 2.3, 0.96, 0.08)); P.shape(R(-0.3, -0.36, 0.6, 0.72, 0.04), 'ink'); cross(-0.72, 0, 0.27); pill(-0.12, 0.12, 0.14); pill(0.12, 0.12, 0.14); dot(0.58, 0.08, 0.13, true); dot(0.9, 0.08, 0.13, true); };
+  const portrait = (round, acc) => { P.body(round ? R(-0.62, -0.95, 1.24, 1.9, 0.22) : () => { g.beginPath(); g.moveTo(-0.62 * u, -0.95 * u); g.lineTo(0.62 * u, -0.95 * u); g.lineTo(0.62 * u, 0.7 * u); g.quadraticCurveTo(0.62 * u, 0.95 * u, 0.3 * u, 0.95 * u); g.lineTo(-0.62 * u, 0.95 * u); g.closePath(); }); scr(-0.4, -0.78, 0.8, 0.62); cross(-0.3, 0.32, 0.17); dot(0.22, 0.42, 0.09); dot(0.42, 0.28, 0.09, acc); pill(-0.1, 0.7, 0.14); pill(0.1, 0.7, 0.14); };
+  const wide = (w, h, r, sw, sh) => { P.body(R(-w / 2, -h / 2, w, h, r)); scr(-sw / 2, -sh / 2 - 0.02, sw, sh); };
+  switch (k) {
+    case 'FC': case 'FDS': nes(); break;
+    case 'SFC': case 'SGB': snes(); break;
+    case 'MD': case 'SEGACD': sega(false); break;
+    case '32X': sega(true); break;
+    case 'PS': P.body(() => { g.beginPath(); g.moveTo(-0.7 * u, -0.42 * u); g.lineTo(0.7 * u, -0.42 * u); g.quadraticCurveTo(1.05 * u, -0.4 * u, 1.05 * u, 0.1 * u); g.quadraticCurveTo(1.05 * u, 0.62 * u, 0.78 * u, 0.62 * u); g.quadraticCurveTo(0.55 * u, 0.62 * u, 0.42 * u, 0.22 * u); g.lineTo(-0.42 * u, 0.22 * u); g.quadraticCurveTo(-0.55 * u, 0.62 * u, -0.78 * u, 0.62 * u); g.quadraticCurveTo(-1.05 * u, 0.62 * u, -1.05 * u, 0.1 * u); g.quadraticCurveTo(-1.05 * u, -0.4 * u, -0.7 * u, -0.42 * u); g.closePath(); }); cross(-0.66, -0.08, 0.22); pill(-0.12, -0.08, 0.14); pill(0.12, -0.08, 0.14); for (const [dx, dy] of [[0, -0.19], [0, 0.03], [-0.11, -0.08], [0.11, -0.08]]) dot(0.66 + dx * 1.1, dy, 0.075); break;
+    case 'N64': P.body(() => { g.beginPath(); rr(g, -1.1 * u, -0.5 * u, 2.2 * u, 0.62 * u, 0.3 * u); rr(g, -1.05 * u, -0.2 * u, 0.42 * u, 0.8 * u, 0.2 * u); rr(g, 0.63 * u, -0.2 * u, 0.42 * u, 0.8 * u, 0.2 * u); rr(g, -0.2 * u, -0.1 * u, 0.4 * u, 0.85 * u, 0.2 * u); }); cross(-0.78, -0.2, 0.17); stick(0, 0.18, 0.15); dot(0.6, -0.12, 0.09, true); dot(0.42, -0.26, 0.08); for (const [dx, dy] of [[0.86, -0.36], [0.86, -0.12], [0.74, -0.24], [0.98, -0.24]]) dot(dx, dy, 0.055); dot(0, -0.3, 0.06); break;
+    case 'DC': P.body(R(-0.98, -0.56, 1.96, 1.06, 0.46)); scr(-0.22, -0.48, 0.44, 0.34); stick(-0.58, -0.14, 0.16); cross(-0.38, 0.26, 0.14); for (const [dx, dy] of [[0.62, -0.22], [0.62, 0.1], [0.46, -0.06], [0.78, -0.06]]) dot(dx, dy, 0.08, dx === 0.78); break;
+    case 'PSP': wide(2.4, 0.92, 0.46, 1.2, 0.62); cross(-0.92, -0.08, 0.15); dot(-0.92, 0.28, 0.07, true); for (const [dx, dy] of [[0, -0.17], [0, 0.11], [-0.14, -0.03], [0.14, -0.03]]) dot(0.92 + dx, dy, 0.06); break;
+    case 'NDS': P.body(R(-0.78, -0.95, 1.56, 1.9, 0.14)); pill(0, 0, 1.3); scr(-0.48, -0.82, 0.96, 0.66); scr(-0.38, 0.14, 0.76, 0.62); cross(-0.6, 0.38, 0.11); dot(0.6, 0.3, 0.06); dot(0.6, 0.5, 0.06, true); break;
+    case 'GG': wide(2.4, 1.04, 0.3, 0.9, 0.66); cross(-0.86, 0, 0.2); dot(0.78, 0.1, 0.1, true); dot(0.98, -0.08, 0.1); dot(0.88, -0.36, 0.05); break;
+    case 'LYNX': wide(2.4, 1.0, 0.2, 0.92, 0.62); cross(-0.88, 0, 0.2); dot(0.86, -0.13, 0.1, true); dot(0.86, 0.15, 0.1); pill(-0.55, 0.4, 0.14); pill(0.55, 0.4, 0.14); break;
+    case 'NGP': case 'NGPC': wide(2.1, 0.96, 0.42, 0.76, 0.58); stick(-0.76, 0, 0.17); dot(0.68, 0.08, 0.1, k === 'NGPC'); dot(0.88, -0.08, 0.1); break;
+    case 'VB': P.body(() => { g.beginPath(); rr(g, -1.15 * u, -0.38 * u, 2.3 * u, 0.56 * u, 0.22 * u); rr(g, -1.12 * u, -0.1 * u, 0.56 * u, 0.78 * u, 0.28 * u); rr(g, 0.56 * u, -0.1 * u, 0.56 * u, 0.78 * u, 0.28 * u); }); cross(-0.8, -0.1, 0.18); cross(0.8, -0.1, 0.18); dot(-0.22, -0.08, 0.06, true); dot(0.22, -0.08, 0.06, true); break;
+    case 'PKM': P.body(R(-0.58, -0.78, 1.16, 1.56, 0.32)); scr(-0.38, -0.58, 0.76, 0.52); cross(-0.24, 0.32, 0.14); dot(0.24, 0.4, 0.09, true); dot(0.4, 0.22, 0.09); break;
+    case 'FBN': P.body(R(-1.2, -0.52, 2.4, 1.04, 0.1)); stick(-0.7, 0, 0.24); for (let i = 0; i < 3; i++) { dot(0.16 + i * 0.3, -0.16, 0.1, i === 0); dot(0.22 + i * 0.3, 0.16, 0.1); } break;
+    case 'A2600': joystick(1); break;
+    case 'A7800': P.body(R(-0.48, -0.92, 0.96, 1.84, 0.3)); stick(0, -0.36, 0.26); dot(-0.28, 0.36, 0.1, true); dot(0.28, 0.36, 0.1, true); break;
+    case 'A5200': case 'COLECO': P.body(R(-0.6, -0.95, 1.2, 1.9, 0.16)); stick(0, -0.55, 0.24); keys(-0.36, 0.0, 3, 4, 0.26); dot(-0.48, -0.88, 0.06, true); dot(0.48, -0.88, 0.06, true); break;
+    case 'SG1000': P.body(R(-1.05, -0.48, 2.1, 0.96, 0.12)); stick(-0.52, 0, 0.28); dot(0.5, 0.06, 0.12, true); dot(0.82, 0.06, 0.12, true); break;
+    case 'SMS': P.body(R(-1.05, -0.5, 2.1, 1.0, 0.12)); cross(-0.6, 0, 0.26); dot(0.52, 0.06, 0.13, true); dot(0.84, 0.06, 0.13); break;
+    case 'PCE': P.body(R(-0.98, -0.44, 1.96, 0.88, 0.1)); cross(-0.6, 0.02, 0.24); pill(-0.12, 0.18, 0.14); pill(0.12, 0.18, 0.14); dot(0.5, 0.12, 0.11, true); dot(0.78, 0.12, 0.11, true); P.shape(R(0.42, -0.26, 0.16, 0.08, 0.02), 'ink'); P.shape(R(0.7, -0.26, 0.16, 0.08, 0.02), 'ink'); break;
+    case 'PUAE': case 'PRBOOM': mouse(); break;
+    case 'P8': P.body(R(-1.0, -0.5, 2.0, 1.0, 0.5)); cross(-0.52, 0, 0.22); dot(0.44, 0.1, 0.11, true); dot(0.7, -0.08, 0.11); break;
+    case 'GB': portrait(false, false); break;
+    case 'GBC': portrait(true, true); break;
+    case 'GBA': wide(2.3, 1.0, 0.42, 0.84, 0.56); cross(-0.8, 0, 0.19); dot(0.76, 0.1, 0.1, true); dot(0.98, -0.08, 0.1); break;
+    default: joystick(2); // MSX, CPC and the Commodores: their classic two-button stick
+  }
+}
+
+// ---------- consoles ----------
+function model(tag, M) {
+  const k = ALIAS[tag] || tag;
+  const B = M.box, rect = M.rect, circ = M.circ, lf = M.lface, grid = M.grid;
+  const cart = (a, b, z, w, h) => B(a, b, z, w, 0.14, h, 'acc');
+  const hand = (w, d, body, sw, sd, dpadX, btn) => {
+    B(-w / 2, -d / 2, 0, w, d, 0.17, body); rect(0.17, -sw / 2, -sd / 2 - 0.02, sw, sd, 'scr');
+    B(dpadX - 0.13, -0.04, 0.17, 0.26, 0.08, 0.05, 'acc'); B(dpadX - 0.04, -0.13, 0.17, 0.08, 0.26, 0.05, 'acc');
+    (btn || [[-dpadX - 0.06, -0.02], [-dpadX + 0.12, -0.16]]).forEach(([x, y]) => B(x, y, 0.17, 0.12, 0.12, 0.06, 'acc'));
+  };
+  const keyboard = (a, b, w, d, h, body, keyRole) => { B(a, b, 0, w, d, h, body); grid(h, a + 0.08, b + 0.12, w - 0.16, d - 0.2, 12, 4, keyRole || 'det'); };
+  const monitor = (a, b, w, d, h, body) => { B(a, b, 0, w, d, h, body); lf(a + 0.1, b + d, h * 0.2, w - 0.2, h * 0.65, 'scr'); };
+  switch (k) {
+    case 'SFC': B(-0.8, -0.62, 0, 1.6, 1.24, 0.3, 'body'); rect(0.3, -0.5, -0.42, 1.0, 0.3, 'det'); cart(-0.42, -0.36, 0.3, 0.84, 0.5); B(-0.62, 0.28, 0.3, 0.26, 0.18, 0.06, 'dark'); B(0.32, 0.28, 0.3, 0.26, 0.18, 0.06, 'acc'); break;
+    case 'SGB': B(-0.8, -0.62, 0, 1.6, 1.24, 0.3, 'body'); rect(0.3, -0.5, -0.42, 1.0, 0.3, 'det'); B(-0.42, -0.36, 0.3, 0.84, 0.14, 0.42, 'dark'); B(-0.22, -0.34, 0.72, 0.44, 0.1, 0.32, 'light'); break;
+    case 'PS': B(-0.82, -0.7, 0, 1.64, 1.4, 0.26, 'body'); circ(0.26, -0.08, -0.08, 0.55, 'light'); circ(0.26, -0.08, -0.08, 0.46, 'det'); circ(0.26, -0.08, -0.08, 0.1, 'light'); B(0.38, 0.4, 0.26, 0.22, 0.16, 0.07, 'dark'); B(-0.62, 0.4, 0.26, 0.22, 0.16, 0.07, 'dark'); break;
+    case 'MD': B(-0.82, -0.62, 0, 1.64, 1.24, 0.28, 'dark'); circ(0.28, 0, 0, 0.58, 'body'); circ(0.28, 0, 0, 0.48, 'dark'); cart(-0.36, -0.08, 0.28, 0.72, 0.46); break;
+    case 'SEGACD': B(-0.86, -0.66, 0, 1.72, 1.32, 0.24, 'dark'); lf(-0.5, 0.66, 0.06, 0.9, 0.1, 'det'); B(-0.8, -0.6, 0.24, 1.6, 1.2, 0.26, 'dark'); circ(0.5, 0, 0, 0.5, 'body'); cart(-0.34, -0.08, 0.5, 0.68, 0.34); break;
+    case '32X': B(-0.82, -0.62, 0, 1.64, 1.24, 0.28, 'dark'); circ(0.28, 0, 0, 0.58, 'body'); B(-0.42, -0.3, 0.28, 0.84, 0.6, 0.3, 'body'); circ(0.58, 0, 0, 0.3, 'det'); cart(-0.3, -0.07, 0.58, 0.6, 0.3); break;
+    case 'SMS': B(-0.88, -0.6, 0, 1.76, 1.2, 0.28, 'dark'); B(-0.88, -0.6, 0.28, 1.76, 0.42, 0.1, 'dark'); rect(0.28, -0.88, 0.2, 1.76, 0.08, 'acc'); cart(-0.34, -0.45, 0.38, 0.68, 0.36); break;
+    case 'SG1000': B(-0.82, -0.6, 0, 1.64, 1.2, 0.26, 'light'); rect(0.26, -0.82, 0.1, 1.64, 0.1, 'acc'); cart(-0.32, -0.36, 0.26, 0.64, 0.4); break;
+    case 'GG': hand(2.0, 1.0, 'dark', 0.62, 0.52, -0.7); break;
+    case 'DC': B(-0.84, -0.8, 0, 1.68, 1.6, 0.3, 'light'); circ(0.3, -0.04, -0.14, 0.56, 'body'); circ(0.3, -0.04, -0.14, 0.1, 'acc'); for (let i = 0; i < 4; i++) lf(-0.7 + i * 0.36, 0.8, 0.08, 0.2, 0.1, 'det'); break;
+    case 'N64': B(-0.86, -0.66, 0, 1.72, 1.32, 0.22, 'dark'); B(-0.86, -0.66, 0.22, 1.72, 0.42, 0.12, 'dark'); cart(-0.32, -0.2, 0.22, 0.64, 0.46); B(-0.62, 0.36, 0.22, 0.2, 0.14, 0.06, 'body'); B(0.42, 0.36, 0.22, 0.2, 0.14, 0.06, 'body'); break;
+    case 'NDS': B(-0.8, -0.05, 0, 1.6, 0.95, 0.12, 'light'); rect(0.12, -0.38, 0.12, 0.76, 0.6, 'scr'); B(-0.06, 0.32, 0.12, 0.1, 0.1, 0.04, 'acc'); B(-0.65, 0.32, 0.12, 0.18, 0.06, 0.04, 'acc'); B(-0.8, -0.18, 0, 1.6, 0.13, 0.95, 'light'); lf(-0.6, -0.05, 0.18, 1.2, 0.62, 'scr'); break;
+    case 'VB': B(-0.12, -0.12, 0, 0.24, 0.24, 0.5, 'dark'); B(-0.7, -0.4, 0, 0.3, 0.3, 0.06, 'dark'); B(0.4, -0.4, 0, 0.3, 0.3, 0.06, 'dark'); B(-0.78, -0.32, 0.5, 1.56, 0.52, 0.36, 'acc'); lf(-0.6, 0.2, 0.56, 0.4, 0.22, 'scr'); lf(0.2, 0.2, 0.56, 0.4, 0.22, 'scr'); break;
+    case 'PKM': hand(1.0, 1.3, 'light', 0.62, 0.5, -0.22, [[0.16, 0.22], [0.3, 0.08]]); break;
+    case 'PSP': hand(2.1, 0.86, 'dark', 1.0, 0.56, -0.78); break;
+    case 'PCE': B(-0.62, -0.62, 0, 1.24, 1.24, 0.24, 'light'); B(-0.62, -0.62, 0.24, 1.24, 0.36, 0.08, 'dark'); B(-0.36, 0.0, 0.24, 0.72, 0.06, 0.26, 'acc'); break;
+    case 'NGP': hand(1.9, 0.92, 'light', 0.66, 0.5, -0.66); break;
+    case 'NGPC': hand(1.9, 0.92, 'alt', 0.66, 0.5, -0.66); break;
+    case 'LYNX': hand(2.2, 0.9, 'dark', 0.82, 0.54, -0.82); break;
+    case 'FBN': B(-0.52, -0.6, 0, 1.04, 0.8, 1.2, 'dark'); lf(-0.38, 0.2, 0.72, 0.76, 0.36, 'scr'); B(-0.6, 0.2, 0, 1.2, 0.46, 0.56, 'body'); circ(0.56, -0.25, 0.42, 0.08, 'acc'); circ(0.56, 0.1, 0.36, 0.06, 'acc'); circ(0.56, 0.28, 0.36, 0.06, 'acc'); B(-0.52, 0.08, 1.2, 1.04, 0.12, 0.14, 'acc'); break;
+    case 'A2600': B(-0.9, -0.62, 0, 1.8, 1.24, 0.22, 'dark'); lf(-0.9, 0.62, 0, 1.8, 0.14, 'wood'); for (let i = 0; i < 5; i++) rect(0.22, -0.8, -0.5 + i * 0.12, 1.6, 0.04, 'det'); cart(-0.3, -0.3, 0.22, 0.6, 0.34); break;
+    case 'A5200': B(-0.95, -0.7, 0, 1.9, 1.4, 0.26, 'dark'); rect(0.26, -0.6, -0.5, 1.2, 0.5, 'det'); cart(-0.34, -0.34, 0.26, 0.68, 0.36); B(0.5, 0.3, 0.26, 0.3, 0.2, 0.05, 'light'); break;
+    case 'A7800': B(-0.86, -0.6, 0, 1.72, 1.2, 0.24, 'dark'); rect(0.24, -0.86, 0.12, 1.72, 0.14, 'light'); cart(-0.32, -0.32, 0.24, 0.64, 0.36); break;
+    case 'COLECO': B(-0.9, -0.62, 0, 1.8, 1.24, 0.22, 'dark'); B(0.3, -0.5, 0.22, 0.45, 0.9, 0.1, 'body'); grid(0.32, 0.36, -0.1, 0.33, 0.42, 3, 4, 'det'); cart(-0.6, -0.3, 0.22, 0.6, 0.34); break;
+    case 'MSX': keyboard(-0.95, -0.4, 1.9, 0.95, 0.18, 'dark'); cart(0.4, -0.52, 0.0, 0.42, 0.42); break;
+    case 'CPC': keyboard(-0.95, -0.05, 1.9, 0.82, 0.16, 'dark'); monitor(-0.6, -0.95, 1.2, 0.72, 0.9, 'light'); break;
+    case 'C64': keyboard(-0.95, -0.52, 1.9, 1.04, 0.22, 'light', 'dark'); rect(0.22, 0.62, -0.42, 0.2, 0.08, 'acc'); break;
+    case 'C128': keyboard(-1.0, -0.56, 2.0, 1.12, 0.18, 'light', 'dark'); rect(0.18, 0.62, -0.44, 0.24, 0.6, 'det'); break;
+    case 'VIC': keyboard(-0.95, -0.52, 1.9, 1.04, 0.22, 'light', 'dark'); rect(0.22, 0.6, -0.4, 0.22, 0.08, 'acc'); rect(0.22, 0.6, -0.26, 0.22, 0.08, 'acc'); break;
+    case 'PLUS4': keyboard(-0.95, -0.48, 1.9, 0.96, 0.14, 'dark', 'light'); rect(0.14, 0.62, 0.12, 0.2, 0.2, 'acc'); break;
+    case 'PET': B(-0.8, 0.02, 0, 1.6, 0.76, 0.2, 'light'); grid(0.2, -0.7, 0.14, 1.4, 0.52, 11, 4, 'dark'); monitor(-0.8, -0.95, 1.6, 0.97, 0.95, 'light'); break;
+    case 'PUAE': keyboard(-1.0, -0.56, 2.0, 1.12, 0.2, 'light', 'det'); rect(0.2, 0.62, -0.46, 0.26, 0.06, 'dark'); rect(0.2, -0.9, -0.48, 0.18, 0.06, 'acc'); break;
+    case 'P8': B(-0.62, -0.62, 0, 1.24, 1.24, 0.6, 'dark'); lf(-0.46, 0.62, 0.14, 0.92, 0.36, 'scr'); cart(-0.3, -0.3, 0.6, 0.6, 0.32); break;
+    case 'PRBOOM': B(0.38, -0.72, 0, 0.46, 1.1, 0.95, 'light'); lf(0.46, 0.38, 0.6, 0.3, 0.08, 'det'); monitor(-0.88, -0.6, 1.12, 0.9, 0.78, 'light'); break;
+    case 'FC': B(-0.82, -0.55, 0, 1.64, 1.1, 0.24, 'body'); B(-0.82, 0.3, 0, 1.64, 0.25, 0.27, 'dark'); cart(-0.36, -0.34, 0.24, 0.72, 0.42); B(-0.78, -0.45, 0.24, 0.28, 0.6, 0.05, 'dark'); B(0.5, -0.45, 0.24, 0.28, 0.6, 0.05, 'dark'); break;
+    case 'FDS': B(-0.82, -0.85, 0, 1.64, 0.95, 0.22, 'body'); cart(-0.3, -0.7, 0.22, 0.6, 0.36); B(-0.72, 0.25, 0, 1.44, 0.62, 0.36, 'dark'); rect(0.36, -0.5, 0.42, 1.0, 0.1, 'det'); break;
+    case 'GBA': hand(1.8, 0.96, 'alt', 0.68, 0.52, -0.62); break;
+    case 'GB': case 'GBC': {
+      B(-0.5, -0.88, 0, 1.0, 1.76, 0.17, k === 'GBC' ? 'alt' : 'body');
+      rect(0.17, -0.38, -0.76, 0.76, 0.66, 'scr');
+      B(-0.34, 0.24, 0.17, 0.26, 0.08, 0.05, 'acc'); B(-0.25, 0.15, 0.17, 0.08, 0.26, 0.05, 'acc');
+      B(0.12, 0.3, 0.17, 0.12, 0.12, 0.06, 'acc'); B(0.3, 0.16, 0.17, 0.12, 0.12, 0.06, 'acc');
+      break;
+    }
+    default: B(-0.7, -0.7, 0, 1.4, 1.4, 0.3, 'body');
+  }
+}
+const API = { SYSTEMS, ALIAS, ctrl, model, rr };
+if (typeof module !== 'undefined' && module.exports) module.exports = API;
+globalThis.ANX_ICONS = API;
+})();
+
+(function () {
+'use strict';
+// Bloco theme renderer: every screen at the RG353V's 640x480, drawn with the same
+// primitives the device code will use (flat polygons, rects, text, image quads).
+const W = 640, H = 480;
+const FF = '"Chakra Petch", "Segoe UI", system-ui, sans-serif';
+const P = {
+  ink: '#eef2ff', soft: '#c9cfea', muted: '#8d96bd', faint: '#5a648a',
+  amber: '#f2a33c', amberHi: '#fbd270', amberDeep: '#c6771d', amberDark: '#8a4e12',
+  cyan: '#3ad6e0', cyanSoft: '#86d9e2', onAmber: '#2a1804'
+};
+const AMB = { t1: '#fde08a', t2: '#f2a33c', l: '#c6771d', r: '#8a4e12' };
+const NEU = { t1: '#3a4064', t2: '#262c4a', l: '#1c2140', r: '#141833' };
+const DIM = { t1: '#262b48', t2: '#1d2240', l: '#161a31', r: '#0f1228' };
+const CYA = { t1: '#a6f2f6', t2: '#3ad6e0', l: '#1a8fa0', r: '#0f5f6b' };
+const MAG = { t1: '#ffb3d6', t2: '#ff5ca8', l: '#b8306f', r: '#7a1f4a' };
+const GRN = { t1: '#b6f5d6', t2: '#51e0a3', l: '#249a6b', r: '#145741' };
+const INK = { t1: '#4a2a08', t2: '#3a2205', l: '#2a1804', r: '#1e1103' };
+
+const clamp = (v, a = 0, b = 1) => (v < a ? a : v > b ? b : v);
+const lerp = (a, b, p) => a + (b - a) * p;
+const eo = p => 1 - Math.pow(1 - p, 3);
+const eob = p => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); };
+const off = (w, h) => {
+  const c = typeof document !== 'undefined' ? document.createElement('canvas') : globalThis.MOCK_CANVAS();
+  c.width = w; c.height = h; return c;
+};
+
+// ---------- primitives ----------
+function font(g, px, w) { g.font = (w || 400) + ' ' + px + 'px ' + FF; }
+function tw(g, s, px, w) { font(g, px, w); return g.measureText(s).width; }
+function text(g, s, x, y, col, px, o) {
+  o = o || {};
+  font(g, px, o.w); g.fillStyle = col; g.textBaseline = 'alphabetic';
+  if (o.ls) {
+    let total = 0; for (const ch of s) total += g.measureText(ch).width; total += o.ls * (s.length - 1);
+    let cx = o.align === 'center' ? x - total / 2 : o.align === 'right' ? x - total : x;
+    g.textAlign = 'left';
+    for (const ch of s) { g.fillText(ch, cx, y); cx += g.measureText(ch).width + o.ls; }
+    return total;
+  }
+  g.textAlign = o.align || 'left'; g.fillText(s, x, y); g.textAlign = 'left';
+  return g.measureText(s).width;
+}
+function poly(g, pts, fill) {
+  g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]);
+  g.closePath(); g.fillStyle = fill; g.fill();
+}
+function vgrad(g, y0, y1, a, b) { const gr = g.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, a); gr.addColorStop(1, b); return gr; }
+// every block extrudes the same way: down and slightly right, so the whole UI shares one light
+function extrude(g, x, y, w, h, d, cb, cs) {
+  const ex = d * 0.5, ey = d;
+  poly(g, [[x, y + h], [x + w, y + h], [x + w + ex, y + h + ey], [x + ex, y + h + ey]], cb);
+  poly(g, [[x + w, y], [x + w + ex, y + ey], [x + w + ex, y + h + ey], [x + w, y + h]], cs);
+}
+function block(g, x, y, w, h, d, face, cb, cs, hl) {
+  if (d > 0) extrude(g, x, y, w, h, d, cb, cs);
+  g.fillStyle = face; g.fillRect(x, y, w, h);
+  if (hl) { g.fillStyle = 'rgba(255,255,255,' + hl + ')'; g.fillRect(x, y, w, 1); g.fillRect(x, y, 1, h); }
+}
+function ablock(g, x, y, w, h, d) { block(g, x, y, w, h, d, vgrad(g, y, y + h, '#fcd57a', '#f2a33c'), P.amberDeep, P.amberDark, 0.4); }
+function nblock(g, x, y, w, h, d) { block(g, x, y, w, h, d, '#262c4a', '#171b33', '#10132a', 0.1); }
+function card(g, x, y, w, h, d, a) { block(g, x, y, w, h, d == null ? 6 : d, 'rgba(17,21,43,' + (a == null ? 0.92 : a) + ')', '#0a0c1c', '#07091a', 0.06); }
+function shade(hex, f) {
+  const n = parseInt(hex.slice(1), 16);
+  const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => Math.round(clamp(f >= 1 ? v + (255 - v) * (f - 1) : v * f, 0, 255)));
+  return 'rgb(' + c.join(',') + ')';
+}
+function palOf(hex) { return { t1: shade(hex, 1.35), t2: hex, l: shade(hex, 0.72), r: shade(hex, 0.5) }; }
+
+// isometric cube; (x,y) is the centre of the top face, s its half-width, h the side height
+function cube(g, x, y, s, h, pal, o) {
+  o = o || {};
+  const fo = o.fly || 0, a = o.alpha == null ? 1 : o.alpha;
+  const T = [x, y - s / 2], R = [x + s, y], B = [x, y + s / 2], L = [x - s, y];
+  g.save(); g.globalAlpha *= a;
+  const lx = -fo * 1.2, rx = fo * 1.2, ty = -fo * 1.2;
+  poly(g, [[L[0] + lx, L[1]], [B[0] + lx, B[1]], [B[0] + lx, B[1] + h], [L[0] + lx, L[1] + h]], pal.l);
+  poly(g, [[B[0] + rx, B[1]], [R[0] + rx, R[1]], [R[0] + rx, R[1] + h], [B[0] + rx, B[1] + h]], pal.r);
+  const gr = g.createLinearGradient(x, y - s / 2 + ty, x, y + s / 2 + ty); gr.addColorStop(0, pal.t1); gr.addColorStop(1, pal.t2);
+  poly(g, [[T[0], T[1] + ty], [R[0], R[1] + ty], [B[0], B[1] + ty], [L[0], L[1] + ty]], gr);
+  if (!fo) {
+    g.strokeStyle = 'rgba(255,255,255,0.22)'; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(L[0], L[1]); g.lineTo(T[0], T[1]); g.lineTo(R[0], R[1]); g.stroke();
+    g.strokeStyle = 'rgba(255,255,255,0.07)'; g.beginPath(); g.moveTo(B[0], B[1]); g.lineTo(B[0], B[1] + h); g.stroke();
+  }
+  if (o.label || o.icon) {
+    g.save(); g.translate(x, y + ty); g.transform(1, 0.5, -1, 0.5, 0, 0);
+    if (o.label) { text(g, o.label, 0, (o.lpx || 18) * 0.36, o.lcol || P.onAmber, o.lpx || 18, { align: 'center', w: 600 }); }
+    if (o.icon) icon(g, o.icon, s);
+    g.restore();
+  }
+  g.restore();
+}
+function topIcon(g, x, y, s, fn) { g.save(); g.translate(x, y); g.transform(1, 0.5, -1, 0.5, 0, 0); fn(g, s); g.restore(); }
+function ellipse(g, x, y, rx, col, a) {
+  g.save(); g.translate(x, y); g.scale(1, 0.45);
+  const gr = g.createRadialGradient(0, 0, 0, 0, 0, rx);
+  gr.addColorStop(0, col.replace('A', a)); gr.addColorStop(1, col.replace('A', 0));
+  g.fillStyle = gr; g.fillRect(-rx, -rx, rx * 2, rx * 2); g.restore();
+}
+const shadow = (g, x, y, rx, a) => ellipse(g, x, y, rx, 'rgba(0,0,0,A)', a == null ? 0.5 : a);
+const glow = (g, x, y, rx, a) => ellipse(g, x, y, rx, 'rgba(242,163,60,A)', a == null ? 0.35 : a);
+
+// icons for the big settings cube, drawn in the top face's own square
+function icon(g, k, s) {
+  const u = s / 2, ink = '#5a3208';
+  g.lineWidth = Math.max(2, s * 0.06); g.strokeStyle = ink; g.fillStyle = ink; g.lineCap = 'round'; g.lineJoin = 'round';
+  const circ = (x, y, r, f) => { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); f ? (g.fillStyle = f, g.fill()) : g.stroke(); };
+  if (k === 'pal') { circ(-u * 0.25, -u * 0.15, u * 0.3, '#3ad6e0'); circ(u * 0.25, -u * 0.15, u * 0.3, '#ff5ca8'); circ(0, u * 0.28, u * 0.3, '#fff2c8'); }
+  else if (k === 'scr') { g.strokeRect(-u * 0.55, -u * 0.4, u * 1.1, u * 0.72); g.beginPath(); g.moveTo(-u * 0.25, u * 0.55); g.lineTo(u * 0.25, u * 0.55); g.stroke(); }
+  else if (k === 'sys') { circ(0, 0, u * 0.32); circ(0, 0, u * 0.08, ink); for (let i = 0; i < 8; i++) { const an = i * Math.PI / 4; g.beginPath(); g.moveTo(Math.cos(an) * u * 0.38, Math.sin(an) * u * 0.38); g.lineTo(Math.cos(an) * u * 0.55, Math.sin(an) * u * 0.55); g.stroke(); } }
+  else if (k === 'net') { for (const r of [0.2, 0.45, 0.7]) { g.beginPath(); g.arc(0, u * 0.35, u * r, -Math.PI * 0.8, -Math.PI * 0.2); g.stroke(); } circ(0, u * 0.35, u * 0.07, ink); }
+  else if (k === 'bt') { g.beginPath(); g.moveTo(-u * 0.3, -u * 0.25); g.lineTo(u * 0.3, u * 0.25); g.lineTo(0, u * 0.55); g.lineTo(0, -u * 0.55); g.lineTo(u * 0.3, -u * 0.25); g.lineTo(-u * 0.3, u * 0.25); g.stroke(); }
+  else if (k === 'info') { circ(0, 0, u * 0.55); circ(0, -u * 0.25, u * 0.07, ink); g.beginPath(); g.moveTo(0, -u * 0.05); g.lineTo(0, u * 0.32); g.stroke(); }
+}
+
+// ---------- background: night-blue room with an isometric floor that fades out ----------
+let bgImg = null;
+function bg(g) {
+  if (!bgImg) {
+    bgImg = off(W, H); const x = bgImg.getContext('2d');
+    const gr = x.createRadialGradient(320, 30, 0, 320, 30, 640);
+    gr.addColorStop(0, '#1c2140'); gr.addColorStop(0.55, '#0f1328'); gr.addColorStop(1, '#090b18');
+    x.fillStyle = gr; x.fillRect(0, 0, W, H);
+    const lat = off(W, H), l = lat.getContext('2d');
+    l.strokeStyle = 'rgba(141,150,189,0.13)'; l.lineWidth = 1;
+    for (let c = -480; c < 900; c += 30) {
+      l.beginPath(); l.moveTo(0, c); l.lineTo(W, c + W * 0.5); l.stroke();
+      l.beginPath(); l.moveTo(0, c); l.lineTo(W, c - W * 0.5); l.stroke();
+    }
+    l.globalCompositeOperation = 'destination-in';
+    l.save(); l.translate(320, 330); l.scale(1, 0.62);
+    const m = l.createRadialGradient(0, 0, 0, 0, 0, 430); m.addColorStop(0, 'rgba(0,0,0,1)'); m.addColorStop(1, 'rgba(0,0,0,0)');
+    l.fillStyle = m; l.fillRect(-640, -640, 1280, 1280); l.restore();
+    x.drawImage(lat, 0, 0);
+  }
+  g.drawImage(bgImg, 0, 0, W, H);
+}
+
+// ---------- shared chrome ----------
+function status(g, extra) {
+  const cells = 4, lvl = 3, bx = 620 - cells * 9;
+  for (let i = 0; i < cells; i++) {
+    const on = i < lvl;
+    block(g, bx + i * 9, 17, 6, 11, 2, on ? P.amber : '#262c4a', on ? P.amberDeep : '#171b33', on ? P.amberDark : '#10132a', 0);
+  }
+  let x = bx - 8;
+  x -= text(g, '82%', x, 28, P.muted, 14, { align: 'right' }) + 14;
+  x -= text(g, '20:47', x, 28, P.soft, 14, { align: 'right' }) + 14;
+  if (extra) text(g, extra, x, 28, P.faint, 14, { align: 'right' });
+}
+function header(g, title, extra, pal) {
+  cube(g, 30, 20, 9, 10, pal || AMB);
+  if (!title) { const w = text(g, 'Anber', 48, 30, P.ink, 21, { w: 600 }); text(g, 'Next', 48 + w, 30, P.cyan, 21, { w: 600 }); }
+  else text(g, title, 48, 30, P.ink, 21, { w: 500 });
+  status(g, extra);
+}
+function glyph(g, k, cx, cy, col, sz) {
+  g.fillStyle = col; const s = sz || 5;
+  const tri = (x, dir) => poly(g, [[x, cy - s], [x, cy + s], [x + dir * s * 1.3, cy]], col);
+  if (k === 'LR') { tri(cx - 3, -1); tri(cx + 3, 1); }
+  else if (k === 'PREV') { g.fillRect(cx - s * 1.6, cy - s, 2, s * 2); tri(cx, -1); tri(cx + s * 1.3, -1); }
+  else if (k === 'NEXT') { tri(cx - s * 1.3, 1); tri(cx, 1); g.fillRect(cx + s * 1.4, cy - s, 2, s * 2); }
+  else if (k === 'PAUSE') { g.fillRect(cx - s * 0.9, cy - s, s * 0.6, s * 2); g.fillRect(cx + s * 0.3, cy - s, s * 0.6, s * 2); }
+}
+const SPECIAL = { LR: 26, PREV: 0, NEXT: 0, PAUSE: 0 };
+function keycap(g, x, y, k, prim) {
+  const w = SPECIAL[k] != null ? 28 : Math.max(22, tw(g, k, 13, 600) + 12), h = 20;
+  if (prim) ablock(g, x, y, w, h, 4); else block(g, x, y, w, h, 4, '#2a3052', '#181c36', '#11142a', 0.12);
+  if (SPECIAL[k] != null) glyph(g, k, x + w / 2, y + 10, prim ? P.onAmber : P.ink, 4);
+  else text(g, k, x + w / 2, y + 15, prim ? P.onAmber : P.ink, 13, { align: 'center', w: 600 });
+  return w + 2;
+}
+function keyW(g, k) { return SPECIAL[k] != null ? 30 : Math.max(22, tw(g, k, 13, 600) + 12) + 2; }
+function hints(g, pairs, back) {
+  const y = 446; let rp = pairs;
+  if (back) { card(g, back[0], 436, back[1], 40, 4, 0.86); }
+  if (pairs[0][0] === 'B') {
+    let x = 20; x += keycap(g, x, y, 'B', false) + 8; text(g, pairs[0][1], x, y + 15, P.muted, 14); rp = pairs.slice(1);
+  }
+  let x = 620;
+  for (let i = rp.length - 1; i >= 0; i--) {
+    const [k, lab] = rp[i];
+    x -= tw(g, lab, 14); text(g, lab, x, y + 15, P.muted, 14); x -= 8;
+    x -= keyW(g, k); keycap(g, x, y, k, k === 'A'); x -= 18;
+  }
+}
+
+// ---------- selection: the chosen row is a key that pops up ----------
+function selState(t, n, per, off0) {
+  const tt = Math.max(0, t + (off0 || 0)), k = Math.floor(tt / per), m = Math.max(1, 2 * n - 2);
+  const f = i => { const s = ((i % m) + m) % m; return s < n ? s : m - s; };
+  return { sel: f(k), prev: f(k - 1), p: clamp((tt - k * per) / 0.34) };
+}
+function curOf(st) { return eo(st.p) > 0.5 ? st.sel : st.prev; }
+function list(g, items, st, o) {
+  const x = o.x, y = o.y, w = o.w, rh = o.rh;
+  const pe = eo(st.p), sy = lerp(y + st.prev * rh, y + st.sel * rh, pe), cur = curOf(st);
+  items.forEach((it, i) => { if (i !== cur) rowContent(g, it, x, y + i * rh, w, rh, false, o); });
+  const lift = 2 + 4 * eob(clamp((st.p - 0.15) / 0.85));
+  const fy = sy + 5 - lift * 0.6, fx = x - lift * 0.3;
+  ablock(g, fx, fy, w, rh - 10, lift + 2);
+  rowContent(g, items[cur], fx, fy - 5, w, rh, true, o);
+  return cur;
+}
+function rowContent(g, it, x, y, w, rh, sel, o) {
+  const fs = o.fs || 19, mid = y + rh / 2, two = !!it.d;
+  let tx = x + 14;
+  if (it.ic) { cube(g, x + 20, mid - 3, 7, 7, sel ? INK : it.ic); tx = x + 38; }
+  const by = two ? mid - 1 : mid + fs * 0.35;
+  text(g, it.t, tx, by, sel ? P.onAmber : P.soft, fs);
+  if (two) text(g, it.d, tx, mid + 16, sel ? 'rgba(42,24,4,0.75)' : P.faint, 13);
+  let rx = x + w - 14;
+  if (it.arrow) {
+    const c = sel ? P.onAmber : P.faint; g.strokeStyle = c; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(rx - 6, mid - 6); g.lineTo(rx, mid); g.lineTo(rx - 6, mid + 6); g.stroke(); rx -= 20;
+  }
+  if (it.sig != null) {
+    for (let i = 0; i < 4; i++) {
+      const bh = 4 + i * 3, on = i < it.sig, bx = rx - 32 + i * 8;
+      g.fillStyle = on ? (sel ? P.onAmber : P.cyanSoft) : (sel ? 'rgba(42,24,4,0.25)' : '#262c4a');
+      g.fillRect(bx, mid + 7 - bh, 5, bh);
+    }
+    rx -= 44;
+    if (it.lock) {
+      const c = sel ? P.onAmber : P.muted; g.strokeStyle = c; g.fillStyle = c; g.lineWidth = 1.6;
+      g.fillRect(rx - 10, mid - 1, 10, 8); g.beginPath(); g.arc(rx - 5, mid - 1, 3.2, Math.PI, 0); g.stroke(); rx -= 22;
+    }
+  }
+  if (it.sw) { block(g, rx - 22, mid - 9, 22, 18, 3, it.sw, shade(it.sw, 0.7), shade(it.sw, 0.5), 0.3); rx -= 32; }
+  if (it.v != null) {
+    const vs = 16;
+    if (sel && it.cycle !== false) {
+      poly(g, [[rx, mid - 5], [rx, mid + 5], [rx + 6, mid]], P.onAmber);
+      const vw = text(g, it.v, rx - 10, mid + vs * 0.35, P.onAmber, vs, { align: 'right' });
+      poly(g, [[rx - 16 - vw, mid - 5], [rx - 16 - vw, mid + 5], [rx - 22 - vw, mid]], P.onAmber);
+    } else text(g, it.v, rx, mid + vs * 0.35, sel ? P.onAmber : (it.vc || P.cyanSoft), vs, { align: 'right' });
+  }
+}
+
+// ---------- art placeholders (the device reads the real covers and saves) ----------
+const cache = {};
+function sceneImg(v) {
+  const key = 'sc' + v; if (cache[key]) return cache[key];
+  const c = off(160, 120), x = c.getContext('2d');
+  const pals = [['#1b1446', '#ff8a5c', '#3a2a7a', '#241c56', '#5ad1a0', '#16123a'], ['#0b2a4a', '#ffd27a', '#1d5a6a', '#123a48', '#f2a33c', '#0a2030'], ['#2a0b2a', '#ff5ca8', '#4a1f4a', '#2a1030', '#3ad6e0', '#1a0818']];
+  const p = pals[v % 3];
+  const sk = x.createLinearGradient(0, 0, 0, 84); sk.addColorStop(0, p[0]); sk.addColorStop(1, p[1]);
+  x.fillStyle = sk; x.fillRect(0, 0, 160, 120);
+  x.fillStyle = '#ffe6a8'; x.beginPath(); x.arc(116, 54, 13, 0, Math.PI * 2); x.fill();
+  x.fillStyle = 'rgba(255,255,255,0.5)'; x.fillRect(20, 20, 22, 4); x.fillRect(26, 16, 12, 4); x.fillRect(84, 28, 18, 3);
+  x.fillStyle = p[2]; x.beginPath(); x.moveTo(0, 120);
+  for (let i = 0; i <= 160; i += 8) x.lineTo(i, 74 + Math.sin(i * 0.05 + v) * 8);
+  x.lineTo(160, 120); x.fill();
+  x.fillStyle = p[3]; x.beginPath(); x.moveTo(0, 120);
+  for (let i = 0; i <= 160; i += 8) x.lineTo(i, 86 + Math.sin(i * 0.09 + v * 2) * 5);
+  x.lineTo(160, 120); x.fill();
+  for (let gx = 0; gx < 160; gx += 8) for (let gy = 96; gy < 120; gy += 8) { x.fillStyle = ((gx + gy) / 8) % 2 ? p[5] : p[3]; x.fillRect(gx, gy, 8, 8); }
+  x.fillStyle = p[4]; x.fillRect(0, 96, 160, 3);
+  x.fillStyle = '#fff2c8'; x.fillRect(42, 78, 8, 6); x.fillStyle = p[4]; x.fillRect(40, 84, 12, 10); x.fillStyle = '#20183a'; x.fillRect(41, 94, 4, 2); x.fillRect(47, 94, 4, 2);
+  x.fillStyle = '#ffd27a'; x.fillRect(70, 70, 5, 5); x.fillRect(80, 66, 5, 5); x.fillRect(90, 70, 5, 5);
+  return (cache[key] = c);
+}
+function drawScene(g, x, y, w, h, v) { g.save(); g.imageSmoothingEnabled = false; g.drawImage(sceneImg(v), x, y, w, h); g.restore(); }
+const GAMES = [['Star Hunt', ['#3ad6e0', '#143f6b']], ['Neon Alley', ['#ff5ca8', '#7a1f5a']], ['Pixel Kart', ['#f2a33c', '#7a3d12']], ['Mecha Dawn', ['#9b7cff', '#2a1f5a']], ['Tide Runner', null], ['Crystal Vale', ['#51e0a3', '#145741']], ['Iron Comet', ['#ff8a5c', '#6b2814']]];
+const ALBUMS = [['Ondas de Vidro', ['#3ad6e0', '#2a1f5a']], ['Arctic Lights', ['#9be7ff', '#143f6b']], ['Bruma', ['#8d96bd', '#1c2140']], ['Cidade Submersa', ['#51e0a3', '#0b2a4a']], ['Faroeste Neon', ['#ff8a5c', '#3a0f2a']], ['Lumen', ['#fbd270', '#7a3d12']], ['Noites Claras', ['#ff5ca8', '#140a2a']]];
+function artImg(kind, i) {
+  const key = kind + i; if (cache[key]) return cache[key];
+  const sq = kind === 'al', [name, cols] = (sq ? ALBUMS : GAMES)[i];
+  const w = sq ? 160 : 120, h = 160, c = off(w, h), x = c.getContext('2d');
+  if (!cols) {
+    x.fillStyle = '#1d2240'; x.fillRect(0, 0, w, h);
+    text(x, name[0], w / 2, h / 2 + 28, P.cyan, 80, { align: 'center', w: 600 });
+    return (cache[key] = c);
+  }
+  const gr = x.createLinearGradient(0, 0, w, h); gr.addColorStop(0, cols[0]); gr.addColorStop(1, cols[1]);
+  x.fillStyle = gr; x.fillRect(0, 0, w, h);
+  x.globalAlpha = 0.22; x.fillStyle = '#fff';
+  x.beginPath(); x.arc(w * 0.72, h * 0.32, w * 0.34, 0, Math.PI * 2); x.fill();
+  x.globalAlpha = 0.14; for (let k = 0; k < 6; k++) x.fillRect(0, h * 0.5 + k * 9, w, 3);
+  x.globalAlpha = 1;
+  const sh = x.createLinearGradient(0, h * 0.5, 0, h); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.6)');
+  x.fillStyle = sh; x.fillRect(0, 0, w, h);
+  text(x, name, 10, h - 14, '#ffffff', sq ? 17 : 15, { w: 600 });
+  return (cache[key] = c);
+}
+// a standing slab: front face shows the art, thickness to the right and below
+function slab(g, img, x, y, w, h, d, o) {
+  o = o || {};
+  extrude(g, x, y, w, h, d, o.sel ? P.amberDeep : '#151935', o.sel ? P.amberDark : '#0e1126');
+  g.drawImage(img, x, y, w, h);
+  g.fillStyle = 'rgba(255,255,255,0.18)'; g.fillRect(x, y, w, 1); g.fillRect(x, y, 1, h);
+  if (o.dim) { g.fillStyle = 'rgba(9,11,24,' + o.dim + ')'; g.fillRect(x, y, w, h + 0.5); }
+}
+
+// ---------- screens ----------
+const S = {};
+const SYS = [['GBA', 'Game Boy Advance', 142], ['SFC', 'Super Nintendo', 308], ['PS', 'PlayStation', 214], ['MD', 'Mega Drive', 96], ['GB', 'Game Boy', 87], ['FC', 'Nintendo', 120], ['GBC', 'Game Boy Color', 64]];
+
+// ---------- console icons: two proposals ----------
+// sigla printed on the cube's left face, so the top is free for the icon
+function sideLabel(g, x, y, s, h, txt, col, px) {
+  g.save(); g.translate(x - s / 2, y + s / 4 + h / 2); g.transform(1, 0.5, 0, 1, 0, 0);
+  text(g, txt, 0, px * 0.36, col, px, { align: 'center', w: 600 }); g.restore();
+}
+function rrect(g, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+// proposal A: the controller, engraved flat on the top face (drawn in the face's own plane)
+// mode 'shadow' | 'side' draw only the silhouette (for the cast shadow and the thickness layers)
+function controller(g, k, u, sel, mode) {
+  const flat = mode === 'shadow' || mode === 'side';
+  const C = sel ? { edge: '#b39a72', body: '#f6e7c8', ink: '#3a2a12', btn: '#f2a33c', acc: '#c6771d', scr: '#2a1f10', glare: 'rgba(253,224,138,0.4)' }
+               : { edge: '#343b62', body: '#6c75a6', ink: '#1c2140', btn: '#c9cfea', acc: '#3ad6e0', scr: '#0b0d1c', glare: 'rgba(58,214,224,0.3)' };
+  if (mode === 'shadow') C.edge = sel ? 'rgba(90,50,8,0.45)' : 'rgba(0,0,0,0.45)';
+  g.save();
+  // painter for the shared drawings in icons.js: filled, with a light emboss on the body
+  const Pn = {
+    g,
+    body: fn => { fn(); g.fillStyle = flat ? C.edge : C.body; g.fill(); if (!flat) { g.save(); g.clip(); g.translate(u * 0.05, u * 0.05); fn(); g.strokeStyle = 'rgba(255,255,255,0.35)'; g.lineWidth = u * 0.04; g.stroke(); g.restore(); } },
+    cross: (x, y, z) => { if (flat) return; const t = z * 0.38; g.fillStyle = C.ink; g.fillRect(x - z, y - t / 2, z * 2, t); g.fillRect(x - t / 2, y - z, t, z * 2); g.fillStyle = 'rgba(255,255,255,0.25)'; g.fillRect(x - z, y - t / 2, z * 2, t * 0.3); },
+    dot: (x, y, r, acc) => { if (flat) return; g.beginPath(); g.arc(x + r * 0.15, y + r * 0.25, r, 0, Math.PI * 2); g.fillStyle = 'rgba(0,0,0,0.35)'; g.fill(); g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fillStyle = acc ? C.acc : C.btn; g.fill(); },
+    pill: (x, y, w) => { if (flat) return; rrect(g, x - w / 2, y - u * 0.035, w, u * 0.07, u * 0.035); g.fillStyle = C.ink; g.fill(); },
+    scr: (x, y, w, h) => { if (flat) return; g.fillStyle = C.ink; g.fillRect(x - u * 0.06, y - u * 0.06, w + u * 0.12, h + u * 0.12); g.fillStyle = k === 'GB' ? '#3f5a2a' : C.scr; g.fillRect(x, y, w, h); g.fillStyle = C.glare; g.fillRect(x + w * 0.1, y + h * 0.15, w * 0.35, h * 0.12); },
+    line: fn => { if (flat) return; fn(); g.strokeStyle = C.ink; g.lineWidth = u * 0.07; g.stroke(); },
+    shape: (fn, role) => { if (flat) return; fn(); g.fillStyle = role === 'acc' ? C.acc : C.ink; g.fill(); }
+  };
+  ANX_ICONS.ctrl(k, Pn, u);
+  g.restore();
+}
+// proposal B: a small model of the console itself, built from blocks, standing on the cube
+function proj(x, y, s, a, b, z) { return [x + s * (a - b) / 2, y + s * (a + b) / 4 - z * 0.55 * s]; }
+function mbox(g, x, y, s, a, b, z, w, d, h, c) {
+  const p = (A, B, Z) => proj(x, y, s, A, B, Z), a1 = a + w, b1 = b + d, z1 = z + h;
+  poly(g, [p(a, b1, z), p(a1, b1, z), p(a1, b1, z1), p(a, b1, z1)], c.l);
+  poly(g, [p(a1, b, z), p(a1, b1, z), p(a1, b1, z1), p(a1, b, z1)], c.r);
+  poly(g, [p(a, b, z1), p(a1, b, z1), p(a1, b1, z1), p(a, b1, z1)], c.t);
+}
+function plane(g, x, y, s, z, fn) { g.save(); g.translate(x, y - z * 0.55 * s); g.transform(1, 0.5, -1, 0.5, 0, 0); g.scale(s / 2, s / 2); fn(); g.restore(); }
+const MROLE = {
+  body: { t: '#7d86b8', l: '#4b527e', r: '#363c62' }, light: { t: '#aab2dc', l: '#717aa8', r: '#565e8a' },
+  dark: { t: '#2a2f4e', l: '#181c34', r: '#10132a' }, scr: { t: '#0b0d1c', l: '#0b0d1c', r: '#0b0d1c' },
+  wood: { t: '#8a5a2e', l: '#6a4220', r: '#4e3016' }, det: { t: '#20253f', l: '#151935', r: '#0e1126' }
+};
+const MALT = { GBA: { t: '#7b68c8', l: '#4f428e', r: '#3a3070' }, GBC: { t: '#43b8c4', l: '#22808b', r: '#17606a' }, NGPC: { t: '#d4586f', l: '#9e3a4f', r: '#76283a' } };
+function model(g, k, x, y, s, sel) {
+  const acc = sel ? { t: '#fde08a', l: '#f2a33c', r: '#c6771d' } : { t: '#86d9e2', l: '#3a9aa6', r: '#26707a' };
+  const role = r => (r === 'acc' ? acc : r === 'alt' ? (MALT[ANX_ICONS.ALIAS[k] || k] || MROLE.body) : MROLE[r] || MROLE.body);
+  const flatCol = r => (r === 'scr' ? (k === 'GB' ? '#3f5a2a' : sel ? '#3a2a12' : '#16324a') : role(r).t);
+  ANX_ICONS.model(k, {
+    box: (a, b, z, w, d, h, r) => mbox(g, x, y, s, a, b, z, w, d, h, role(r)),
+    rect: (z, rx, ry, w, h, r) => plane(g, x, y, s, z, () => { g.fillStyle = flatCol(r); g.fillRect(rx, ry, w, h); }),
+    circ: (z, cx, cy, rad, r) => plane(g, x, y, s, z, () => { g.beginPath(); g.arc(cx, cy, rad, 0, Math.PI * 2); g.fillStyle = flatCol(r); g.fill(); }),
+    lface: (a, b1, z, w, h, r) => poly(g, [proj(x, y, s, a, b1, z), proj(x, y, s, a + w, b1, z), proj(x, y, s, a + w, b1, z + h), proj(x, y, s, a, b1, z + h)], r === 'scr' ? flatCol('scr') : role(r).l),
+    grid: (z, gx, gy, w, h, cols, rows, r) => plane(g, x, y, s, z, () => { g.fillStyle = role(r).t; const cw = w / cols, ch = h / rows; for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) g.fillRect(gx + i * cw + cw * 0.12, gy + j * ch + ch * 0.12, cw * 0.76, ch * 0.76); })
+  });
+}
+function sysCube(g, x, y, s, h, tag, sel, variant) {
+  if (variant === 'S') { cube(g, x, y, s, h, sel ? AMB : NEU, { label: tag, lpx: Math.round(s * 0.37 * Math.min(1, 3.4 / tag.length)), lcol: sel ? '#5a3208' : P.muted }); return; }
+  cube(g, x, y, s, h, sel ? AMB : NEU);
+  sideLabel(g, x, y, s, h, tag, sel ? '#5a3208' : P.muted, Math.max(7, Math.round(s * 0.3 * Math.min(1, 3.4 / tag.length))));
+  if (variant === 'A') {
+    // the controller lies on the cube as a real piece: cast shadow, a few px of thickness, then the top
+    const u = s * 0.42, th = Math.max(2, Math.round(s * 0.11));
+    const at = (dy, mode) => { g.save(); g.translate(x + (mode === 'shadow' ? s * 0.06 : 0), y - dy + (mode === 'shadow' ? s * 0.05 : 0)); g.transform(1, 0.5, -1, 0.5, 0, 0); controller(g, tag, u, sel, mode); g.restore(); };
+    at(0, 'shadow');
+    for (let i = 0; i < th; i++) at(i, 'side');
+    at(th, 'top');
+  }
+  else model(g, tag, x, y, s, sel);
+}
+function iconSheet(g, t, variant) {
+  bg(g);
+  const L = ANX_ICONS.SYSTEMS, n = L.length, cur = Math.floor(t / 0.9) % n, pp = eob(clamp((t % 0.9) / 0.35));
+  header(g, 'Todos os consoles · ' + (variant === 'A' ? 'Controle' : 'Console'), n + ' sistemas');
+  L.forEach(([tag], j) => {
+    const row = Math.floor(j / 8), col = j % 8, x = 47 + col * 78, floorY = 108 + row * 68, sel = j === cur;
+    const s = sel ? 24 : 19, h = s * 1.1, lift = sel ? 8 * pp : 0;
+    if (sel) glow(g, x, floorY + 2, 50, 0.35);
+    shadow(g, x, floorY + 2, s * 1.2, 0.45);
+    sysCube(g, x, floorY - s / 2 - h - lift, s, h, tag, sel, variant);
+  });
+  card(g, 20, 438, 600, 30, 4, 0.92);
+  text(g, L[cur][1], 36, 459, P.ink, 17, { w: 500 });
+  text(g, L[cur][0], 604, 459, P.amber, 14, { align: 'right', ls: 2, w: 600 });
+}
+S.iconsA = (g, t) => iconSheet(g, t, 'A');
+S.iconsB = (g, t) => iconSheet(g, t, 'B');
+S.homeA = (g, t) => S.home(g, t, false, 'A');
+// the other two home layouts: list with the big cube on the right, and every console at once in a grid
+S.homeList = function (g, t) {
+  bg(g); header(g, null);
+  const st = selState(t, SYS.length, 1.4), cur = curOf(st);
+  list(g, SYS.map(([tag, name]) => ({ t: name, ic: NEU })), st, { x: 20, y: 50, w: 330, rh: 52 });
+  const pop = 8 * eob(clamp(st.p / 0.7)), s = 66, h = s * 1.1, x = 492, floorY = 318;
+  glow(g, x, floorY, 120, 0.32); shadow(g, x, floorY + 2, s * 1.3, 0.55);
+  sysCube(g, x, floorY - s / 2 - h - pop, s, h, SYS[cur][0], true, 'B');
+  text(g, SYS[cur][2] + ' JOGOS', x, floorY + 40, P.muted, 13, { align: 'center', ls: 2.5 });
+  musicCard(g, 20, 438, t);
+  hints(g, [['SELECT', 'Recentes'], ['F', 'Menu'], ['A', 'Abrir']]);
+};
+S.homeGrid = function (g, t) {
+  bg(g); header(g, null);
+  const n = SYS.length, cur = Math.floor(t / 1.2) % n, pp = eob(clamp((t % 1.2) / 0.4));
+  SYS.forEach(([tag, name, cnt], j) => {
+    const row = j < 4 ? 0 : 1, col = row ? j - 4 : j, cols = row ? 3 : 4;
+    const x = 320 + (col - (cols - 1) / 2) * 148, floorY = row ? 352 : 184, s = 40, h = s * 1.1;
+    const sel = j === cur, lift = sel ? 12 * pp : 0;
+    if (sel) glow(g, x, floorY + 4, 80, 0.32);
+    shadow(g, x, floorY + 4, s * 1.25, 0.5);
+    sysCube(g, x, floorY - s / 2 - h - lift, s, h, tag, sel, 'B');
+    text(g, name, x, floorY + 30, sel ? P.ink : P.muted, 14, { align: 'center', w: sel ? 500 : 400 });
+    if (sel) text(g, cnt + ' JOGOS', x, floorY + 48, P.amber, 11, { align: 'center', ls: 2 });
+  });
+  musicCard(g, 20, 438, t);
+  hints(g, [['SELECT', 'Recentes'], ['F', 'Menu'], ['A', 'Abrir']]);
+};
+S.homeB = (g, t) => S.home(g, t, false, 'B');
+
+function musicCard(g, x, y, t) {
+  card(g, x, y, 230, 28, 4, 0.9);
+  for (let c = 0; c < 4; c++) {
+    const n = 2 + Math.round((Math.sin(t * 6 + c * 1.7) + 1) * 1.5);
+    for (let k = 0; k < n; k++) { g.fillStyle = k === n - 1 ? P.amberHi : P.amber; g.fillRect(x + 10 + c * 7, y + 22 - k * 4, 5, 3); }
+  }
+  text(g, 'Midnight Pulse', x + 46, y + 19, P.ink, 14);
+  text(g, 'AnberTunes', x + 220, y + 19, P.faint, 12, { align: 'right' });
+}
+
+S.home = function (g, t, bare, variant) {
+  variant = variant || 'B';
+  bg(g); header(g, null);
+  const n = SYS.length, per = 2.2, k = Math.floor(t / per), p = eo(clamp((t - k * per) / 0.5)), c = (k - 1) + p;
+  const items = [];
+  for (let j = 0; j < n; j++) { let o = ((j - c) % n + n) % n; if (o > n / 2) o -= n; items.push([j, o]); }
+  items.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  glow(g, 320, 300, 150, 0.32);
+  for (const [j, o] of items) {
+    const ao = Math.abs(o); if (ao > 3) continue;
+    const x = 320 + Math.sign(o) * (ao < 1 ? ao * 150 : 150 + (ao - 1) * 100);
+    const sc = ao < 1 ? lerp(1, 0.62, ao) : Math.max(0.4, 0.62 - (ao - 1) * 0.12);
+    const s = 60 * sc, h = s * 1.1, lift = Math.max(0, 1 - ao) * 24, floorY = 268 + (1 - sc) * 30;
+    const y = floorY - s / 2 - h - lift;
+    shadow(g, x, floorY + 2, s * 1.25, 0.55 - lift * 0.01);
+    const sel = ao < 0.5;
+    g.save(); g.globalAlpha = clamp(1 - (ao - 1.7) / 1.1);
+    if (variant) sysCube(g, x, y, s, h, SYS[j][0], sel, variant);
+    else cube(g, x, y, s, h, sel ? AMB : NEU, { label: SYS[j][0], lpx: Math.round(22 * sc), lcol: sel ? '#5a3208' : P.muted });
+    g.restore();
+  }
+  const cur = ((Math.round(c) % n) + n) % n;
+  text(g, SYS[cur][1], 320, 340, P.ink, 30, { align: 'center', w: 500 });
+  text(g, SYS[cur][2] + ' JOGOS', 320, 364, P.muted, 13, { align: 'center', ls: 2.5 });
+  for (let j = 0; j < n; j++) {
+    const x = 320 + (j - (n - 1) / 2) * 16, on = j === cur;
+    poly(g, [[x, 386], [x + 5, 388.5], [x, 391], [x - 5, 388.5]], on ? P.amber : '#2a3052');
+  }
+  if (bare) return;
+  musicCard(g, 20, 438, t);
+  hints(g, [['SELECT', 'Recentes'], ['F', 'Menu'], ['A', 'Abrir']]);
+};
+
+S.games = function (g, t) {
+  bg(g);
+  const n = GAMES.length, per = 2.0, k = Math.floor(t / per), m = 2 * n - 2;
+  const f = i => { const s = ((i % m) + m) % m; return s < n ? s : m - s; };
+  const p = eo(clamp((t - k * per) / 0.45)), c = lerp(f(k - 1), f(k), p);
+  header(g, 'PlayStation', (Math.round(c) + 1) + '/214', AMB);
+  const order = GAMES.map((_, j) => [j, j - c]).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  glow(g, 320, 312, 130, 0.3);
+  for (const [j, o] of order) {
+    const ao = Math.abs(o); if (ao > 2.7) continue;
+    const sc = ao < 1 ? lerp(1, 0.68, ao) : Math.max(0.45, 0.68 - (ao - 1) * 0.1);
+    const w = 140 * sc, h = 186 * sc, floorY = 300;
+    const cx = 320 + Math.sign(o) * (ao < 1 ? ao * 150 : 150 + (ao - 1) * 92);
+    const lift = Math.max(0, 1 - ao) * 10, y = floorY - h - lift, x = cx - w / 2;
+    shadow(g, cx + 6, floorY + 4, w * 0.75, 0.6);
+    g.save(); g.translate(x, y); g.transform(1, clamp(o, -1, 1) * -0.1, 0, 1, 0, 0);
+    slab(g, artImg('cv', j), 0, 0, w, h, 12 * sc, { sel: ao < 0.5, dim: Math.min(0.55, ao * 0.5) });
+    g.restore();
+  }
+  const cur = Math.round(c);
+  text(g, GAMES[cur][0], 320, 354, P.ink, 26, { align: 'center', w: 500 });
+  text(g, GAMES[cur][1] ? 'COM CAPA' : 'SEM CAPA: A INICIAL VIRA A CAPA', 320, 377, P.faint, 12, { align: 'center', ls: 2 });
+  hints(g, [['B', 'Voltar'], ['SELECT', 'Recentes'], ['A', 'Jogar']]);
+};
+
+const TOOLS = [['Atualizar NeonDrive', CYA], ['Disc Organizer', NEU], ['Pak Plaza', MAG], ['AnberNext Rollback', NEU], ['Battery', GRN], ['Clock', NEU], ['Game Tracker', NEU], ['Input Tester', NEU]];
+S.tools = function (g, t) {
+  bg(g); header(g, 'Ferramentas', '8');
+  list(g, TOOLS.map(([a, ic]) => ({ t: a, ic })), selState(t, TOOLS.length, 1.4), { x: 20, y: 54, w: 600, rh: 46 });
+  hints(g, [['B', 'Voltar'], ['A', 'Abrir']]);
+};
+
+S.recent = function (g, t) {
+  bg(g);
+  const n = 3, per = 2.6, k = Math.floor(t / per), p = eo(clamp((t - k * per) / 0.5)), c = lerp(k - 1, k, p);
+  const cur = ((Math.round(c) % n) + n) % n;
+  header(g, 'Recentes', (cur + 1) + '/3');
+  const names = [['Star Hunt', 'PlayStation · slot 2'], ['Pixel Kart', 'Super Nintendo · slot 0'], ['Crystal Vale', 'Game Boy Advance · retomada']];
+  const order = [0, 1, 2].map(j => { let o = (((j - c) % 3) + 3) % 3; if (o > 1.5) o -= 3; return [j, o]; }).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  for (const [j, o] of order) {
+    const ao = Math.abs(o), sc = lerp(1, 0.62, clamp(ao)), w = 352 * sc, h = 264 * sc;
+    const cx = 320 + o * 330, y = 74 + (1 - sc) * 90, x = cx - w / 2;
+    shadow(g, cx + 8, y + h + 14, w * 0.6, 0.55);
+    extrude(g, x, y, w, h, 14 * sc, ao < 0.5 ? P.amberDeep : '#151935', ao < 0.5 ? P.amberDark : '#0e1126');
+    drawScene(g, x, y, w, h, j);
+    g.fillStyle = 'rgba(255,255,255,0.18)'; g.fillRect(x, y, w, 1);
+    if (ao > 0.01) { g.fillStyle = 'rgba(9,11,24,' + Math.min(0.6, ao * 0.6) + ')'; g.fillRect(x, y, w, h); }
+  }
+  text(g, names[cur][0], 320, 382, P.ink, 24, { align: 'center', w: 500 });
+  text(g, names[cur][1], 320, 404, P.muted, 14, { align: 'center' });
+  hints(g, [['B', 'Voltar'], ['LR', 'Trocar'], ['A', 'Continuar']]);
+};
+
+const FM = ['Ajustes', 'Loja de Paks', 'Ferramentas', 'Música', 'Recentes', 'Reiniciar', 'Desligar'];
+S.fmenu = function (g, t) {
+  S.home(g, 0.3, true);
+  g.fillStyle = 'rgba(6,7,16,0.88)'; g.fillRect(0, 0, W, H);
+  text(g, 'MENU', 320, 64, P.muted, 13, { align: 'center', ls: 4 });
+  const st = selState(t, FM.length, 1.4), pe = eo(st.p);
+  const bw = 250, bh = 34, gap = 6, x0 = 192, y0 = 80;
+  for (let i = 0; i < FM.length; i++) {
+    const slide = i === st.sel ? 30 * pe : i === st.prev ? 30 * (1 - pe) : 0, x = x0 + slide, y = y0 + i * (bh + gap), sel = slide > 15;
+    if (sel) ablock(g, x, y, bw, bh, 6); else nblock(g, x, y, bw, bh, 6);
+    text(g, FM[i], x + bw / 2, y + 23, sel ? P.onAmber : (i >= 5 ? P.muted : P.ink), 18, { align: 'center' });
+  }
+  hints(g, [['B', 'Fechar'], ['A', 'OK']]);
+};
+
+S.loading = function (g, t) {
+  bg(g);
+  const per = 2.8, lt = t % per, a = eo(clamp(lt / 0.8)), bob = Math.sin(t * 3) * 3 * clamp((lt - 0.8) / 0.3);
+  glow(g, 320, 236, 90, 0.3 * a); shadow(g, 320, 236, 60, 0.5 * a);
+  cube(g, 320, 150 + bob, 46, 50, AMB, { fly: (1 - a) * 50, alpha: a });
+  text(g, 'CARREGANDO', 320, 290, P.muted, 13, { align: 'center', ls: 4 });
+  text(g, 'Star Hunt', 320, 326, P.ink, 28, { align: 'center', w: 500 });
+  const nb = 14, filled = Math.floor(clamp(lt / 2.4) * nb), x0 = 320 - (nb * 18 - 4) / 2;
+  for (let i = 0; i < nb; i++) {
+    if (i < filled) block(g, x0 + i * 18, 352, 14, 10, 3, P.amber, P.amberDeep, P.amberDark, 0.3);
+    else block(g, x0 + i * 18, 355, 14, 7, 0, '#1d2240', '', '', 0);
+  }
+};
+
+S.osd = function (g, t) {
+  S.games(g, 0.2);
+  g.fillStyle = 'rgba(0,0,0,0.25)'; g.fillRect(0, 0, W, H);
+  card(g, 170, 26, 300, 98, 6, 0.97);
+  const lvl = 8 + Math.round(Math.sin(t * 1.4) * 4);
+  text(g, 'VOLUME', 188, 50, P.muted, 12, { ls: 3 });
+  text(g, Math.round(lvl / 16 * 100) + '%', 452, 51, P.amber, 16, { align: 'right', w: 600 });
+  for (let i = 0; i < 16; i++) {
+    const bh = 5 + i * 1.3, x = 188 + i * 16.6, on = i < lvl;
+    if (on) block(g, x, 80 - bh, 12, bh, 2, P.amber, P.amberDeep, P.amberDark, 0.3);
+    else block(g, x, 80 - bh, 12, bh, 0, '#262c4a', '', '', 0);
+  }
+  text(g, 'Brilho: segure F e use o volume', 320, 112, P.soft, 13, { align: 'center' });
+};
+
+const ARTISTS = ['A Day To Remember', 'Arctic Lights', 'Bruma', 'Cidade Submersa', 'Faroeste Neon', 'Lumen', 'Midnight Pulse'];
+S.music = function (g, t) {
+  bg(g); header(g, 'Música', '7 artistas', CYA);
+  const st = selState(t, ARTISTS.length, 1.5);
+  const cur = list(g, ARTISTS.map(a => ({ t: a, ic: DIM, d: '2 álbuns' })), st, { x: 20, y: 52, w: 330, rh: 52, fs: 18 });
+  g.fillStyle = '#1d2240'; g.fillRect(364, 60, 4, 350);
+  const ty = 60 + (cur / (ARTISTS.length - 1)) * 300;
+  block(g, 362, ty, 8, 50, 2, P.amber, P.amberDeep, P.amberDark, 0.3);
+  glow(g, 500, 318, 120, 0.26); shadow(g, 506, 318, 120, 0.55);
+  slab(g, artImg('al', cur), 396, 96, 208, 208, 14, { sel: true });
+  text(g, ALBUMS[cur][0], 500, 352, P.ink, 17, { align: 'center' });
+  text(g, ARTISTS[cur], 500, 374, P.muted, 13, { align: 'center' });
+  hints(g, [['B', 'Voltar'], ['Y', 'Pausar'], ['A', 'Abrir']]);
+};
+
+S.playing = function (g, t) {
+  bg(g); header(g, 'Tocando agora', null, CYA);
+  glow(g, 166, 346, 140, 0.3); shadow(g, 172, 346, 140, 0.55);
+  slab(g, artImg('al', 6), 46, 82, 240, 240, 16, { sel: true });
+  const x = 320;
+  text(g, 'FAIXA 3 DE 9', x, 124, P.muted, 12, { ls: 2.5 });
+  text(g, 'Ondas de Vidro', x, 160, P.ink, 30, { w: 500 });
+  text(g, 'Midnight Pulse', x, 188, P.cyanSoft, 17);
+  text(g, 'Noites Claras', x, 210, P.muted, 15);
+  const nb = 21, pos = (0.32 + t * 0.03) % 1, fill = pos * nb;
+  for (let i = 0; i < nb; i++) {
+    const bx = x + i * 14, head = i === Math.floor(fill);
+    if (i < fill) block(g, bx, head ? 236 : 240, 10, head ? 14 : 10, head ? 4 : 2, head ? P.amberHi : P.amber, P.amberDeep, P.amberDark, 0.3);
+    else block(g, bx, 243, 10, 7, 0, '#1d2240', '', '', 0);
+  }
+  const el = Math.floor(pos * 238);
+  text(g, Math.floor(el / 60) + ':' + String(el % 60).padStart(2, '0'), x, 276, P.muted, 13);
+  text(g, '3:58', x + nb * 14 - 4, 276, P.muted, 13, { align: 'right' });
+  const btn = [['PREV', 'Anterior', false], ['PAUSE', 'Pausar (Y)', true], ['NEXT', 'Próxima', false]];
+  btn.forEach(([k, lab, prim], i) => {
+    const bx = x + i * 98, by = 304;
+    if (prim) ablock(g, bx, by, 72, 42, 6); else block(g, bx, by, 72, 42, 6, '#2a3052', '#181c36', '#11142a', 0.12);
+    glyph(g, k, bx + 36, by + 21, prim ? P.onAmber : P.ink, 7);
+    text(g, lab, bx + 36, by + 70, P.muted, 12, { align: 'center' });
+  });
+  hints(g, [['B', 'Voltar'], ['LR', 'Faixa'], ['A', 'Lista']]);
+};
+
+const GM = ['Continuar', 'Salvar', 'Carregar', 'Opções', 'Música', 'Sair'];
+S.gamemenu = function (g, t) {
+  drawScene(g, 0, 0, W, H, 0);
+  g.fillStyle = 'rgba(11,13,28,0.95)'; g.fillRect(0, 0, 264, H);
+  poly(g, [[264, 0], [274, 6], [274, H], [264, H]], '#1c2140');
+  g.fillStyle = 'rgba(255,255,255,0.08)'; g.fillRect(264, 0, 1, H);
+  cube(g, 30, 22, 9, 10, AMB);
+  text(g, 'Star Hunt', 48, 32, P.amber, 22, { w: 500 });
+  text(g, 'PLAYSTATION', 48, 52, P.faint, 11, { ls: 2.5 });
+  card(g, 470, 8, 160, 30, 4, 0.86); status(g);
+  const st = selState(t, GM.length, 1.5);
+  const cur = list(g, GM.map(a => ({ t: a })), st, { x: 20, y: 84, w: 226, rh: 44 });
+  if (cur === 1 || cur === 2) {
+    const slot = 2;
+    card(g, 306, 92, 304, 290, 8, 0.9);
+    text(g, (cur === 1 ? 'SALVAR NO SLOT ' : 'CARREGAR DO SLOT ') + slot, 458, 120, P.muted, 12, { align: 'center', ls: 2.5 });
+    shadow(g, 462, 316, 120, 0.4);
+    extrude(g, 338, 136, 240, 172, 10, P.amberDeep, P.amberDark);
+    drawScene(g, 338, 136, 240, 172, 1);
+    for (let i = 0; i < 9; i++) {
+      const bx = 458 - (9 * 22 - 6) / 2 + i * 22, on = i === slot;
+      if (on) ablock(g, bx, 340, 16, 16, 4); else nblock(g, bx, 344, 16, 12, 2);
+      text(g, String(i), bx + 8, on ? 353 : 355, on ? P.onAmber : P.muted, 10, { align: 'center', w: 600 });
+    }
+  }
+  hints(g, [['B', 'Voltar'], ['A', 'OK']], [430, 210]);
+};
+
+const OPT = [['Escala da tela', 'Aspecto'], ['Filtro', 'Nítido'], ['Mostrar FPS', 'Não'], ['Pular quadros', 'Auto'], ['Avanço rápido', '2x'], ['Controles', null], ['Atalhos', null], ['Salvar para este jogo', null]];
+const OPTD = ['Como a imagem do jogo ocupa a tela.', 'Suaviza ou deixa os pixels nítidos.', 'Mostra os quadros por segundo no canto.', 'Pula quadros quando o jogo pesa.', 'Velocidade do avanço rápido.', 'Mapa dos botões neste emulador.', 'Combinações para salvar, carregar e sair.', 'Grava estas opções só para este jogo.'];
+S.options = function (g, t) {
+  bg(g); header(g, 'Opções', 'Star Hunt');
+  const cur = list(g, OPT.map(([a, v]) => (v ? { t: a, v } : { t: a, arrow: true })), selState(t, OPT.length, 1.3), { x: 20, y: 50, w: 600, rh: 44 });
+  text(g, OPTD[cur], 20, 422, P.muted, 14);
+  hints(g, [['B', 'Voltar'], ['LR', 'Mudar'], ['A', 'Abrir']]);
+};
+
+S.toasts = function (g, t) {
+  drawScene(g, 0, 0, W, H, 2);
+  const lt = t % 5.5;
+  card(g, 210, 18, 220, 40, 5, 0.95);
+  text(g, 'VOL', 226, 43, P.muted, 12, { ls: 2 });
+  for (let i = 0; i < 12; i++) {
+    const on = i < 7, bh = 4 + i;
+    if (on) block(g, 262 + i * 13, 48 - bh, 9, bh, 2, P.amber, P.amberDeep, P.amberDark, 0.3);
+    else block(g, 262 + i * 13, 48 - bh, 9, bh, 0, '#262c4a', '', '', 0);
+  }
+  const a1 = eo(clamp(lt / 0.45)), a2 = eo(clamp((lt - 0.9) / 0.45));
+  const x1 = lerp(-320, 20, a1), x2 = lerp(-320, 20, a2);
+  card(g, x1, 362, 300, 36, 5, 0.95); cube(g, x1 + 20, 376, 7, 7, AMB);
+  text(g, 'Estado salvo no slot 2', x1 + 38, 385, P.ink, 15);
+  card(g, x2, 408, 300, 36, 5, 0.95); cube(g, x2 + 20, 422, 7, 7, CYA);
+  text(g, 'Conquista: Primeira volta', x2 + 38, 431, P.ink, 15);
+};
+
+const ACH = [['Primeira volta', 'Termine a primeira corrida', 1], ['Sem arranhões', 'Vença sem bater nenhuma vez', 1], ['Colecionador', 'Pegue 100 moedas', 1], ['Atalho secreto', 'Ache o túnel escondido', 0], ['Recordista', 'Bata o tempo do fantasma', 0], ['Campeão', 'Vença a copa estrela', 0]];
+S.achievements = function (g, t) {
+  bg(g); header(g, 'Conquistas', '3/6', CYA);
+  list(g, ACH.map(([a, d, u]) => ({ t: a, d, ic: u ? AMB : DIM, v: u ? 'Feita' : 'Falta', vc: u ? P.amber : P.faint, cycle: false })), selState(t, ACH.length, 1.5), { x: 20, y: 50, w: 600, rh: 60, fs: 18 });
+  hints(g, [['B', 'Voltar'], ['A', 'Detalhes']]);
+};
+
+const SET = [['Aparência', 'Tema, cores, fonte e animações.', 'pal'], ['Tela', 'Brilho, temperatura e contraste.', 'scr'], ['Sistema', 'Volume, hora, energia e saves.', 'sys'], ['Rede', 'Wi-Fi e conexões.', 'net'], ['Bluetooth', 'Fones e controles sem fio.', 'bt'], ['Sobre', 'Versão e armazenamento.', 'info']];
+S.settings = function (g, t) {
+  bg(g); header(g, 'Ajustes');
+  const st = selState(t, SET.length, 1.6);
+  const cur = list(g, SET.map(([a]) => ({ t: a, ic: NEU, arrow: true })), st, { x: 20, y: 56, w: 320, rh: 50 });
+  const pop = eob(clamp(st.p / 0.8));
+  glow(g, 492, 312, 110, 0.3); shadow(g, 492, 312, 100, 0.55);
+  cube(g, 492, 196 - pop * 6 + 6, 74, 82, AMB, { icon: SET[cur][2] });
+  text(g, SET[cur][0], 492, 356, P.ink, 20, { align: 'center', w: 500 });
+  text(g, SET[cur][1], 492, 378, P.muted, 13, { align: 'center' });
+  hints(g, [['B', 'Sair'], ['A', 'Abrir']]);
+};
+
+let thumbs = null;
+function neonThumb() {
+  const c = off(W, H), x = c.getContext('2d');
+  const gr = x.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#140a2a'); gr.addColorStop(0.6, '#2a0f3d'); gr.addColorStop(1, '#120a24');
+  x.fillStyle = gr; x.fillRect(0, 0, W, H);
+  x.save(); x.beginPath(); x.rect(0, 0, W, 250); x.clip();
+  const sg = x.createLinearGradient(0, 120, 0, 250); sg.addColorStop(0, '#fbd270'); sg.addColorStop(0.5, '#f2a33c'); sg.addColorStop(1, '#ff5ca8');
+  x.fillStyle = sg; x.beginPath(); x.arc(430, 250, 120, 0, Math.PI * 2); x.fill(); x.restore();
+  x.strokeStyle = 'rgba(58,214,224,0.45)'; x.lineWidth = 2;
+  for (let i = -12; i <= 12; i++) { x.beginPath(); x.moveTo(430, 250); x.lineTo(430 + i * 70, H); x.stroke(); }
+  for (let k = 0; k < 7; k++) { const y = 250 + Math.pow(k / 6, 2) * 230; x.beginPath(); x.moveTo(0, y); x.lineTo(W, y); x.stroke(); }
+  x.fillStyle = 'rgba(11,7,24,0.55)'; x.fillRect(0, 0, 330, H);
+  const w = text(x, 'ANBER', 28, 50, '#f9a62b', 30, { w: 700 }); text(x, 'NEXT', 28 + w, 50, '#3ad6e0', 30, { w: 700 });
+  ['GAME BOY ADVANCE', 'SUPER NINTENDO', 'PLAYSTATION', 'MEGA DRIVE', 'GAME BOY'].forEach((s, i) => {
+    const y = 150 + i * 52, sel = i === 2;
+    if (sel) { x.fillStyle = '#f9a62b'; x.fillRect(28, y - 26, 7, 34); text(x, s, 50, y, '#3ad6e0', 28, { ls: 2 }); text(x, s, 54, y, '#ff5ca8', 28, { ls: 2 }); }
+    text(x, s, sel ? 52 : 44, y, sel ? '#ffffff' : 'rgba(58,214,224,0.7)', 28, { ls: 2 });
+  });
+  return c;
+}
+// the three layout choices live right under Tema; the panel on the right previews the row in focus
+const LOOK = [
+  { t: 'Tema', opts: ['Neon Drive', 'Bloco'], def: 1, d: 'Muda o visual de tudo, inclusive o boot.' },
+  { t: 'Tela inicial', opts: ['Carrossel', 'Lista', 'Grade'], def: 0, d: 'Como os consoles aparecem na tela inicial.' },
+  { t: 'Ícone dos consoles', opts: ['Sigla', 'Controle', 'Console'], def: 2, d: 'O que fica em cima dos cubos na tela inicial.' },
+  { t: 'Biblioteca de jogos', opts: ['Carrossel', 'Lista'], def: 0, d: 'Como os jogos aparecem dentro de cada console.' }
+];
+function thumbPair(g, imgs, labels, on, pt) {
+  for (let i = 0; i < 2; i++) {
+    const act = i === on, a = act ? eob(pt) : 1 - eo(pt), lift = act ? 6 * a : 0;
+    const x = 420 - lift * 0.4, y = 60 + i * 180 - lift, w = 180, h = 135;
+    extrude(g, x, y, w, h, act ? 4 + lift : 3, act ? P.amberDeep : '#151935', act ? P.amberDark : '#0e1126');
+    g.drawImage(imgs[i], x, y, w, h);
+    if (!act) { g.fillStyle = 'rgba(9,11,24,0.55)'; g.fillRect(x, y, w, h); }
+    text(g, labels[i] + (act ? '  · em uso' : ''), x, y + h + 20 + lift, act ? P.amber : P.muted, 14, { w: act ? 600 : 400 });
+  }
+}
+function thumbTriple(g, imgs, labels, on, pt) {
+  for (let i = 0; i < 3; i++) {
+    const act = i === on, a = act ? eob(pt) : 1 - eo(pt), lift = act ? 5 * a : 0;
+    const x = 450 - lift * 0.4, y = 56 + i * 120 - lift, w = 124, h = 93;
+    extrude(g, x, y, w, h, act ? 4 + lift : 3, act ? P.amberDeep : '#151935', act ? P.amberDark : '#0e1126');
+    g.drawImage(imgs[i], x, y, w, h);
+    if (!act) { g.fillStyle = 'rgba(9,11,24,0.55)'; g.fillRect(x, y, w, h); }
+    text(g, labels[i] + (act ? '  · em uso' : ''), x, y + h + 15 + lift, act ? P.amber : P.muted, 13, { w: act ? 600 : 400 });
+  }
+}
+function thumbOf(fn, t) { const c = off(W, H); fn(c.getContext('2d'), t); return c; }
+S.appearance = function (g, t) {
+  if (!thumbs) thumbs = { neon: neonThumb(), bloco: thumbOf((x, tt) => S.home(x, tt), 2.4), carr: thumbOf(S.games, 2.3), lista: thumbOf(S.gamesList, 1.0), hc: thumbOf((x, tt) => S.home(x, tt), 2.4), hl: thumbOf(S.homeList, 3.3), hg: thumbOf(S.homeGrid, 2.5) };
+  bg(g); header(g, 'Aparência');
+  const per = 4.6, nr = LOOK.length, r = Math.floor(t / per) % nr, lt = t % per, L = LOOK[r];
+  const step = 1.4, k = Math.floor(Math.max(0, lt - 0.5) / step), on = lt < 0.5 ? L.def : (L.def + k + 1) % L.opts.length;
+  const pt = lt < 0.5 ? 1 : clamp(((lt - 0.5) % step) / 0.34);
+  const rows = LOOK.map((o, i) => ({ t: o.t, v: o.opts[i === r ? on : o.def] }))
+    .concat([{ t: 'Cor principal', sw: '#f2a33c', arrow: true }, { t: 'Fonte', v: 'Chakra Petch' }]);
+  list(g, rows, { sel: r, prev: (r + nr - 1) % nr, p: clamp(lt / 0.34) }, { x: 20, y: 54, w: 344, rh: 50 });
+  if (r === 0) thumbPair(g, [thumbs.neon, thumbs.bloco], L.opts, on, pt);
+  else if (r === 1) thumbTriple(g, [thumbs.hc, thumbs.hl, thumbs.hg], L.opts, on, pt);
+  else if (r === 3) thumbPair(g, [thumbs.carr, thumbs.lista], L.opts, on, pt);
+  else {
+    ['S', 'A', 'B'].forEach((v, i) => {
+      const act = i === on, lift = act ? 10 * eob(pt) : 0, cy = 112 + i * 112, s = 34, h = s * 1.1, x = 462;
+      if (act) glow(g, x, cy + 30, 60, 0.3);
+      shadow(g, x, cy + 30, s * 1.2, 0.5);
+      sysCube(g, x, cy + 30 - s / 2 - h - lift, s, h, 'PS', act, v);
+      text(g, L.opts[i], 514, cy + 6, act ? P.amber : P.muted, 15, { w: act ? 600 : 400 });
+      if (act) text(g, 'em uso', 514, cy + 24, P.faint, 12);
+    });
+  }
+  text(g, L.d, 20, 420, P.muted, 14);
+  hints(g, [['B', 'Voltar'], ['LR', 'Trocar']]);
+};
+
+S.gamesList = function (g, t) {
+  bg(g);
+  const st = selState(t, GAMES.length, 1.4), cur = curOf(st);
+  header(g, 'PlayStation', (cur + 1) + '/214', AMB);
+  list(g, GAMES.map(([n]) => ({ t: n })), st, { x: 20, y: 50, w: 330, rh: 52 });
+  g.fillStyle = '#1d2240'; g.fillRect(364, 58, 4, 356);
+  block(g, 362, 58 + cur / (GAMES.length - 1) * 306, 8, 50, 2, P.amber, P.amberDeep, P.amberDark, 0.3);
+  const pop = 8 * eob(clamp(st.p / 0.7)), w = 196, h = 262, x = 400, floorY = 370;
+  glow(g, x + w / 2, floorY, 120, 0.3); shadow(g, x + w / 2 + 6, floorY + 2, 110, 0.55);
+  slab(g, artImg('cv', cur), x, floorY - h - pop, w, h, 14, { sel: true });
+  hints(g, [['B', 'Voltar'], ['SELECT', 'Recentes'], ['A', 'Jogar']]);
+};
+
+S.color = function (g, t) {
+  bg(g); header(g, 'Cor principal');
+  const st = selState(t, 4, 1.5), cur = curOf(st);
+  const ch = [['Vermelho', 242, '#ff6b6b'], ['Verde', 163, '#51e0a3'], ['Azul', 60, '#5a8dff'], ['Opacidade', 255, '#eef2ff']];
+  ch.forEach(([lab, v, col], i) => {
+    const y = 58 + i * 76, sel = i === cur;
+    if (sel) { nblock(g, 16, y, 360, 62, 6); g.fillStyle = P.amber; g.fillRect(16, y, 4, 62); }
+    text(g, lab, 34, y + 24, sel ? P.amber : P.soft, 18, { w: sel ? 500 : 400 });
+    text(g, String(v), 362, y + 24, sel ? P.ink : P.muted, 16, { align: 'right' });
+    const nb = 24, fill = Math.round(v / 255 * nb);
+    for (let k = 0; k < nb; k++) {
+      const bx = 34 + k * 13.5;
+      if (k < fill) block(g, bx, y + 36, 10, 12, 2, col, shade(col, 0.7), shade(col, 0.5), 0.25);
+      else block(g, bx, y + 39, 10, 9, 0, '#1d2240', '', '', 0);
+    }
+  });
+  const base = '#f2a33c';
+  glow(g, 506, 262, 110, 0.32); shadow(g, 506, 262, 96, 0.55);
+  cube(g, 506, 128 + Math.sin(t * 1.6) * 3, 66, 72, palOf(base));
+  text(g, '#F2A33C', 506, 300, P.ink, 22, { align: 'center', w: 500 });
+  text(g, 'PRONTAS', 506, 340, P.faint, 11, { align: 'center', ls: 3 });
+  ['#f2a33c', '#3ad6e0', '#ff5ca8', '#51e0a3', '#9b7cff', '#eef2ff'].forEach((c, i) => {
+    const x = 431 + i * 30;
+    cube(g, x, 366, 11, 12, palOf(c));
+    if (i === 0) { g.fillStyle = P.amber; g.fillRect(x - 8, 396, 16, 2); }
+  });
+  hints(g, [['B', 'Voltar'], ['LR', 'Ajustar'], ['A', 'Aplicar']]);
+};
+
+const NETS = [['Casa_5G', 4, 1, 'Conectado'], ['Casa_2G', 3, 1], ['Café Central', 3, 0], ['Escritório', 2, 1], ['Vizinho_123', 1, 1], ['Convidados', 1, 0]];
+S.wifi = function (g, t) {
+  bg(g); header(g, 'Wi-Fi', null, CYA);
+  const items = [{ t: 'Wi-Fi', v: 'Ligado' }].concat(NETS.map(([a, s, l, v]) => ({ t: a, sig: s, lock: !!l, v, vc: P.cyan, cycle: false })));
+  list(g, items, selState(t, items.length, 1.3), { x: 20, y: 52, w: 600, rh: 50 });
+  hints(g, [['B', 'Voltar'], ['Y', 'Buscar'], ['A', 'Conectar']]);
+};
+
+S.keyboard = function (g, t) {
+  bg(g); header(g, 'Senha de Casa_5G', null, CYA);
+  card(g, 20, 54, 600, 46, 6, 0.95);
+  const typed = Math.floor(t / 0.7) % 12;
+  const dots = '•'.repeat(Math.max(4, typed));
+  const dw = text(g, dots, 38, 86, P.ink, 22);
+  if (Math.floor(t * 2) % 2) { g.fillStyle = P.amber; g.fillRect(42 + dw, 66, 3, 24); }
+  const rows = ['1234567890', 'qwertyuiop', 'asdfghjkl@', 'zxcvbnm.-_'];
+  const path = [[1, 2], [1, 3], [2, 1], [2, 2], [1, 7], [3, 5], [3, 6], [2, 8], [4, 3]];
+  const st = path[Math.floor(t / 0.7) % path.length], pp = eob(clamp((t % 0.7) / 0.3));
+  rows.forEach((r, ri) => {
+    for (let ci = 0; ci < r.length; ci++) {
+      const x = 34 + ci * 58, y = 122 + ri * 58, sel = st[0] === ri && st[1] === ci;
+      if (sel) { const l = 3 * pp; ablock(g, x - l * 0.3, y - l, 50, 42, 4 + l); text(g, r[ci], x + 25 - l * 0.3, y + 28 - l, P.onAmber, 20, { align: 'center', w: 500 }); }
+      else { nblock(g, x, y, 50, 42, 4); text(g, r[ci], x + 25, y + 28, P.soft, 20, { align: 'center' }); }
+    }
+  });
+  const sp = [['Maiúsc.', 112], ['Espaço', 222], ['Apagar', 112], ['OK', 92]];
+  let x = 34;
+  sp.forEach(([lab, w], i) => {
+    const sel = st[0] === 4 && st[1] === i, y = 354;
+    if (sel) { const l = 3 * pp; ablock(g, x - l * 0.3, y - l, w, 42, 4 + l); text(g, lab, x + w / 2 - l * 0.3, y + 27 - l, P.onAmber, 17, { align: 'center', w: 500 }); }
+    else { nblock(g, x, y, w, 42, 4); text(g, lab, x + w / 2, y + 27, i === 3 ? P.amber : P.soft, 17, { align: 'center' }); }
+    x += w + 10;
+  });
+  hints(g, [['B', 'Apagar'], ['Y', 'Maiúsc.'], ['A', 'Digitar']]);
+};
+
+const PHRASES = ['aquecendo o motor…', 'soprando o cartucho…', 'carregando os pixels…', 'empilhando os blocos…', 'afinando o som…', 'procurando os saves…'];
+S.boot = function (g, t) {
+  bg(g);
+  const per = 5.2, lt = t % per, a = eo(clamp(lt / 0.9)), bob = Math.sin(t * 2.4) * 3 * clamp((lt - 0.9) / 0.4);
+  glow(g, 320, 222, 110, 0.34 * a); shadow(g, 320, 222, 70, 0.5 * a);
+  cube(g, 320, 132 + bob, 50, 55, AMB, { fly: (1 - a) * 70, alpha: a });
+  const word = [['A', P.ink], ['n', P.ink], ['b', P.ink], ['e', P.ink], ['r', P.ink], ['N', P.cyan], ['e', P.cyan], ['x', P.cyan], ['t', P.cyan]];
+  let total = 0; font(g, 44, 700); for (const [c] of word) total += g.measureText(c).width;
+  let x = 320 - total / 2;
+  word.forEach(([c, col], i) => {
+    const la = eo(clamp((lt - 0.7 - i * 0.07) / 0.35));
+    g.save(); g.globalAlpha = la; text(g, c, x, 292 - (1 - la) * 22, col, 44, { w: 700 }); g.restore();
+    font(g, 44, 700); x += g.measureText(c).width;
+  });
+  const ph = PHRASES[Math.floor(t / 1.7) % PHRASES.length];
+  g.save(); g.globalAlpha = clamp((lt - 1.4) / 0.4); text(g, ph, 320, 330, P.muted, 16, { align: 'center' }); g.restore();
+  const nb = 20, filled = Math.floor(clamp((lt - 1.2) / 3.6) * nb), x0 = 320 - (nb * 15 - 3) / 2;
+  for (let i = 0; i < nb; i++) {
+    if (i < filled) block(g, x0 + i * 15, 362, 12, 8, 2, P.amber, P.amberDeep, P.amberDark, 0.3);
+    else block(g, x0 + i * 15, 364, 12, 6, 0, '#1d2240', '', '', 0);
+  }
+  text(g, 'AnberNext v3.26 · RG353V', 320, 446, P.faint, 13, { align: 'center' });
+  text(g, 'segure F ao ligar para ir ao Android', 320, 466, '#454e72', 12, { align: 'center' });
+};
+
+// ---------- runtime ----------
+if (typeof module !== 'undefined' && module.exports) { module.exports = S; return; }
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cvs = Array.from(document.querySelectorAll('canvas[data-screen]'));
+const vis = new Set();
+function setup(c) {
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  c.width = W * dpr; c.height = H * dpr; c._s = dpr;
+}
+function paint(c, t) {
+  const g = c.getContext('2d'); g.setTransform(c._s, 0, 0, c._s, 0, 0);
+  g.clearRect(0, 0, W, H);
+  try { S[c.dataset.screen](g, t + (+c.dataset.offset || 0)); } catch (e) { console.error(c.dataset.screen, e); }
+}
+function start() {
+  cvs.forEach(c => { setup(c); paint(c, 1.3); });
+  if (reduce) return;
+  const io = new IntersectionObserver(es => es.forEach(e => (e.isIntersecting ? vis.add(e.target) : vis.delete(e.target))), { rootMargin: '80px' });
+  cvs.forEach(c => io.observe(c));
+  const t0 = performance.now(); let last = 0;
+  (function loop(now) {
+    if (now - last > 32) { last = now; const t = (now - t0) / 1000; vis.forEach(c => paint(c, t)); }
+    requestAnimationFrame(loop);
+  })(t0);
+}
+const ready = document.fonts ? Promise.race([Promise.all([document.fonts.load('400 20px "Chakra Petch"'), document.fonts.load('600 20px "Chakra Petch"'), document.fonts.load('700 40px "Chakra Petch"'), document.fonts.load('500 20px "Chakra Petch"')]), new Promise(r => setTimeout(r, 2500))]) : Promise.resolve();
+ready.then(start, start);
+})();
+
+</script>
+
+</body></html>

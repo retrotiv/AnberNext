@@ -1,0 +1,165 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>BrickNext Logo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap">
+<style>
+  /* Layout: a dark studio sheet of logo lockups; amber brick + cyan accent on deep indigo. */
+  :root{
+    --bg:#0e1020; --panel:#161a2e; --panel-2:#1d2238; --line:#2a3050;
+    --fg:#eef1fb; --muted:#9aa2c4;
+    --amber:#f2a33c; --amber-hi:#fbd270; --amber-lo:#bd6a18; --cyan:#3ad6e0;
+    color-scheme:dark;
+  }
+  :root[data-theme="light"]{
+    --bg:#eef0f7; --panel:#ffffff; --panel-2:#f4f6fc; --line:#d9deee;
+    --fg:#141830; --muted:#5b628a; color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--fg);font-family:Outfit,system-ui,sans-serif;line-height:1.5}
+  .wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px}
+  header h1{font-family:'Chakra Petch',sans-serif;font-weight:600;letter-spacing:.02em;font-size:clamp(1.3rem,4vw,1.9rem);margin:0;text-wrap:balance}
+  header p{color:var(--muted);margin:.4rem 0 0;max-width:60ch}
+  h2{font-family:'Chakra Petch',sans-serif;font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:.8rem;color:var(--cyan);margin:2.6rem 0 1rem}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;align-items:center;justify-content:center}
+  .hero{min-height:220px;background:var(--panel);position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 90% at 25% 30%,rgba(242,163,60,.12),transparent 60%);pointer-events:none}
+  .grid{display:grid;gap:16px}
+  .cols-3{grid-template-columns:repeat(3,1fr)}
+  .cols-2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:620px){.cols-3,.cols-2{grid-template-columns:1fr}}
+  .tile{flex-direction:column;gap:14px;min-height:150px}
+  .tile .cap{font-size:.78rem;color:var(--muted);letter-spacing:.03em}
+  .onlight{background:#f3f4fa}
+  .ondark{background:#0b0d18}
+  .swatches{display:flex;flex-wrap:wrap;gap:12px}
+  .sw{flex:1 1 110px;min-width:110px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .sw .chip{height:56px}
+  .sw .meta{padding:8px 10px;font-size:.72rem;font-variant-numeric:tabular-nums}
+  .sw .meta b{display:block;font-family:'Chakra Petch',sans-serif;font-weight:500;letter-spacing:.04em}
+  .note{color:var(--muted);font-size:.86rem;margin-top:.6rem}
+  svg{display:block;max-width:100%;height:auto}
+</style>
+
+<!-- Reusable brick glyphs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbd270"/><stop offset="1" stop-color="#f2a33c"/>
+    </linearGradient>
+    <linearGradient id="gLeft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e8902a"/><stop offset="1" stop-color="#c6771d"/>
+    </linearGradient>
+    <linearGradient id="gRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cf7e22"/><stop offset="1" stop-color="#a95c14"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Studded isometric brick (the playful "tijolinho") -->
+    <g id="brick">
+      <g stroke="#2a1c08" stroke-width="1.4" stroke-linejoin="round">
+        <polygon points="50,14 86,33 50,52 14,33" fill="url(#gTop)"/>
+        <polygon points="14,33 50,52 50,80 14,61" fill="url(#gLeft)"/>
+        <polygon points="86,33 50,52 50,80 86,61" fill="url(#gRight)"/>
+      </g>
+      <!-- studs on the top face -->
+      <g stroke="#2a1c08" stroke-width="1.1">
+        <ellipse cx="38" cy="30" rx="8" ry="4.3" fill="#fbd270"/>
+        <ellipse cx="62" cy="30" rx="8" ry="4.3" fill="#fbd270"/>
+        <ellipse cx="50" cy="39" rx="8" ry="4.3" fill="#f6b64e"/>
+      </g>
+    </g>
+
+    <!-- Plain masonry brick -->
+    <g id="brick2">
+      <g stroke="#2a1c08" stroke-width="1.4" stroke-linejoin="round">
+        <polygon points="50,16 86,35 50,54 14,35" fill="url(#gTop)"/>
+        <polygon points="14,35 50,54 50,82 14,63" fill="url(#gLeft)"/>
+        <polygon points="86,35 50,54 50,82 86,63" fill="url(#gRight)"/>
+      </g>
+      <!-- mortar groove on the two front faces -->
+      <path d="M14,49 L50,68 M50,68 L86,49" fill="none" stroke="#8a4e12" stroke-width="1.6" opacity=".8"/>
+      <path d="M32,58.5 L32,72.5 M68,58.5 L68,72.5" fill="none" stroke="#8a4e12" stroke-width="1.4" opacity=".55"/>
+    </g>
+
+    <!-- Combined: masonry faces + mortar grooves + studs on top -->
+    <g id="brick3">
+      <g stroke="#2a1c08" stroke-width="1.4" stroke-linejoin="round">
+        <polygon points="50,16 86,35 50,54 14,35" fill="url(#gTop)"/>
+        <polygon points="14,35 50,54 50,82 14,63" fill="url(#gLeft)"/>
+        <polygon points="86,35 50,54 50,82 86,63" fill="url(#gRight)"/>
+      </g>
+      <path d="M14,49 L50,68 M50,68 L86,49" fill="none" stroke="#8a4e12" stroke-width="1.6" opacity=".7"/>
+      <path d="M32,58.5 L32,72.5 M68,58.5 L68,72.5" fill="none" stroke="#8a4e12" stroke-width="1.4" opacity=".5"/>
+      <g stroke="#2a1c08" stroke-width="1.1">
+        <ellipse cx="38" cy="31" rx="7.4" ry="4" fill="#fbd270"/>
+        <ellipse cx="62" cy="31" rx="7.4" ry="4" fill="#fbd270"/>
+        <ellipse cx="50" cy="40" rx="7.4" ry="4" fill="#f6b64e"/>
+      </g>
+    </g>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header>
+    <h1>BrickNext — identidade</h1>
+    <p>Proposta de marca para o firmware do TrimUI Brick, no estilo retrotiv: tijolinho âmbar em 2.5D, acento ciano, base índigo. Original, sem copiar a marca do NextUI, com os créditos preservados.</p>
+  </header>
+
+  <h2>Marca principal</h2>
+  <div class="panel hero">
+    <!-- Primary lockup: brick icon + wordmark -->
+    <svg viewBox="0 0 520 150" width="460" role="img" aria-label="BrickNext">
+      <g filter="url(#glow)" transform="translate(16,28) scale(0.92)"><use href="#brick3"/></g>
+      <text x="126" y="78" font-family="'Chakra Petch',sans-serif" font-weight="700" font-size="62" letter-spacing="1" fill="#f2a33c">BRICK</text>
+      <text x="128" y="116" font-family="Outfit,sans-serif" font-weight="300" font-size="40" letter-spacing="14" fill="#3ad6e0">NEXT</text>
+    </svg>
+  </div>
+
+  <h2>Variações do ícone</h2>
+  <div class="grid cols-3">
+    <div class="panel tile">
+      <svg viewBox="0 0 100 94" width="100" aria-label="Tijolinho com pinos"><use href="#brick"/></svg>
+      <span class="cap">A — tijolinho com pinos</span>
+    </div>
+    <div class="panel tile">
+      <svg viewBox="0 0 100 96" width="100" aria-label="Tijolo de alvenaria"><use href="#brick2"/></svg>
+      <span class="cap">B — tijolo de alvenaria</span>
+    </div>
+    <div class="panel tile" style="border-color:var(--amber)">
+      <svg viewBox="0 0 100 96" width="100" aria-label="Combinado: pinos e juntas"><use href="#brick3"/></svg>
+      <span class="cap" style="color:var(--amber)">A + B — combinado (principal)</span>
+    </div>
+  </div>
+
+  <h2>Em uso (GitHub lê em claro e escuro)</h2>
+  <div class="grid cols-2">
+    <div class="panel tile ondark">
+      <svg viewBox="0 0 430 110" width="340" aria-label="BrickNext no escuro">
+        <g transform="translate(6,20) scale(0.74)"><use href="#brick3"/></g>
+        <text x="96" y="60" font-family="'Chakra Petch',sans-serif" font-weight="700" font-size="46" fill="#f2a33c">BRICK</text>
+        <text x="98" y="92" font-family="Outfit,sans-serif" font-weight="300" font-size="29" letter-spacing="11" fill="#3ad6e0">NEXT</text>
+      </svg>
+    </div>
+    <div class="panel tile onlight">
+      <svg viewBox="0 0 430 110" width="340" aria-label="BrickNext no claro">
+        <g transform="translate(6,20) scale(0.74)"><use href="#brick3"/></g>
+        <text x="96" y="60" font-family="'Chakra Petch',sans-serif" font-weight="700" font-size="46" fill="#d97d14">BRICK</text>
+        <text x="98" y="92" font-family="Outfit,sans-serif" font-weight="400" font-size="29" letter-spacing="11" fill="#0f8a92">NEXT</text>
+      </svg>
+    </div>
+  </div>
+
+  <h2>Paleta</h2>
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:#f2a33c"></div><div class="meta"><b>Âmbar</b>#F2A33C</div></div>
+    <div class="sw"><div class="chip" style="background:#fbd270"></div><div class="meta"><b>Âmbar claro</b>#FBD270</div></div>
+    <div class="sw"><div class="chip" style="background:#bd6a18"></div><div class="meta"><b>Âmbar fundo</b>#BD6A18</div></div>
+    <div class="sw"><div class="chip" style="background:#3ad6e0"></div><div class="meta"><b>Ciano</b>#3AD6E0</div></div>
+    <div class="sw"><div class="chip" style="background:#0e1020"></div><div class="meta"><b>Índigo</b>#0E1020</div></div>
+  </div>
+  <p class="note">Agora o ícone principal é o <b>combinado</b>: pinos em cima (A) + juntas de alvenaria na frente (B). Me diz se ficou do jeito que você imaginou ou se ajusto algo (menos juntas, pinos maiores/menores, cor). Fechando, eu gero os SVG finais (wordmark, ícone e avatar) pro repo BrickNEXT.</p>
+</div>
+
+</body></html>
