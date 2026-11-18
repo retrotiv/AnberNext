@@ -50,6 +50,8 @@
 
   main { min-width: 0; }
   .col { max-width: 680px; }
+  .col ul { margin: 0 0 18px; padding-left: 22px; }
+  .col li { margin: 0 0 10px; }
   .wide { max-width: 1000px; }
 
   /* cover */
@@ -157,15 +159,16 @@
       <li><a href="#cap8"><span>08</span>BrickNext</a></li>
       <li><a href="#cap9"><span>09</span>As páginas do projeto</a></li>
       <li><a href="#cap10"><span>10</span>MiniNext</a></li>
-      <li><a href="#cap11"><span>11</span>Um cartão para todos</a></li>
-      <li><a href="#cap12"><span>12</span>O que aprendemos</a></li>
+      <li><a href="#detonado"><span>11</span>Detonado e Compêndio</a></li>
+      <li><a href="#cap11"><span>12</span>Um cartão para todos</a></li>
+      <li><a href="#cap12"><span>13</span>O que aprendemos</a></li>
       <li><a href="#apendice"><span>A</span>Todas as prévias</a></li>
     </ol>
   </nav>
 
   <main>
     <header class="cover">
-      <div class="eyebrow">retrotiv · 28 de outubro a 13 de novembro de 2026</div>
+      <div class="eyebrow">retrotiv · 28 de outubro a 18 de novembro de 2026</div>
       <h1>O livro do <em>AnberNext</em></h1>
       <p class="lede">Como uma interface de portátil virou uma família de sistemas: três marcas, quatro temas, quatro tipos de aparelho e um cartão de jogos que serve todos eles. Contado pelas prévias que o Vitor aprovou, na ordem em que aconteceram.</p>
       <div class="devices">
@@ -177,7 +180,7 @@
         <div><b>4</b><span>sistemas: AnberNext, AnberNext H700, BrickNext e MiniNext</span></div>
         <div><b>4</b><span>temas: Neon Drive, Bloco, Grafite e Fósforo</span></div>
         <div><b>9</b><span>modelos de aparelho com imagem própria</span></div>
-        <div><b>14</b><span>prévias aprovadas antes de virar código</span></div>
+        <div><b>561</b><span>detonados dentro do jogo, 42 deles em português</span></div>
       </div>
     </header>
 
@@ -461,13 +464,88 @@
       <div class="col">
         <h3>No cartão</h3>
         <p>No cartão do Brick já havia um sistema para o Mini, feito antes num outro computador, que rodava bem na tela do Mini do Vitor. O MiniNext foi montado em cima dele. A primeira versão traz a tela inicial nos três jeitos, a biblioteca com capas, o menu do botão MENU, a Aparência, os recentes no SELECT e a barra de volume e brilho no tema.</p>
-        <p>Se o menu novo cair, o Mini abre sozinho o menu antigo e tenta o novo de novo no próximo boot. Ainda falta o teste no aparelho, e depois vêm o menu do jogo no tema, a tela de abertura e a música.</p>
+        <p>Se o menu novo cair, o Mini abre sozinho o menu antigo e tenta o novo de novo no próximo boot. O Vitor testou e aprovou em 16 de novembro.</p>
+        <h3>Tudo no tema</h3>
+        <p>No mesmo dia vieram o resto das telas. O menu do jogo ganhou o painel do tema por cima do jogo escurecido, com a imagem e a hora de cada slot. O "Mais ajustes", que ainda abria o programa antigo, virou Ajustes completos no tema: Tela, Energia, Sistema, relógio, teste dos controles e Sobre.</p>
+        <p>Depois vieram um desenho para cada um dos 39 consoles, os mesmos do RG353V, e a animação de boot de cada tema. Na segunda rodada os ícones cresceram, entrou a troca entre console e controle, e o Fósforo ganhou as três cores.</p>
+        <blockquote>Testei, ficou muito legal!<cite>Vitor, sobre a abertura do Mini</cite></blockquote>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/mini-themes.png" aria-label="Ampliar a tela inicial nos quatro temas"><img src="img/mini-themes.png" alt="A tela inicial do MiniNext nos quatro temas" loading="lazy"></button></div>
+        <figcaption><b>O MiniNext nos quatro temas</b><span class="meta">Miyoo Mini</span><span>Telas do próprio programa do Mini, com o desenho de cada console.</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/mini-screens.png" aria-label="Ampliar o menu do jogo, os Ajustes, os controles e a abertura"><img src="img/mini-screens.png" alt="Menu do jogo, Ajustes, ícones de controle e a abertura do MiniNext" loading="lazy"></button></div>
+        <figcaption><b>Menu do jogo, Ajustes, controles e abertura</b><span class="meta">Miyoo Mini</span><span>As telas que ficaram no tema na segunda leva.</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- Detonado -->
+    <section class="ch" id="detonado">
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">11</div><div class="eyebrow">17 e 18 de novembro</div><h2>Detonado e Compêndio</h2></div>
+      <div class="col">
+        <p>Travou num chefe? Esqueceu onde fica a próxima chave? Nos nossos sistemas, é só apertar MENU dentro do jogo e escolher <b>Detonado</b>, logo abaixo de Carregar. O guia daquele jogo abre por cima da partida, no tema do aparelho, e volta para a mesma página da última vez. Fechou o guia, o jogo continua de onde parou.</p>
+        <p>Nenhum outro sistema para portáteis faz isso hoje. Nos outros, quem quer um detonado precisa largar o aparelho e pegar o celular.</p>
+        <blockquote>Queria ter uma função in-game que seria nosso diferencial: Detonado por jogo!<cite>Vitor, 17/11</cite></blockquote>
+        <h3>Como funciona</h3>
+        <ul>
+          <li><b>Acha sozinho o guia do jogo.</b> Basta o arquivo estar em <code>Guides/&lt;console&gt;/</code> com o nome do jogo. Ele reconhece o jogo mesmo com "(USA)", "(Disc 1)" e outros detalhes no nome do arquivo.</li>
+          <li><b>Português e inglês.</b> O botão X troca de idioma na hora e mantém o ponto da leitura.</li>
+          <li><b>Três tamanhos de letra,</b> e o texto se ajeita na tela em cada um.</li>
+          <li><b>Lembra onde você parou,</b> jogo por jogo. O menu mostra a página antes de abrir.</li>
+          <li><b>Aceita texto ou imagem.</b> Um detonado em <code>.txt</code> ou uma pasta com as páginas escaneadas de uma revista: dá para ler a página inteira ou com zoom e rolagem.</li>
+        </ul>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/detonado-menu.webp" aria-label="Ampliar o menu do jogo com o Detonado nos quatro temas"><img src="img/detonado-menu.webp" alt="O menu do jogo com a opção Detonado e a página onde a leitura parou, nos quatro temas" loading="lazy"></button></div>
+        <figcaption><b>O Detonado no menu do jogo</b><span class="meta">Neon Drive, Bloco, Grafite e Fósforo</span><span>Ao lado aparecem o idioma, a página onde você parou e, se houver, o Compêndio.</span></figcaption>
+      </figure>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/detonado-leitura.webp" aria-label="Ampliar a leitura do detonado"><img src="img/detonado-leitura.webp" alt="O detonado do Super Mario World aberto em português e em inglês" loading="lazy"></button></div>
+        <figcaption><b>Lendo o detonado</b><span class="meta">Super Mario World</span><span>O mesmo trecho em português e em inglês, em letra média e pequena.</span></figcaption>
+      </figure>
+      <div class="col">
+        <h3>O Compêndio</h3>
+        <p>Nos RPGs, o que mais se consulta não é o detonado, é a lista: onde achar aquela matéria, a fraqueza de um chefe, o que um monstro deixa cair. Por isso veio junto o <b>Compêndio</b>, uma enciclopédia do jogo dentro do mesmo menu. As fichas são divididas por categoria e cada uma pode ter imagem. Dá para marcar o que você já pegou, e as marcas valem nos dois idiomas. Na lista, L e R pulam de letra em letra. O SELECT alterna entre o detonado e o Compêndio.</p>
+        <p>O exemplo é o Final Fantasy VII, completo: chefes, monstros, armas, matérias, Limit Breaks, invocações e Enemy Skills, 938 fichas em 12 categorias, com ícones desenhados para o Compêndio. Ele mostra o que dá para fazer. Os dados do FF7 vêm de um site de referência que não permite redistribuir, então esse Compêndio fica só no cartão do Vitor. O formato é aberto e simples, para qualquer pessoa montar o do seu jogo preferido.</p>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/detonado-compendio.webp" aria-label="Ampliar o Compêndio do Final Fantasy VII"><img src="img/detonado-compendio.webp" alt="O Compêndio do Final Fantasy VII: categorias, lista e fichas" loading="lazy"></button></div>
+        <figcaption><b>O Compêndio do Final Fantasy VII</b><span class="meta">exemplo, não distribuído</span><span>Categorias, lista com marcas e fichas com imagem.</span></figcaption>
+      </figure>
+      <div class="col">
+        <h3>Os guias</h3>
+        <p>O cartão já vem com <b>561 detonados</b> de 11 consoles, do NES ao PSP, tirados do StrategyWiki. Eles são escritos pela comunidade e têm licença livre (CC BY-SA 3.0), e o crédito vem no topo de cada arquivo. Dos títulos procurados, só entraram os que têm detonado de verdade. Os que eram só a página do jogo ficaram de fora.</p>
+        <p><b>42 deles foram traduzidos para o português</b>, inteiros e sem resumo. A regra é uma só: o texto fica em português, e o que aparece na tela continua como o jogo mostra. Se o detonado manda pegar a <i>Master Sword</i>, é esse o nome que você vai ver no jogo. As traduções seguem a mesma licença do original.</p>
+        <div class="tbl"><table>
+          <thead><tr><th>Série</th><th>Em português</th></tr></thead>
+          <tbody>
+            <tr><td>Zelda</td><td>A Link to the Past, Ocarina of Time, Majora's Mask, Link's Awakening, Minish Cap, Oracle of Ages, Oracle of Seasons</td></tr>
+            <tr><td>Pokémon</td><td>Red/Blue, Gold/Silver, FireRed/LeafGreen, Ruby/Sapphire</td></tr>
+            <tr><td>Final Fantasy</td><td>I, IV, VI, VII, VIII, IX, Crisis Core</td></tr>
+            <tr><td>Mario</td><td>Super Mario Bros. 3, Super Mario World, Super Mario 64, Super Mario RPG, Paper Mario, Mario &amp; Luigi: Superstar Saga</td></tr>
+            <tr><td>RPGs</td><td>Chrono Trigger, Secret of Mana, Legend of Mana, Golden Sun, Golden Sun: The Lost Age, Breath of Fire III, Suikoden II, Phantasy Star II, Dragon Warrior, Mother 3, Kingdom Hearts: Chain of Memories, Alundra</td></tr>
+            <tr><td>Ação e aventura</td><td>Metroid Fusion, Castlevania: Aria of Sorrow, Resident Evil 2, Silent Hill, Metal Gear Solid, Banjo-Kazooie, Harvest Moon 64</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Nos quatro sistemas</h3>
+        <p>O Detonado é o mesmo código no Miyoo Mini, no TrimUI Brick, no RG353V e no RG35XX Plus. A pasta <code>Guides</code> segue a mesma regra do cartão de jogos: um guia posto no cartão serve todos os aparelhos. No Brick, que tem a tela maior, as telas crescem junto com o resto do sistema. O Vitor testou e aprovou no Mini e no Brick.</p>
+        <blockquote>Ficou bom demais, de verdade!<cite>Vitor, sobre o Compêndio do FF7</cite></blockquote>
+        <h3>Baixar no meio da partida</h3>
+        <p>Nos aparelhos com Wi-Fi (Brick, RG353V e a linha H700), não precisa nem tirar o cartão. Se o jogo ainda não tem detonado, escolher <b>Detonado</b> no menu já procura no nosso catálogo pela internet. A tela mostra os idiomas e o tamanho, e o A baixa. Uma barra acompanha o download, e o jogo fica pausado o tempo todo. Terminou, o A abre o guia, que fica guardado no cartão para as próximas vezes, mesmo sem internet.</p>
+        <p>O catálogo é público, no GitHub da retrotiv (<a href="https://github.com/retrotiv/detonados">retrotiv/detonados</a>), com as mesmas pastas do cartão. Um detonado novo posto lá aparece na hora para todo mundo.</p>
+      </div>
+      <figure class="shot wide">
+        <div class="bezel"><button type="button" data-full="img/detonado-wifi.webp" aria-label="Ampliar o download do detonado pelo Wi-Fi"><img src="img/detonado-wifi.webp" alt="Procurando no catálogo, achou, baixando e pronto" loading="lazy"></button></div>
+        <figcaption><b>Baixando o detonado pelo Wi-Fi</b><span class="meta">Brick, RG353V e linha H700</span><span>Procura, mostra o que achou, baixa com a barra e abre.</span></figcaption>
+      </figure>
+      <div class="col">
       </div>
     </section>
 
     <!-- 11 -->
     <section class="ch" id="cap11">
-      <div class="ch-head"><div class="ch-no" aria-hidden="true">11</div><div class="eyebrow">a ideia que une tudo</div><h2>Um cartão para todos</h2></div>
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">12</div><div class="eyebrow">a ideia que une tudo</div><h2>Um cartão para todos</h2></div>
       <div class="col">
         <p>Os quatro sistemas leem os jogos do mesmo micro SD. O Brick e o Mini ligam direto dele. Os Anbernic ligam do próprio cartão de boot, no slot 1, e leem este no slot 2 só como biblioteca. Os saves de bateria são os mesmos em todos: dá para parar no Mini e continuar no Brick. Os estados salvos ficam separados, porque cada aparelho roda versões diferentes dos emuladores.</p>
       </div>
@@ -498,7 +576,7 @@
 
     <!-- 12 -->
     <section class="ch" id="cap12">
-      <div class="ch-head"><div class="ch-no" aria-hidden="true">12</div><div class="eyebrow">para não pagar de novo</div><h2>O que aprendemos</h2></div>
+      <div class="ch-head"><div class="ch-no" aria-hidden="true">13</div><div class="eyebrow">para não pagar de novo</div><h2>O que aprendemos</h2></div>
       <div class="col">
         <p>Cada lição abaixo custou horas para descobrir. Elas ficam guardadas para o próximo aparelho não tropeçar no mesmo lugar.</p>
         <div class="tbl"><table>
