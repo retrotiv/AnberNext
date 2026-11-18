@@ -98,7 +98,8 @@ sistemas. O pacote de guias tem **561 detonados** do [StrategyWiki](https://stra
 (licença CC BY-SA 3.0, com o crédito em cada arquivo), **42 deles traduzidos para o português**:
 Zelda, Pokémon, Final Fantasy, Mario, Chrono Trigger, Golden Sun e outros. Com o Wi-Fi ligado, um
 jogo que ainda não tem detonado no cartão baixa o guia na hora, pelo próprio menu, do catálogo
-público [retrotiv/detonados](https://github.com/retrotiv/detonados). *Chega na próxima versão.*
+público [retrotiv/detonados](https://github.com/retrotiv/detonados). Já vem na **v3.26** do RG353V e
+chega sozinho, pelo Wi-Fi, na linha H700.
 
 ### A animação de boot
 
@@ -174,7 +175,7 @@ boot from it.
 - **Four themes**: Neon Drive, Bloco, Grafite and Fósforo, applied everywhere (home, library, in-game
   menu, Settings, boot screen), each with its own layouts and live previews in Settings.
   Portuguese (Brazil) or English menus.
-- **Walkthroughs inside the game** (coming in the next release): press MENU, pick **Guide**, and that
+- **Walkthroughs inside the game** (RG353V v3.26; on the H700 line it arrives over Wi-Fi): press MENU, pick **Guide**, and that
   game's walkthrough opens over the paused game, in your theme, back on the page you left. No other
   handheld front-end does this. Portuguese or English, three text sizes, scanned magazine pages too,
   and a **Compendium** for RPGs (bosses, monsters, items, spells) where you tick off what you found.
